@@ -1,25 +1,15 @@
-import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "./utils/firebase";
-import api from "./utils/api";
+import { useEffect } from "react";
+import Home from "./pages/Home";
+import getCurrentUser from "./features/getCurrentUser";
 
 const App = () => {
-  const handleLogin = async (token) => {
-    const response = await api.post("/auth/google-login", { token });
-    console.log(response);
-  };
-  const googleLogin = async () => {
-    const response = await signInWithPopup(auth, googleProvider);
-    const token = await response.user.getIdToken();
-    await handleLogin(token);
-  };
+  useEffect(() => {
+    const getUser = async () => await getCurrentUser();
+    getUser();
+  }, []);
   return (
-    <div className="flex min-h-screen justify-center items-center">
-      <button
-        onClick={googleLogin}
-        className="w-50 h-10 bg-blue-500 text-white border rounded-full"
-      >
-        Continue with google
-      </button>
+    <div>
+      <Home />
     </div>
   );
 };

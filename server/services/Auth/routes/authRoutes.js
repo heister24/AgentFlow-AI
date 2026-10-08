@@ -1,8 +1,9 @@
 import express from "express";
-import { login } from "../controller/auth.controller.js";
+import { login, logout } from "../controller/auth.controller.js";
 
 const authRouter = express.Router();
 
 authRouter.post("/google-login", login);
+authRouter.get("/logout", logout);
 
 export default authRouter;

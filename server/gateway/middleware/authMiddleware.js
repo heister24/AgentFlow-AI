@@ -3,7 +3,7 @@ import redis from "../../shared/redis/redis.js";
 const authMiddleware = async (req, res, next) => {
   try {
     const sessionId = req.cookies?.sessionId;
-    console.log(sessionId);
+    // console.log(sessionId);
     if (!sessionId) {
       return res.status(400).json({
         success: false,

@@ -5,6 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authMiddleware from "./middleware/authMiddleware.js";
 import { getCurrentUser } from "./controllers/user.controller.js";
+import { headerWithProxy } from "./utils/headerWithProxy.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(
 app.use(cookieParser());
 
 app.use("/api/auth", proxy(process.env.AUTH_URL));
+app.use("/api/chat", authMiddleware, headerWithProxy(process.env.CHAT_URL));
 app.get("/api/me", authMiddleware, getCurrentUser);
 
 app.get("/health", (req, res) => {

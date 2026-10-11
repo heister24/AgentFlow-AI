@@ -10,7 +10,7 @@ import {
 
 const chatRouter = express.Router();
 
-chatRouter.post("/create-conversation", createConversation);
+chatRouter.get("/create-conversation", createConversation);
 chatRouter.get("/get-conversations", getConversations);
 chatRouter.get("/get-conversation/:id", getConversationById);
 chatRouter.put("/update-conversation", updateConversation);

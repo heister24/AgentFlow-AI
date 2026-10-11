@@ -4,6 +4,9 @@ import { auth, googleProvider } from "../utils/firebase";
 import { FcGoogle } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../redux/slices/userSlice";
+import Sidebar from "../components/Sidebar";
+import ChatArea from "../components/chatArea";
+import Artifact from "../components/Artifact";
 
 const Home = () => {
   const { userData } = useSelector((state) => state.user);
@@ -18,25 +21,30 @@ const Home = () => {
   const googleLogin = async () => {
     const response = await signInWithPopup(auth, googleProvider);
     const token = await response.user.getIdToken();
-    console.log(token)
+    console.log(token);
     await handleLogin(token);
   };
 
-  const handleLogout = async () => {
-    try {
-      const response = await api.get("/auth/logout");
-      if (response) {
-        console.log("logged out");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     const response = await api.get("/auth/logout");
+  //     if (response) {
+  //       console.log("logged out");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
-    <div className="h-screen flex bg-[#0d0f14] text-white overflow-hidden">
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-        {!userData && (
+    <div className="h-screen w-full flex bg-[#0d0f14] text-white overflow-hidden">
+      <Sidebar />
+      <ChatArea />
+      <Artifact />
+      {!userData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          {/* user data */}
+
           <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#151820] p-8 shadow-2xl shadow-black/50">
             <div className="flex flex-col gap-2 mb-8 text-center">
               <h2 className="text-2xl font-semibold">
@@ -54,8 +62,8 @@ const Home = () => {
               <FcGoogle className="text-xl" />
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -46,7 +46,8 @@ export const getConversationById = async (req, res) => {
   try {
     const conversationId = req.params.id;
     const conversation = await Conversation.findById(conversationId);
-    return res.status(200).json(conversation);
+    const messages = await Message.find({ conversationId: conversationId });
+    return res.status(200).json({ conversation, messages });
   } catch (error) {
     console.log(`Error While fetching specific conversation : ${error}`);
     return res.status(500).json({
@@ -67,6 +68,51 @@ export const updateConversation = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "error while update conversation title",
+    });
+  }
+};
+
+export const deleteConversationById = async (req, res) => {
+  try {
+    const conversationId = req.params.id;
+    const userId = req.headers["x-user-id"];
+
+    if (!conversationId) {
+      return res.status(400).json({
+        success: false,
+        message: "Conversation ID is required",
+      });
+    }
+
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return res.status(404).json({
+        success: false,
+        message: "Conversation not found",
+      });
+    }
+
+    if (userId && conversation.userId !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized to delete this conversation",
+      });
+    }
+
+    await Message.deleteMany({ conversationId });
+    const deletedConversation =
+      await Conversation.findByIdAndDelete(conversationId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Conversation Deleted",
+      conversation: deletedConversation,
+    });
+  } catch (error) {
+    console.log(`Error while deleting conversation : ${error}`);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Error while deleting conversation",
     });
   }
 };

@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import authMiddleware from "./middleware/authMiddleware.js";
 import { getCurrentUser } from "./controllers/user.controller.js";
 import { headerWithProxy } from "./utils/headerWithProxy.js";
+import morgan from "morgan";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(
   }),
 );
 app.use(cookieParser());
+app.use(morgan("dev"));
 
 app.use("/api/auth", proxy(process.env.AUTH_URL));
 app.use("/api/chat", authMiddleware, headerWithProxy(process.env.CHAT_URL));

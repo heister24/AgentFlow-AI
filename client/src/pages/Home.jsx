@@ -26,6 +26,7 @@ const Home = () => {
     try {
       const response = await signInWithPopup(auth, googleProvider);
       const token = await response.user.getIdToken();
+      console.log(token)
       await handleLogin(token);
     } catch (error) {
       console.error("Google sign-in popup error:", error);

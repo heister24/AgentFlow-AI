@@ -27,6 +27,7 @@ import logoutUser from "../features/logoutUser";
 import { setUserData } from "../redux/slices/userSlice";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { setSelectedConvMsg } from "../redux/slices/messagesSlice";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -35,14 +36,13 @@ const Sidebar = () => {
   const { conversations, selectedConversation } = useSelector(
     (state) => state.conversation,
   );
+  const { userData } = useSelector((state) => state.user);
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [conversationMenuOpen, setConversationMenuOpen] = useState(null);
   const [editTitle, setEditTitle] = useState(null);
   const [title, setTitle] = useState("");
   const [saving, setSaving] = useState(false);
-
-  const { userData } = useSelector((state) => state.user);
 
   const toggleSidebarOpen = () => {
     setSidebarOpen((prev) => !prev);
@@ -81,9 +81,9 @@ const Sidebar = () => {
     };
 
     handleGetAllConversations();
-  }, [dispatch, userData, conversations]);
+  }, [dispatch, userData]);
 
-  // Start editing a conversation title
+  // editing a conversation title
   const handleEditTitle = (conversation) => {
     setEditTitle(conversation._id);
     setTitle(conversation.title || "");
@@ -147,12 +147,14 @@ const Sidebar = () => {
 
     try {
       const response = await getConversationById(id);
-      dispatch(setSelectedConversation(response));
+      dispatch(setSelectedConversation(response.conversation));
+      dispatch(setSelectedConvMsg(response.messages));
     } catch (error) {
       console.error("Failed to open conversation:", error);
     }
   };
 
+  // Logout
   const handleLogoutUser = async () => {
     try {
       await logoutUser();

@@ -8,11 +8,16 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const getUser = async () => {
-      const data = await getCurrentUser();
-      dispatch(setUserData(data));
+      try {
+        const data = await getCurrentUser();
+        dispatch(setUserData(data));
+      } catch (error) {
+        console.error("Error checking auth status:", error);
+        dispatch(setUserData(null));
+      }
     };
     getUser();
-  }, []);
+  }, [dispatch]);
   return (
     <div>
       <Home />

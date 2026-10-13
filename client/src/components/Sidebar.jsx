@@ -6,6 +6,8 @@ import {
   Check,
   X,
   Trash2,
+  MessageSquare,
+  LogOut,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +23,10 @@ import {
 import getConversationById from "../features/getConversationById";
 import deleteConversationById from "../features/deleteConversationById";
 import editConversationTitle from "../features/editConversationTitle";
+import logoutUser from "../features/logoutUser";
+import { setUserData } from "../redux/slices/userSlice";
+import { signOut } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -35,6 +41,8 @@ const Sidebar = () => {
   const [editTitle, setEditTitle] = useState(null);
   const [title, setTitle] = useState("");
   const [saving, setSaving] = useState(false);
+
+  const { userData } = useSelector((state) => state.user);
 
   const toggleSidebarOpen = () => {
     setSidebarOpen((prev) => !prev);
@@ -62,6 +70,7 @@ const Sidebar = () => {
 
   // Fetch conversations on mount
   useEffect(() => {
+    if (!userData) return;
     const handleGetAllConversations = async () => {
       try {
         const response = await getAllConversations();
@@ -72,7 +81,7 @@ const Sidebar = () => {
     };
 
     handleGetAllConversations();
-  }, [dispatch, conversations]);
+  }, [dispatch, userData, conversations]);
 
   // Start editing a conversation title
   const handleEditTitle = (conversation) => {
@@ -144,6 +153,19 @@ const Sidebar = () => {
     }
   };
 
+  const handleLogoutUser = async () => {
+    try {
+      await logoutUser();
+      await signOut(auth);
+    } catch (error) {
+      console.error("Failed to log out:", error);
+    } finally {
+      dispatch(setUserData(null));
+      dispatch(setConversations([]));
+      dispatch(setSelectedConversation(null));
+    }
+  };
+
   return (
     <aside
       className={`${
@@ -210,7 +232,7 @@ const Sidebar = () => {
         </button>
       </div>
 
-      {/* Conversation List */}
+      {/* Conversation Area */}
       {sidebarOpen && (
         <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden pr-1">
           <p className="mb-2 px-3 text-xs font-medium text-gray-500">
@@ -231,6 +253,9 @@ const Sidebar = () => {
                 >
                   {/* Conversation title */}
                   <div className="flex min-h-10 min-w-0 items-center gap-1 px-2">
+                    <span>
+                      <MessageSquare size={15} />
+                    </span>
                     {isEditing ? (
                       <input
                         type="text"
@@ -248,7 +273,7 @@ const Sidebar = () => {
                           }
                         }}
                         placeholder="Conversation title"
-                        className="h-8 min-w-0 flex-1 rounded-md border border-white/20 bg-[#1b1c20] px-2 text-sm text-white outline-none placeholder:text-gray-500 focus:border-blue-500"
+                        className="h-8 min-w-0 flex-1 rounded-md border border-white/20 bg-[#1b1c20] px-2 text-sm text-white outline-none"
                       />
                     ) : (
                       <button
@@ -325,6 +350,47 @@ const Sidebar = () => {
           </ul>
         </div>
       )}
+
+      {/* User Info and action Area */}
+      <div
+        className={`mt-auto border-t border-white/10 ${
+          sidebarOpen ? "pt-4" : "pt-3"
+        }`}
+      >
+        <div
+          className={`flex items-center ${
+            sidebarOpen ? "gap-3" : "flex-col gap-3"
+          }`}
+        >
+          <img
+            src={userData?.avatar}
+            alt=""
+            className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-white/20"
+          />
+          {sidebarOpen && (
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium text-white">
+                {userData?.name}
+              </p>
+              <p className="truncate text-xs text-gray-400">
+                {userData?.email}
+              </p>
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={handleLogoutUser}
+            title="Logout"
+            aria-label="Logout"
+            className={`flex h-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/10 hover:text-white ${
+              sidebarOpen ? "w-9 shrink-0" : "w-8"
+            }`}
+          >
+            <LogOut size={17} />
+            {sidebarOpen && <span className="sr-only">Logout</span>}
+          </button>
+        </div>
+      </div>
     </aside>
   );
 };

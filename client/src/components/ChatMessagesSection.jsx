@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import Markdown from "react-markdown";
 
 const ChatMessagesSection = () => {
   const { selectedConversation } = useSelector((state) => state.conversation);
@@ -25,7 +26,7 @@ const ChatMessagesSection = () => {
         </div>
       ) : (
         /* Conversation messages */
-        <div className="flex-1 space-y-6 overflow-y-auto px-4 py-6 sm:px-8 lg:px-12">
+        <div className="hide-scrollbar flex-1 space-y-6 overflow-y-auto px-4 py-6 sm:px-8 lg:px-12">
           {selectedConvMsgs.map((msg) => {
             const isUser = msg.role === "user";
 
@@ -39,13 +40,11 @@ const ChatMessagesSection = () => {
                 <div
                   className={`max-w-[90%] wrap-break-word sm:max-w-[80%] lg:max-w-[75%] ${
                     isUser
-                      ? "rounded-2xl rounded-br-md bg-[#27282d] px-4 py-3 text-gray-100"
-                      : "text-gray-200"
+                      ? "rounded-2xl rounded-br-md bg-[#212123] px-4 py-3 text-gray-100"
+                      : "rounded-2xl rounded-bl-md bg-[#383838] px-4 py-3 text-gray-200"
                   }`}
                 >
-                  <p className="whitespace-pre-wrap text-sm leading-7 sm:text-[15px]">
-                    {msg.content}
-                  </p>
+                  <Markdown>{msg.content}</Markdown>
                 </div>
               </div>
             );

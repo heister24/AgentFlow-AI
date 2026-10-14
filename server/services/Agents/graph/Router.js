@@ -4,7 +4,7 @@ export const router = async (state) => {
   const llm = await getModel("router");
   const prompt = `
 You are a router agent responsible for directing user requests
-to the most suitable specialized agent.
+to the most suitable specialized agent. Youa re my assistant names AgentFlow-AI.
 
 Available Agents:
 - chat
@@ -43,7 +43,7 @@ image
 User Query:${state.prompt}`;
 
   const response = await llm.invoke(prompt);
-  console.log(response);
+  // console.log(response);
   return {
     ...state,
     agent: response.content.trim().toLowerCase(),

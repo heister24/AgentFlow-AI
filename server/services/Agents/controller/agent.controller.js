@@ -1,9 +1,11 @@
 import axios from "axios";
 import { graph } from "../graph/graph.js";
+import { addNewMsgToMemory } from "../configs/memory.js";
 
 export const agent = async (req, res) => {
   try {
     const { prompt, conversationId } = req.body;
+
     await axios.post(`${process.env.CHAT_URL}/save-message`, {
       conversationId,
       role: "user",
@@ -17,6 +19,10 @@ export const agent = async (req, res) => {
     });
 
     const aiResponse = response.aiResponse;
+
+    await addNewMsgToMemory(conversationId, "user", prompt);
+    await addNewMsgToMemory(conversationId, "assistant", aiResponse);
+
     await axios.post(`${process.env.CHAT_URL}/save-message`, {
       conversationId,
       role: "assistant",

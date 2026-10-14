@@ -9,8 +9,12 @@ const messageSlice = createSlice({
     setSelectedConvMsg: (state, action) => {
       state.selectedConvMsgs = action.payload;
     },
+    addMsgToSelectedConv: (state, action) => {
+      state.selectedConvMsgs.push(action.payload);
+    },
   },
 });
 
-export const { setSelectedConvMsg } = messageSlice.actions;
+export const { setSelectedConvMsg, addMsgToSelectedConv } =
+  messageSlice.actions;
 export default messageSlice.reducer;

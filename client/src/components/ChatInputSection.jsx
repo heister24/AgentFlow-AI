@@ -1,21 +1,44 @@
 import { Mic, Paperclip, Send } from "lucide-react";
 import { useRef, useState } from "react";
+import sendRequestToAgent from "../features/sendRequestToAgent";
+import { useDispatch, useSelector } from "react-redux";
+import { addMsgToSelectedConv } from "../redux/slices/messagesSlice";
 
 const ChatInputSection = () => {
   const [input, setInput] = useState("");
+  const dispatch = useDispatch();
+  const { selectedConversation } = useSelector((state) => state.conversation);
 
   const chatInputRef = useRef(null);
 
+  const handleSendRequest = async () => {
+    try {
+      setInput("");
+      dispatch(addMsgToSelectedConv({ role: "user", content: input.trim() }));
+      const response = await sendRequestToAgent(
+        input,
+        selectedConversation?._id,
+      );
+      dispatch(
+        addMsgToSelectedConv({
+          role: "assistant",
+          content: response.aiResponse,
+        }),
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Input height
   const handleInput = () => {
     const textarea = chatInputRef.current;
     if (!textarea) return;
-
     // Reset height to calculate the correct height
     textarea.style.height = "auto";
-
     // Increase height according to content
     textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
-
     // Enable scrolling when maximum height is reached
     textarea.style.overflowY = textarea.scrollHeight > 200 ? "auto" : "hidden";
   };
@@ -31,7 +54,7 @@ const ChatInputSection = () => {
             onChange={(e) => setInput(e.target.value)}
             onInput={handleInput}
             rows={1}
-            className="block w-full resize-none bg-transparent px-2 text-sm leading-6 text-gray-100 outline-none placeholder:text-gray-500 sm:text-base"
+            className="hide-scrollbar block w-full resize-none bg-transparent px-2 text-sm leading-6 text-gray-100 outline-none placeholder:text-gray-500 sm:text-base"
           />
 
           {/* Action buttons */}
@@ -58,6 +81,7 @@ const ChatInputSection = () => {
               type="button"
               disabled={input.trim().length === 0}
               aria-label="Send message"
+              onClick={handleSendRequest}
               className={`flex h-9 w-9 items-center justify-center rounded-xl bg-white text-black 
                 transition hover:bg-gray-200 active:scale-95 disabled:cursor-not-allowed`}
             >

@@ -3,6 +3,11 @@ import { useRef, useState } from "react";
 import sendRequestToAgent from "../features/sendRequestToAgent";
 import { useDispatch, useSelector } from "react-redux";
 import { addMsgToSelectedConv } from "../redux/slices/messagesSlice";
+import createConversation from "../features/createConversation";
+import {
+  addConversation,
+  setSelectedConversation,
+} from "../redux/slices/conversationSlice";
 
 const ChatInputSection = () => {
   const [input, setInput] = useState("");
@@ -12,14 +17,23 @@ const ChatInputSection = () => {
   const chatInputRef = useRef(null);
 
   const handleSendRequest = async () => {
+    if (input.trim().length === 0) return;
+
     try {
-      setInput("");
+      let conversationId = selectedConversation?._id;
+      if (!conversationId) {
+        const conversation = await createConversation();
+        dispatch(addConversation(conversation));
+        dispatch(setSelectedConversation(conversation));
+        conversationId = conversation._id;
+      }
+
       dispatch(addMsgToSelectedConv({ role: "user", content: input.trim() }));
-      const response = await sendRequestToAgent(
-        input,
-        selectedConversation?._id,
-      );
+      setInput("");
+
+      const response = await sendRequestToAgent(input, conversationId);
       // console.log(response);
+
       dispatch(
         addMsgToSelectedConv({
           role: "assistant",

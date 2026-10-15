@@ -60,11 +60,30 @@ export const getConversationById = async (req, res) => {
 export const updateConversation = async (req, res) => {
   try {
     const { title, conversationId } = req.body;
-    const conversation = await Conversation.findByIdAndUpdate(conversationId, {
-      title,
-    });
+
+    if (typeof title !== "string" || !title.trim() || !conversationId) {
+      return res.status(400).json({
+        success: false,
+        message: "title and conversationId are required",
+      });
+    }
+
+    const conversation = await Conversation.findByIdAndUpdate(
+      conversationId,
+      { title: title.trim() },
+      { new: true, runValidators: true },
+    );
+
+    if (!conversation) {
+      return res.status(404).json({
+        success: false,
+        message: "Conversation not found",
+      });
+    }
+
     return res.status(200).json(conversation);
   } catch (error) {
+    console.error("Error while updating conversation title:", error);
     return res.status(500).json({
       success: false,
       message: "error while update conversation title",

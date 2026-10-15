@@ -60,6 +60,8 @@ const Sidebar = () => {
 
       if (response) {
         dispatch(addConversation(response));
+        dispatch(setSelectedConversation(response));
+        dispatch(setSelectedConvMsg([]));
         setConversationMenuOpen(null);
         setEditTitle(null);
       }
@@ -129,8 +131,11 @@ const Sidebar = () => {
 
       const response = await getAllConversations();
       dispatch(setConversations(response));
-      dispatch(setSelectedConvMsg([]));
-      setSelectedConversation(null);
+
+      if (selectedConversation?._id === id) {
+        dispatch(setSelectedConvMsg([]));
+        dispatch(setSelectedConversation(null));
+      }
 
       setConversationMenuOpen(null);
 

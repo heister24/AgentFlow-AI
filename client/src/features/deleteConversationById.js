@@ -3,9 +3,13 @@ import api from "../utils/api";
 const deleteConversationById = async (id) => {
   try {
     const response = await api.delete(`/chat/delete-conversation/${id}`);
-    console.log(response)
+    return response.data;
   } catch (error) {
-    console.log(`Error while deleting error:${error}`);
+    console.error(
+      "Error while deleting conversation:",
+      error.response?.data || error.message,
+    );
+    throw error;
   }
 };
 

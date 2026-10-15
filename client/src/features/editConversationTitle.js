@@ -6,9 +6,13 @@ const editConversationTitle = async (title, conversationId) => {
       title,
       conversationId,
     });
-    console.log(response);
+    return response.data;
   } catch (error) {
-    console.log(`Error while updating title : ${error}`);
+    console.error(
+      "Error while updating conversation title:",
+      error.response?.data || error.message,
+    );
+    throw error;
   }
 };
 

@@ -6,9 +6,15 @@ const sendRequestToAgent = async (prompt, conversationId) => {
       prompt,
       conversationId,
     });
+    // console.log(response.data);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(
+      "Agent request failed:",
+      error.response?.data || error.message,
+    );
+
+    throw error;
   }
 };
 

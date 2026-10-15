@@ -19,15 +19,18 @@ const ChatInputSection = () => {
         input,
         selectedConversation?._id,
       );
+      // console.log(response);
       dispatch(
         addMsgToSelectedConv({
           role: "assistant",
           content: response.aiResponse,
         }),
       );
-      console.log(response);
     } catch (error) {
-      console.log(error);
+      console.error(
+        "Failed to send message:",
+        error.response?.data || error.message,
+      );
     }
   };
 

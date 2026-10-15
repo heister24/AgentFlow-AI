@@ -6,11 +6,12 @@ export const agent = async (req, res) => {
   try {
     const { prompt, conversationId } = req.body;
 
-    await axios.post(`${process.env.CHAT_URL}/save-message`, {
-      conversationId,
-      role: "user",
-      content: prompt,
-    });
+    if (typeof prompt !== "string" || !prompt.trim() || !conversationId) {
+      return res.status(400).json({
+        success: false,
+        message: "prompt and conversationId are required",
+      });
+    }
 
     // graph return ste state that we added in state.js
     const response = await graph.invoke({
@@ -20,8 +21,13 @@ export const agent = async (req, res) => {
 
     const aiResponse = response.aiResponse;
 
+    await axios.post(`${process.env.CHAT_URL}/save-message`, {
+      conversationId,
+      role: "user",
+      content: prompt,
+    });
+
     await addNewMsgToMemory(conversationId, "user", prompt);
-    await addNewMsgToMemory(conversationId, "assistant", aiResponse);
 
     await axios.post(`${process.env.CHAT_URL}/save-message`, {
       conversationId,
@@ -29,14 +35,20 @@ export const agent = async (req, res) => {
       content: aiResponse,
     });
 
+    await addNewMsgToMemory(conversationId, "assistant", aiResponse);
+
     return res.status(200).json({
       aiResponse: aiResponse,
     });
   } catch (error) {
-    console.log(error);
+    console.error(
+      "Agent controller error:",
+      error.response?.data || error.stack || error,
+    );
+
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: "Failed to process agent request",
     });
   }
 };

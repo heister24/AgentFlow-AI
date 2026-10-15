@@ -11,6 +11,7 @@ export const chatAgent = async (state) => {
     const llm = await getModel("chat");
 
     const history = await getMemory(state.conversationId);
+    const safeHistory = Array.isArray(history) ? history : [];
 
     const systemPrompt = `You are AgentFlow-AI, an intelligent assistant
           FORMATTING:
@@ -44,7 +45,9 @@ export const chatAgent = async (state) => {
 
     const msgs = [new SystemMessage(systemPrompt)];
 
-    history.forEach((msg) => {
+    safeHistory.forEach((msg) => {
+      if (!msg || typeof msg.content !== "string") return;
+
       if (msg.role === "user") {
         msgs.push(new HumanMessage(msg.content));
       }
@@ -57,12 +60,13 @@ export const chatAgent = async (state) => {
 
     const response = await llm.invoke(msgs);
 
-    console.log(response.content);
+    // console.log(response.content);
     return {
       ...state,
       aiResponse: response.content.trim(),
     };
   } catch (error) {
-    console.log(`Error at chat agent : ${error}`);
+    console.error("Error at chat agent:", error);
+    throw error;
   }
 };

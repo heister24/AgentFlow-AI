@@ -129,6 +129,8 @@ const Sidebar = () => {
 
       const response = await getAllConversations();
       dispatch(setConversations(response));
+      dispatch(setSelectedConvMsg([]));
+      setSelectedConversation(null);
 
       setConversationMenuOpen(null);
 

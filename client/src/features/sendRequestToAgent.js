@@ -1,10 +1,11 @@
 import api from "../utils/api";
 
-const sendRequestToAgent = async (prompt, conversationId) => {
+const sendRequestToAgent = async (prompt, conversationId, agent) => {
   try {
     const response = await api.post("/agent/agent-chat", {
       prompt,
       conversationId,
+      agent,
     });
     console.log(response.data);
     return response.data;

@@ -51,9 +51,7 @@ workflow.addConditionalEdges(
 );
 
 workflow.addEdge("search", "chat");
-
 workflow.addEdge("chat", END);
-workflow.addEdge("search", END);
 workflow.addEdge("coding", END);
 workflow.addEdge("pdf", END);
 workflow.addEdge("ppt", END);

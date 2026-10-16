@@ -4,7 +4,7 @@ import { addNewMsgToMemory } from "../configs/memory.js";
 
 export const agent = async (req, res) => {
   try {
-    const { prompt, conversationId } = req.body;
+    const { prompt, conversationId, agent } = req.body;
 
     if (typeof prompt !== "string" || !prompt.trim() || !conversationId) {
       return res.status(400).json({
@@ -17,6 +17,7 @@ export const agent = async (req, res) => {
     const response = await graph.invoke({
       prompt,
       conversationId,
+      agent,
     });
 
     const aiResponse = response.aiResponse;
@@ -33,12 +34,14 @@ export const agent = async (req, res) => {
       conversationId,
       role: "assistant",
       content: aiResponse,
+      images: response.images,
     });
 
     await addNewMsgToMemory(conversationId, "assistant", aiResponse);
 
     return res.status(200).json({
       aiResponse: aiResponse,
+      images: response.images,
     });
   } catch (error) {
     console.error(

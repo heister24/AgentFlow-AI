@@ -13,7 +13,17 @@ export const chatAgent = async (state) => {
     const history = await getMemory(state.conversationId);
     const safeHistory = Array.isArray(history) ? history : [];
 
+    const searchContext = state.searchToolResult
+      ? `Web Search Result:
+            ${JSON.stringify(state.searchToolResult)} 
+            Answer user using only above search result`
+      : "";
+
     const systemPrompt = `You are AgentFlow-AI, an intelligent assistant
+
+          ${searchContext}
+          If search context available then use search result to answer and do not  mention internal tools.
+          
           FORMATTING:
                 - Use headings for long or multi-section answers.
                 - Use bullet points for lists and key takeaways.

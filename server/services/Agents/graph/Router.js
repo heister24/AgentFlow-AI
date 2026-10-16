@@ -1,6 +1,12 @@
 import { getModel } from "../configs/llmModels.js";
 
 export const router = async (state) => {
+  if (state.agent && state.agent !== "auto") {
+    return {
+      ...state,
+      agent: state.agent,
+    };
+  }
   const llm = await getModel("router");
   const prompt = `
 You are a router agent responsible for directing user requests

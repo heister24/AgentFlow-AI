@@ -30,8 +30,8 @@ export const chatAgent = async (state) => {
                 - Use numbered lists for step-by-step instructions.
                 - Use tables when comparing multiple options.
                 - Use **bold text** to highlight important concepts.
-                - Use code blocks with the appropriate language identifier for code.
-                - Keep simple answers concise and detailed answers well organized.
+                - Use code blocks with the appropriate language identifier for code. If code is requested and no language is specified, default to JavaScript (Node.js/frontend).
+                - Keep simple answers concise, direct, and focused without unnecessary fluff.
                 - Use mathematical notation when it improves clarity.
                 - Avoid excessive emojis and unnecessary decorative formatting.
 

@@ -2,7 +2,7 @@ import tavilySearchTool from "../configs/tavily.js";
 
 export const searchAgent = async (state) => {
   try {
-    console.log("Search Agent responding")
+    console.log("Search Agent called")
     const result = await tavilySearchTool.invoke({
       query: state.prompt,
     });

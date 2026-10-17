@@ -28,6 +28,10 @@ import { setUserData } from "../redux/slices/userSlice";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { setSelectedConvMsg } from "../redux/slices/messagesSlice";
+import {
+  setActiveArtifact,
+  clearArtifact,
+} from "../redux/slices/artifactSlice";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -62,6 +66,7 @@ const Sidebar = () => {
         dispatch(addConversation(response));
         dispatch(setSelectedConversation(response));
         dispatch(setSelectedConvMsg([]));
+        dispatch(clearArtifact());
         setConversationMenuOpen(null);
         setEditTitle(null);
       }
@@ -135,6 +140,7 @@ const Sidebar = () => {
       if (selectedConversation?._id === id) {
         dispatch(setSelectedConvMsg([]));
         dispatch(setSelectedConversation(null));
+        dispatch(clearArtifact());
       }
 
       setConversationMenuOpen(null);
@@ -156,6 +162,16 @@ const Sidebar = () => {
       const response = await getConversationById(id);
       dispatch(setSelectedConversation(response.conversation));
       dispatch(setSelectedConvMsg(response.messages));
+
+      const lastArtifactMsg = [...(response.messages || [])]
+        .reverse()
+        .find((m) => m.artifacts && m.artifacts.length > 0 && m.artifacts[0].files?.length > 0);
+
+      if (lastArtifactMsg) {
+        dispatch(setActiveArtifact(lastArtifactMsg.artifacts[0]));
+      } else {
+        dispatch(clearArtifact());
+      }
     } catch (error) {
       console.error("Failed to open conversation:", error);
     }

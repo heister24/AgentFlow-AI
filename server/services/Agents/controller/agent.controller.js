@@ -34,14 +34,16 @@ export const agent = async (req, res) => {
       conversationId,
       role: "assistant",
       content: aiResponse,
-      images: response.images,
+      images: response?.images,
+      artifacts: response?.artifacts,
     });
 
     await addNewMsgToMemory(conversationId, "assistant", aiResponse);
 
     return res.status(200).json({
       aiResponse: aiResponse,
-      images: response.images,
+      images: response?.images,
+      artifacts: response?.artifacts,
     });
   } catch (error) {
     console.error(

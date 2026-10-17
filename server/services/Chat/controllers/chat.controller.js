@@ -46,7 +46,9 @@ export const getConversationById = async (req, res) => {
   try {
     const conversationId = req.params.id;
     const conversation = await Conversation.findById(conversationId);
-    const messages = await Message.find({ conversationId: conversationId });
+    const messages = await Message.find({ conversationId: conversationId }).sort({
+      createdAt: 1,
+    });
     return res.status(200).json({ conversation, messages });
   } catch (error) {
     console.log(`Error While fetching specific conversation : ${error}`);
@@ -138,12 +140,13 @@ export const deleteConversationById = async (req, res) => {
 
 export const saveMessage = async (req, res) => {
   try {
-    const { conversationId, role, content, images } = req.body;
+    const { conversationId, role, content, images, artifacts } = req.body;
     const message = await Message.create({
       conversationId,
       role,
       content,
       images,
+      artifacts,
     });
     return res.status(200).json(message);
   } catch (error) {
@@ -159,7 +162,7 @@ export const getAllMessages = async (req, res) => {
   try {
     const messages = await Message.find({
       conversationId: req.params.id,
-    }).sort({ updatedAt: -1 });
+    }).sort({ createdAt: 1 });
     return res.status(200).json(messages);
   } catch (error) {
     console.log(`Get All Message Error : ${error}`);

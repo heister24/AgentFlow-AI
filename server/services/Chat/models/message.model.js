@@ -1,5 +1,26 @@
 import mongoose from "mongoose";
 
+const filesSchema = new mongoose.Schema(
+  {
+    name: String,
+    content: String,
+  },
+  {
+    _id: false,
+  },
+);
+
+const artifactsSchema = new mongoose.Schema(
+  {
+    id: Number,
+    type: String,
+    files: [filesSchema],
+  },
+  {
+    _id: false,
+  },
+);
+
 const messageSchema = new mongoose.Schema(
   {
     conversationId: {
@@ -14,6 +35,7 @@ const messageSchema = new mongoose.Schema(
       type: String,
     },
     images: [String],
+    artifacts: [artifactsSchema],
   },
   { timestamps: true },
 );

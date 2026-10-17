@@ -1,14 +1,21 @@
-import { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Check, Copy, Eye, FileCode, Layers } from "lucide-react";
+import {
+  setActiveArtifact,
+  setArtifactOpen,
+} from "../redux/slices/artifactSlice";
 
 const ChatMessagesSection = () => {
+  const dispatch = useDispatch();
   const { selectedConversation } = useSelector((state) => state.conversation);
   const { selectedConvMsgs = [] } = useSelector((state) => state.message);
   const messagesEndRef = useRef(null);
+  const [copiedCodeIndex, setCopiedCodeIndex] = useState(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -16,20 +23,22 @@ const ChatMessagesSection = () => {
 
   const showWelcome = !selectedConversation && selectedConvMsgs.length === 0;
 
-  const handleCopyCode = async (code) => {
+  const handleCopyCode = async (code, indexKey) => {
     try {
       await navigator.clipboard.writeText(code);
+      setCopiedCodeIndex(indexKey);
+      setTimeout(() => setCopiedCodeIndex(null), 2000);
     } catch (error) {
       console.error("Failed to copy code:", error);
     }
   };
 
   return (
-    <section className="flex h-full min-h-0 flex-col overflow-hidden bg-[#0d0e11]">
+    <section className="flex h-full min-h-0 flex-col overflow-hidden bg-[#0d0d0d]">
       {showWelcome ? (
         <div className="flex flex-1 items-center justify-center px-5">
           <div className="max-w-xl text-center">
-            <h1 className="text-2xl font-semibold tracking-tight text-gray-100 sm:text-3xl">
+            <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
               How can I help you today?
             </h1>
             <p className="mt-3 text-sm leading-6 text-gray-400 sm:text-base">
@@ -49,20 +58,31 @@ const ChatMessagesSection = () => {
                 className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[90%] wrap-break-word sm:max-w-[80%] lg:max-w-[75%] ${isUser ? "rounded-2xl rounded-br-md bg-[#212123] px-4 py-3 text-gray-100" : "rounded-2xl rounded-bl-md border border-[#282b36] bg-[#1a1c23] px-5 py-3.5 text-gray-200"}`}
+                  className={`max-w-[90%] wrap-break-word sm:max-w-[82%] lg:max-w-[78%] transition-all ${
+                    isUser
+                      ? "rounded-2xl rounded-br-sm border border-white/10 bg-[#222222] px-4 py-3 text-white shadow-sm"
+                      : "rounded-2xl rounded-bl-sm border border-white/10 bg-[#171717] px-5 py-4 text-gray-200 shadow-sm"
+                  }`}
                 >
+                  {/* Uploaded Images */}
                   {msg.images?.length > 0 && (
                     <div
-                      className={`mb-4 grid gap-3 ${msg.images.length === 1 ? "grid-cols-1" : msg.images.length === 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-3"}`}
+                      className={`mb-4 grid gap-3 ${
+                        msg.images.length === 1
+                          ? "grid-cols-1"
+                          : msg.images.length === 2
+                            ? "grid-cols-2"
+                            : "grid-cols-2 sm:grid-cols-3"
+                      }`}
                     >
                       {msg.images.map((image, imageIndex) => (
                         <div
                           key={imageIndex}
-                          className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10 bg-[#111318]"
+                          className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10 bg-[#111111]"
                         >
                           <img
                             src={image}
-                            alt={`Uploaded image ${imageIndex + 1}`}
+                            alt={`Uploaded attachment ${imageIndex + 1}`}
                             loading="lazy"
                             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                           />
@@ -71,11 +91,12 @@ const ChatMessagesSection = () => {
                     </div>
                   )}
 
+                  {/* Markdown Content */}
                   <Markdown
                     remarkPlugins={[remarkGfm]}
                     components={{
                       p: ({ children }) => (
-                        <p className="mb-2.5 text-[15px] leading-7 last:mb-0">
+                        <p className="mb-2.5 text-[15px] leading-7 last:mb-0 text-gray-200">
                           {children}
                         </p>
                       ),
@@ -90,7 +111,7 @@ const ChatMessagesSection = () => {
                         </ol>
                       ),
                       li: ({ children }) => (
-                        <li className="leading-7">{children}</li>
+                        <li className="leading-7 text-gray-200">{children}</li>
                       ),
                       h1: ({ children }) => (
                         <h1 className="mb-2 mt-4 text-xl font-bold text-white">
@@ -108,7 +129,7 @@ const ChatMessagesSection = () => {
                         </h3>
                       ),
                       blockquote: ({ children }) => (
-                        <blockquote className="my-2.5 border-l-3 border-gray-500 pl-3 italic text-gray-300">
+                        <blockquote className="my-2.5 rounded-r-lg border-l-2 border-white/30 bg-white/5 pl-3.5 py-1 italic text-gray-300">
                           {children}
                         </blockquote>
                       ),
@@ -122,19 +143,38 @@ const ChatMessagesSection = () => {
 
                         if (isBlock) {
                           const language = match[1].toLowerCase();
+                          const snippetId = `${index}-${code.slice(0, 15)}`;
+                          const isCopied = copiedCodeIndex === snippetId;
 
                           return (
-                            <div className="my-4 min-w-0 max-w-full overflow-hidden rounded-xl border border-white/10">
-                              <div className="flex items-center justify-between gap-3 border-b border-white/5 bg-[#171922] px-4 py-2">
-                                <span className="text-xs font-medium capitalize text-gray-400">
+                            <div className="my-4 min-w-0 max-w-full overflow-hidden rounded-xl border border-white/10 bg-[#101010] shadow-md">
+                              <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-[#1c1c1c] px-4 py-2">
+                                <span className="text-xs font-medium font-mono text-gray-300">
                                   {language}
                                 </span>
                                 <button
                                   type="button"
-                                  onClick={() => handleCopyCode(code)}
-                                  className="shrink-0 rounded-md px-2 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white"
+                                  onClick={() =>
+                                    handleCopyCode(code, snippetId)
+                                  }
+                                  className="flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
                                 >
-                                  Copy code
+                                  {isCopied ? (
+                                    <>
+                                      <Check
+                                        size={13}
+                                        className="text-emerald-400"
+                                      />
+                                      <span className="text-emerald-400 font-medium">
+                                        Copied
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Copy size={13} />
+                                      <span>Copy code</span>
+                                    </>
+                                  )}
                                 </button>
                               </div>
 
@@ -145,7 +185,7 @@ const ChatMessagesSection = () => {
                                 customStyle={{
                                   margin: 0,
                                   padding: "16px",
-                                  background: "#0f1015",
+                                  background: "#101010",
                                   fontSize: "13px",
                                   lineHeight: "1.7",
                                   overflowX: "auto",
@@ -168,7 +208,7 @@ const ChatMessagesSection = () => {
 
                         return (
                           <code
-                            className="break-words rounded bg-[#282b37] px-1.5 py-0.5 font-mono text-xs text-sky-300"
+                            className="break-words rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-xs text-gray-200"
                             {...props}
                           >
                             {children}
@@ -176,7 +216,7 @@ const ChatMessagesSection = () => {
                         );
                       },
 
-                      hr: () => <hr className="my-3 border-white/10" />,
+                      hr: () => <hr className="my-4 border-white/10" />,
                       strong: ({ children }) => (
                         <strong className="font-semibold text-white">
                           {children}
@@ -187,30 +227,30 @@ const ChatMessagesSection = () => {
                           href={href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-400 underline hover:text-blue-300"
+                          className="text-white underline decoration-white/40 hover:decoration-white transition"
                         >
                           {children}
                         </a>
                       ),
                       table: ({ children }) => (
-                        <div className="my-4 max-w-full overflow-x-auto rounded-lg border border-white/10">
+                        <div className="my-4 max-w-full overflow-x-auto rounded-xl border border-white/10 bg-[#161616]">
                           <table className="w-full border-collapse text-left text-sm">
                             {children}
                           </table>
                         </div>
                       ),
                       thead: ({ children }) => (
-                        <thead className="bg-[#252833] text-gray-100">
+                        <thead className="bg-[#1f1f1f] text-gray-100 border-b border-white/10">
                           {children}
                         </thead>
                       ),
                       th: ({ children }) => (
-                        <th className="border border-white/10 px-3 py-2 font-semibold">
+                        <th className="border border-white/10 px-3.5 py-2 font-semibold">
                           {children}
                         </th>
                       ),
                       td: ({ children }) => (
-                        <td className="border border-white/10 px-3 py-2 text-gray-300">
+                        <td className="border border-white/10 px-3.5 py-2 text-gray-300">
                           {children}
                         </td>
                       ),
@@ -218,6 +258,54 @@ const ChatMessagesSection = () => {
                   >
                     {msg.content}
                   </Markdown>
+
+                  {/* Sandbox Card */}
+                  {!isUser && msg.artifacts?.[0]?.files?.length > 0 && (
+                    <div className="mt-4 rounded-xl border border-white/10 bg-[#1f1f1f] p-3.5 transition-colors duration-200 hover:border-white/20 shadow-sm">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex items-center gap-2.5">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300">
+                            <Layers size={16} />
+                          </div>
+                          <div>
+                            <div className="text-xs font-semibold text-white">
+                              Generated Code Sandbox
+                            </div>
+                            <div className="text-[11px] text-gray-400">
+                              {msg.artifacts[0].files.length}{" "}
+                              {msg.artifacts[0].files.length === 1
+                                ? "file"
+                                : "files"}{" "}
+                              ready
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            dispatch(setActiveArtifact(msg.artifacts[0]));
+                            dispatch(setArtifactOpen(true));
+                          }}
+                          className="flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-1.5 text-xs font-medium text-[#111111] shadow-sm transition-all duration-200 hover:bg-gray-100 active:scale-95 cursor-pointer"
+                        >
+                          <Eye size={14} />
+                          <span>Open Sandbox</span>
+                        </button>
+                      </div>
+
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {msg.artifacts[0].files.map((file, idx) => (
+                          <span
+                            key={idx}
+                            className="flex items-center gap-1.5 rounded-md border border-white/10 bg-[#141414] px-2.5 py-1 text-[11px] font-mono text-gray-300"
+                          >
+                            <FileCode size={13} className="text-gray-400" />
+                            {file.name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             );

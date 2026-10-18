@@ -142,7 +142,7 @@ const ChatInputSection = () => {
             onKeyDown={handleKeyDown}
             disabled={isSubmitting}
             rows={1}
-            className="hide-scrollbar block min-h-10.5 max-h-48 w-full resize-none overflow-y-auto bg-transparent px-4 pt-3 pb-1 text-[14px] leading-6 text-white outline-none placeholder:text-gray-500 disabled:opacity-60 sm:text-[15px]"
+            className="hide-scrollbar block min-h-10.5 max-h-48 w-full resize-none overflow-y-auto bg-transparent px-4 pt-3 pb-1 text-[14px] leading-6 text-white outline-none disabled:opacity-60 sm:text-[15px]"
           />
 
           {/* Action Toolbar */}

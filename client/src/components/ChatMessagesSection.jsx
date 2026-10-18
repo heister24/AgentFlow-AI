@@ -9,6 +9,7 @@ import {
   setActiveArtifact,
   setArtifactOpen,
 } from "../redux/slices/artifactSlice";
+import GeneratedImageCard from "./GeneratedImageCard";
 
 const ChatMessagesSection = () => {
   const dispatch = useDispatch();
@@ -78,7 +79,7 @@ const ChatMessagesSection = () => {
                       {msg.images.map((image, imageIndex) => (
                         <div
                           key={imageIndex}
-                          className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10 bg-[#111111]"
+                          className="group relative aspect-4/3 overflow-hidden rounded-xl border border-white/10 bg-[#111111]"
                         >
                           <img
                             src={image}
@@ -96,7 +97,7 @@ const ChatMessagesSection = () => {
                     remarkPlugins={[remarkGfm]}
                     components={{
                       p: ({ children }) => (
-                        <p className="mb-2.5 text-[15px] leading-7 last:mb-0 text-gray-200">
+                        <p className="text-[15px] leading-7 last:mb-0 text-gray-200">
                           {children}
                         </p>
                       ),
@@ -208,7 +209,7 @@ const ChatMessagesSection = () => {
 
                         return (
                           <code
-                            className="break-words rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-xs text-gray-200"
+                            className="wrap-break-word rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-xs text-gray-200"
                             {...props}
                           >
                             {children}
@@ -216,6 +217,9 @@ const ChatMessagesSection = () => {
                         );
                       },
 
+                      img: ({ src, alt }) => (
+                        <GeneratedImageCard src={src} alt={alt} />
+                      ),
                       hr: () => <hr className="my-4 border-white/10" />,
                       strong: ({ children }) => (
                         <strong className="font-semibold text-white">
@@ -227,7 +231,7 @@ const ChatMessagesSection = () => {
                           href={href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-white underline decoration-white/40 hover:decoration-white transition"
+                          className="text-indigo-400 hover:text-indigo-300 underline decoration-indigo-400/40 hover:decoration-indigo-300 transition"
                         >
                           {children}
                         </a>

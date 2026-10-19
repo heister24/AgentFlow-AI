@@ -22,14 +22,27 @@ const openRouterLLM = new ChatOpenRouter({
   maxTokens: 8192,
 });
 
+const pdfLLM = new ChatGroq({
+  model: "openai/gpt-oss-120b",
+  apiKey: process.env.GROQ_API_KEY,
+  temperature: 0.2,
+  maxTokens: 8192,
+  maxRetries: 3,
+  modelKwargs: { response_format: { type: "json_object" } },
+});
+
 export const getModel = (agent) => {
   switch (agent) {
     case "chat":
       return groqLLM;
+    case "chat_backup":
+      return openRouterLLM;
     case "search":
       return groqLLM;
     case "coding":
       return openRouterLLM;
+    case "pdf":
+      return pdfLLM;
     default:
       return groqLLM;
   }

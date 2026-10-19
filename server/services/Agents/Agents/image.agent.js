@@ -50,7 +50,7 @@ export const imageAgent = async (state) => {
 
     try {
       await uploadOnS3(filename, buffer, contentType);
-      displayUrl = await getDataFromS3(filename, 3000);
+      displayUrl = await getDataFromS3(filename, 5 * 60);
       isS3 = true;
     } catch (s3Error) {
       console.warn(

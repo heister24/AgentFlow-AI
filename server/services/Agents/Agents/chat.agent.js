@@ -6,71 +6,110 @@ import {
 import { getModel } from "../configs/llmModels.js";
 import { getMemory } from "../configs/memory.js";
 
+const formatSearchContext = (searchToolResult) => {
+  if (!searchToolResult) return "";
+
+  const results = Array.isArray(searchToolResult)
+    ? searchToolResult
+    : Array.isArray(searchToolResult.results)
+      ? searchToolResult.results
+      : [];
+
+  if (results.length === 0) return "";
+
+  const snippets = results.slice(0, 4).map((item, i) => {
+    const title = item.title ? `[${i + 1}] ${item.title}` : `[${i + 1}] Source`;
+    const url = item.url ? ` (${item.url})` : "";
+    const cleanContent = String(item.content || item.snippet || "")
+      .replace(/\s+/g, " ")
+      .slice(0, 350)
+      .trim();
+
+    return `${title}${url}\n${cleanContent}`;
+  });
+
+  return `\n\nWEB SEARCH RESULTS:\n${snippets.join("\n\n")}\n\nUse the above search results to provide an up-to-date, accurate answer with relevant citations. Do not mention internal tool names.\n`;
+};
+
 export const chatAgent = async (state) => {
   try {
     const llm = await getModel("chat");
 
-    const history = await getMemory(state.conversationId);
+    let history = [];
+    try {
+      history = await getMemory(state.conversationId);
+    } catch (memErr) {
+      console.warn("Could not load memory, proceeding with fresh context:", memErr.message);
+    }
     const safeHistory = Array.isArray(history) ? history : [];
 
-    const searchContext = state.searchToolResult
-      ? `Web Search Result:
-            ${JSON.stringify(state.searchToolResult)} 
-            Answer user using only above search result`
-      : "";
+    // Concise, formatted search context instead of raw multi-kilobyte JSON dump
+    const searchContext = formatSearchContext(state.searchToolResult);
 
-    const systemPrompt = `You are AgentFlow-AI, an intelligent assistant
+    const systemPrompt = `You are AgentFlow-AI, an intelligent assistant.
+${searchContext}
+FORMATTING:
+- Use headings for long or multi-section answers.
+- Use bullet points for lists and key takeaways.
+- Use numbered lists for step-by-step instructions.
+- Use tables when comparing options.
+- Use **bold text** to highlight important concepts.
+- Use code blocks with appropriate language tags when providing code.
+- Keep simple answers concise, direct, and focused without unnecessary fluff.
 
-          ${searchContext}
-          If search context available then use search result to answer and do not  mention internal tools.
-          
-          FORMATTING:
-                - Use headings for long or multi-section answers.
-                - Use bullet points for lists and key takeaways.
-                - Use numbered lists for step-by-step instructions.
-                - Use tables when comparing multiple options.
-                - Use **bold text** to highlight important concepts.
-                - Use code blocks with the appropriate language identifier for code. If code is requested and no language is specified, default to JavaScript (Node.js/frontend).
-                - Keep simple answers concise, direct, and focused without unnecessary fluff.
-                - Use mathematical notation when it improves clarity.
-                - Avoid excessive emojis and unnecessary decorative formatting.
-
-                CONVERSATION STYLE:
-                - Be friendly, professional, and conversational.
-                - Avoid robotic or overly formal responses.
-                - Do not repeat the user's question unnecessarily.
-                - Match the user's preferred language when appropriate.
-                - For beginners, explain concepts step by step.
-                - For experienced developers, prioritize technical depth and efficiency.
-
-                RESPONSE QUALITY:
-                - Answer the main question first.
-                - Provide examples when they improve understanding.
-                - Include actionable next steps when useful.
-                - Keep responses focused on the user's actual request.
-
-                One important note if user ask normal question then dont give long answer.`;
+CONVERSATION STYLE:
+- Be friendly, professional, and conversational.
+- Match technical depth to the question.
+- Focus on the user's actual request.`;
 
     const userPrompt = state.prompt;
 
     const msgs = [new SystemMessage(systemPrompt)];
 
-    safeHistory.forEach((msg) => {
+    // Window history to the most recent 6 messages to stay well within TPM limits
+    const recentHistory = safeHistory.slice(-6);
+
+    recentHistory.forEach((msg) => {
       if (!msg || typeof msg.content !== "string") return;
 
+      const content =
+        msg.content.length > 1500
+          ? msg.content.slice(0, 1500) + "..."
+          : msg.content;
+
       if (msg.role === "user") {
-        msgs.push(new HumanMessage(msg.content));
+        msgs.push(new HumanMessage(content));
       }
       if (msg.role === "assistant") {
-        msgs.push(new AIMessage(msg.content));
+        msgs.push(new AIMessage(content));
       }
     });
 
     msgs.push(new HumanMessage(userPrompt));
 
-    const response = await llm.invoke(msgs);
+    let response;
+    try {
+      response = await llm.invoke(msgs);
+    } catch (llmError) {
+      const isRateLimit =
+        llmError.status === 413 ||
+        llmError.status === 429 ||
+        String(llmError.message).includes("413") ||
+        String(llmError.message).includes("rate_limit") ||
+        String(llmError.message).includes("tokens per minute") ||
+        String(llmError.message).includes("TPM");
 
-    // console.log(response.content);
+      if (isRateLimit) {
+        console.warn(
+          "Primary chat model hit TPM rate limit (413), automatically falling back to backup model...",
+        );
+        const backupLLM = await getModel("chat_backup");
+        response = await backupLLM.invoke(msgs);
+      } else {
+        throw llmError;
+      }
+    }
+
     return {
       ...state,
       aiResponse: response.content.trim(),

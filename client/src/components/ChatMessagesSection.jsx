@@ -10,6 +10,7 @@ import {
   setArtifactOpen,
 } from "../redux/slices/artifactSlice";
 import GeneratedImageCard from "./GeneratedImageCard";
+import GeneratedPdfCard from "./GeneratedPdfCard";
 
 const ChatMessagesSection = () => {
   const dispatch = useDispatch();
@@ -226,16 +227,29 @@ const ChatMessagesSection = () => {
                           {children}
                         </strong>
                       ),
-                      a: ({ href, children }) => (
-                        <a
-                          href={href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-indigo-400 hover:text-indigo-300 underline decoration-indigo-400/40 hover:decoration-indigo-300 transition"
-                        >
-                          {children}
-                        </a>
-                      ),
+                      a: ({ href, children }) => {
+                        const isPdf =
+                          href?.toLowerCase().includes(".pdf") ||
+                          href?.includes("/pdf-") ||
+                          href?.includes("application/pdf") ||
+                          (typeof children === "string" &&
+                            children.toLowerCase().includes("pdf"));
+
+                        if (isPdf) {
+                          return <GeneratedPdfCard href={href} title={children} />;
+                        }
+
+                        return (
+                          <a
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-indigo-400 hover:text-indigo-300 underline decoration-indigo-400/40 hover:decoration-indigo-300 transition"
+                          >
+                            {children}
+                          </a>
+                        );
+                      },
                       table: ({ children }) => (
                         <div className="my-4 max-w-full overflow-x-auto rounded-xl border border-white/10 bg-[#161616]">
                           <table className="w-full border-collapse text-left text-sm">

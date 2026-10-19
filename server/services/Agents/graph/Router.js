@@ -28,8 +28,8 @@ Rules:
    and software development questions.
 4. Select "search" when the user needs current information,
    web research, or information that requires searching online.
-5. Select "pdf" when the user wants to upload, read, analyze,
-   summarize, or ask questions about a PDF document.
+5. Select "pdf" when the user wants to generate, create, export,
+   upload, read, analyze, summarize, or format a PDF document or report.
 6. Select "ppt" when the user wants to create, edit, or analyze
    a PowerPoint presentation.
 7. Select "image" when the user wants to generate, edit,
@@ -49,9 +49,18 @@ image
 User Query:${state.prompt}`;
 
   const response = await llm.invoke(prompt);
-  // console.log(response);
+  const rawAgent = String(response.content || "").trim().toLowerCase();
+  const validAgents = ["chat", "coding", "search", "pdf", "ppt", "image"];
+  let matchedAgent = "chat";
+  for (const agentName of validAgents) {
+    if (rawAgent === agentName || rawAgent.includes(agentName)) {
+      matchedAgent = agentName;
+      break;
+    }
+  }
+
   return {
     ...state,
-    agent: response.content.trim().toLowerCase(),
+    agent: matchedAgent,
   };
 };

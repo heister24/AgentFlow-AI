@@ -11,6 +11,7 @@ import {
 } from "../redux/slices/artifactSlice";
 import GeneratedImageCard from "./GeneratedImageCard";
 import GeneratedPdfCard from "./GeneratedPdfCard";
+import GeneratedPptCard from "./GeneratedPptCard";
 
 const ChatMessagesSection = () => {
   const dispatch = useDispatch();
@@ -237,6 +238,20 @@ const ChatMessagesSection = () => {
 
                         if (isPdf) {
                           return <GeneratedPdfCard href={href} title={children} />;
+                        }
+
+                        const isPpt =
+                          href?.toLowerCase().includes(".pptx") ||
+                          href?.toLowerCase().includes(".ppt") ||
+                          href?.includes("/ppt-") ||
+                          href?.includes("presentationml") ||
+                          (typeof children === "string" &&
+                            (children.toLowerCase().includes("powerpoint") ||
+                              children.toLowerCase().includes("presentation") ||
+                              children.toLowerCase().includes("ppt")));
+
+                        if (isPpt) {
+                          return <GeneratedPptCard href={href} title={children} />;
                         }
 
                         return (

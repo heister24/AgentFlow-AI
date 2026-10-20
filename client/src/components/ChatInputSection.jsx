@@ -116,9 +116,9 @@ const ChatInputSection = () => {
 
   const agents = [
     { id: "auto", icon: Zap, label: "Auto" },
-    { id: "coding", icon: Code2, label: "Coding" },
-    { id: "search", icon: Globe, label: "Search" },
     { id: "chat", icon: MessageSquare, label: "Chat" },
+    { id: "search", icon: Globe, label: "Search" },
+    { id: "coding", icon: Code2, label: "Coding" },
     { id: "pdf", icon: FileText, label: "PDF" },
     { id: "ppt", icon: Presentation, label: "PPT" },
     { id: "image", icon: Image, label: "Image" },

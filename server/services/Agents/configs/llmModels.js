@@ -31,6 +31,15 @@ const pdfLLM = new ChatGroq({
   modelKwargs: { response_format: { type: "json_object" } },
 });
 
+const pptLLM = new ChatGroq({
+  model: "openai/gpt-oss-120b",
+  apiKey: process.env.GROQ_API_KEY,
+  temperature: 0.3,
+  maxTokens: 8192,
+  maxRetries: 2,
+  modelKwargs: { response_format: { type: "json_object" } },
+});
+
 export const getModel = (agent) => {
   switch (agent) {
     case "chat":
@@ -43,6 +52,8 @@ export const getModel = (agent) => {
       return openRouterLLM;
     case "pdf":
       return pdfLLM;
+    case "ppt":
+      return pptLLM
     default:
       return groqLLM;
   }

@@ -22,6 +22,8 @@ import {
   setSelectedConversation,
 } from "../redux/slices/conversationSlice";
 import { setActiveArtifact } from "../redux/slices/artifactSlice";
+import getCurrentUser from "../features/getCurrentUser";
+import { setUserData } from "../redux/slices/userSlice";
 
 const ChatInputSection = () => {
   const [input, setInput] = useState("");
@@ -88,6 +90,11 @@ const ChatInputSection = () => {
 
       if (response?.artifacts && response.artifacts.length > 0) {
         dispatch(setActiveArtifact(response.artifacts[0]));
+      }
+
+      const updatedUser = await getCurrentUser();
+      if (updatedUser) {
+        dispatch(setUserData(updatedUser));
       }
     } catch (error) {
       console.error(

@@ -5,6 +5,7 @@ import {
 } from "@langchain/core/messages";
 import { getModel } from "../configs/llmModels.js";
 import { getMemory } from "../configs/memory.js";
+import deductCredits from "../utils/deductCredits.js";
 
 const formatSearchContext = (searchToolResult) => {
   if (!searchToolResult) return "";
@@ -39,7 +40,10 @@ export const chatAgent = async (state) => {
     try {
       history = await getMemory(state.conversationId);
     } catch (memErr) {
-      console.warn("Could not load memory, proceeding with fresh context:", memErr.message);
+      console.warn(
+        "Could not load memory, proceeding with fresh context:",
+        memErr.message,
+      );
     }
     const safeHistory = Array.isArray(history) ? history : [];
 
@@ -109,6 +113,8 @@ CONVERSATION STYLE:
         throw llmError;
       }
     }
+
+    await deductCredits(state.userId, "chat");
 
     return {
       ...state,

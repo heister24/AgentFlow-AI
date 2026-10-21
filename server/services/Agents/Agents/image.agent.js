@@ -2,6 +2,7 @@ import { getModel } from "../configs/llmModels.js";
 import axios from "axios";
 import { uploadOnS3 } from "../utils/uploadOnS3.js";
 import { getDataFromS3 } from "../utils/getDataFromS3.js";
+import deductCredits from "../utils/deductCredits.js";
 
 export const imageAgent = async (state) => {
   try {
@@ -62,6 +63,8 @@ export const imageAgent = async (state) => {
     const cleanPrompt = (state.prompt || "AI Artwork")
       .replace(/["\n\r[\]]/g, " ")
       .trim();
+
+    await deductCredits(state.userId, "image");
 
     return {
       ...state,

@@ -5,6 +5,7 @@ import { addNewMsgToMemory } from "../configs/memory.js";
 export const agent = async (req, res) => {
   try {
     const { prompt, conversationId, agent } = req.body;
+    const userId = req.headers["x-user-id"];
 
     if (typeof prompt !== "string" || !prompt.trim() || !conversationId) {
       return res.status(400).json({
@@ -18,6 +19,7 @@ export const agent = async (req, res) => {
       prompt,
       conversationId,
       agent,
+      userId,
     });
 
     const aiResponse = response.aiResponse;

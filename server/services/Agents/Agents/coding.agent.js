@@ -6,6 +6,7 @@ import {
 import { getModel } from "../configs/llmModels.js";
 import { getMemory } from "../configs/memory.js";
 import { extractFilesFromMarkdown } from "../utils/artifactExtractor.js";
+import deductCredits from "../utils/deductCredits.js";
 
 export const codingAgent = async (state) => {
   try {
@@ -121,6 +122,8 @@ Whenever you generate code files, complete projects, or script solutions:
             },
           ]
         : [];
+
+    await deductCredits(state.userId, "coding");
 
     return {
       ...state,

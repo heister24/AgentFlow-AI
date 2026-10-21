@@ -40,7 +40,14 @@ export const login = async (req, res) => {
       });
     }
 
+    if (!user.plan) user.plan = "free";
+    if (user.credits === undefined) user.credits = 100;
+    if (user.totalCredits === undefined) user.totalCredits = 100;
+    await user.save();
+
     const sessionId = crypto.randomUUID();
+    await redis.set(`user-sessionId`, sessionId);
+    await redis.set(`user-sessionId-${user._id}`, sessionId);
     await redis.set(
       `sessionId-${sessionId}`,
       JSON.stringify({
@@ -48,6 +55,10 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         avatar: user.avatar,
+        plan: user.plan,
+        credits: user.credits,
+        totalCredits: user.totalCredits,
+        planExpires: user.planExpires || null,
       }),
       "EX",
       7 * 24 * 60 * 60 * 1000,
@@ -64,9 +75,14 @@ export const login = async (req, res) => {
       success: true,
       message: "User logged in successfully",
       user: {
+        userId: user._id,
         name: user.name,
         email: user.email,
         avatar: user.avatar,
+        plan: user.plan,
+        credits: user.credits,
+        totalCredits: user.totalCredits,
+        planExpires: user.planExpires || null,
       },
     });
   } catch (error) {
@@ -99,6 +115,120 @@ export const logout = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Logout failed",
+    });
+  }
+};
+
+export const updateUserAfterPayment = async (req, res) => {
+  try {
+    const { plan, credits, userId } = req.body;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.json({
+        message: "User not found",
+      });
+    }
+
+    user.plan = plan;
+    user.credits += credits;
+    user.totalCredits += credits;
+    user.planExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    await user.save();
+
+    const sessionId =
+      (await redis.get(`user-sessionId-${userId}`)) ||
+      (await redis.get("user-sessionId"));
+    if (sessionId) {
+      await redis.set(
+        `sessionId-${sessionId}`,
+        JSON.stringify({
+          userId: user._id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
+          plan: user.plan,
+          credits: user.credits,
+          totalCredits: user.totalCredits,
+          planExpires: user.planExpires,
+        }),
+        "EX",
+        7 * 24 * 60 * 60 * 1000,
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server err",
+    });
+  }
+};
+
+export const deductCredits = async (req, res) => {
+  try {
+    const { userId, agent } = req.body;
+    const cost = {
+      chat: 1,
+      search: 5,
+      coding: 10,
+      pdf: 10,
+      ppt: 10,
+      image: 10,
+    };
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.json({
+        message: "User not found",
+      });
+    }
+
+    const costOfAgent = cost[agent] || 2;
+
+    if (user.credits < costOfAgent) {
+      return res.json({
+        message: "You dont have enough credits for this request",
+      });
+    }
+
+    user.credits -= costOfAgent;
+    await user.save();
+
+    const sessionId =
+      (await redis.get(`user-sessionId-${userId}`)) ||
+      (await redis.get("user-sessionId"));
+    if (sessionId) {
+      await redis.set(
+        `sessionId-${sessionId}`,
+        JSON.stringify({
+          userId: user._id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
+          plan: user.plan,
+          credits: user.credits,
+          totalCredits: user.totalCredits,
+          planExpires: user.planExpires,
+        }),
+        "EX",
+        7 * 24 * 60 * 60 * 1000,
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Deducted Successful",
+      credits: user.credits,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
     });
   }
 };

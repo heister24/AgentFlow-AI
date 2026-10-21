@@ -10,6 +10,21 @@ const userSchema = new mongoose.Schema(
     email: String,
     name: String,
     avatar: String,
+    plan: {
+      type: String,
+      default: "free",
+    },
+    credits: {
+      type: Number,
+      default: 100,
+    },
+    totalCredits: {
+      type: Number,
+      default: 100,
+    },
+    planExpires: {
+      type: Date,
+    },
   },
   { timestamps: true },
 );

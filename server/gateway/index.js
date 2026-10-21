@@ -24,6 +24,7 @@ app.use(morgan("dev"));
 app.use("/api/auth", proxy(process.env.AUTH_URL));
 app.use("/api/chat", authMiddleware, headerWithProxy(process.env.CHAT_URL));
 app.use("/api/agent", authMiddleware, headerWithProxy(process.env.AGENT_URL));
+app.use("/api/billing",authMiddleware,headerWithProxy(process.env.PAYMENT_URL));
 app.get("/api/me", authMiddleware, getCurrentUser);
 
 app.get("/health", (req, res) => {

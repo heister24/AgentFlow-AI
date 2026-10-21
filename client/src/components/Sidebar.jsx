@@ -8,6 +8,7 @@ import {
   Trash2,
   MessageSquare,
   LogOut,
+  Receipt,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -165,7 +166,12 @@ const Sidebar = () => {
 
       const lastArtifactMsg = [...(response.messages || [])]
         .reverse()
-        .find((m) => m.artifacts && m.artifacts.length > 0 && m.artifacts[0].files?.length > 0);
+        .find(
+          (m) =>
+            m.artifacts &&
+            m.artifacts.length > 0 &&
+            m.artifacts[0].files?.length > 0,
+        );
 
       if (lastArtifactMsg) {
         dispatch(setActiveArtifact(lastArtifactMsg.artifacts[0]));
@@ -392,6 +398,7 @@ const Sidebar = () => {
             alt=""
             className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-white/20"
           />
+
           {sidebarOpen && (
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-white">
@@ -402,6 +409,22 @@ const Sidebar = () => {
               </p>
             </div>
           )}
+
+          {/* Billing Icon */}
+          <button
+            type="button"
+            onClick={() => navigate("/payment")}
+            title="Billing"
+            aria-label="Billing"
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/10 hover:text-white ${
+              sidebarOpen ? "" : ""
+            }`}
+          >
+            <Receipt size={17} />
+            {sidebarOpen && <span className="sr-only">Billing</span>}
+          </button>
+
+          {/* Logout */}
           <button
             type="button"
             onClick={handleLogoutUser}

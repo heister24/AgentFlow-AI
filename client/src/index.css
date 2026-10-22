@@ -1,22 +1,85 @@
 @import "tailwindcss";
 
-/* Custom Sleek Scrollbar */
+:root {
+  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+code, kbd, samp, pre {
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* Retro Grid Background Pattern */
+.retro-grid {
+  background-color: #0d0d0d;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Retro Box Shadows with crisp hard offsets */
+.retro-shadow-sm {
+  box-shadow: 1px 1px 0px rgba(255, 255, 255, 0.15);
+}
+
+.retro-shadow {
+  box-shadow: 2px 2px 0px rgba(255, 255, 255, 0.14);
+}
+
+.retro-shadow-dark {
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.7), 3px 3px 0px rgba(255, 255, 255, 0.1);
+}
+
+/* Interactive Retro Card with subtle hover lift */
+.retro-card {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s ease;
+  box-shadow: 1.5px 1.5px 0px rgba(255, 255, 255, 0.12);
+}
+
+.retro-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 0px rgba(255, 255, 255, 0.2);
+}
+
+/* Tactile Retro Button */
+.retro-btn {
+  position: relative;
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.12s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.15s ease,
+              border-color 0.15s ease,
+              color 0.15s ease;
+  box-shadow: 2px 2px 0px rgba(255, 255, 255, 0.15);
+}
+
+.retro-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 2.5px 2.5px 0px rgba(255, 255, 255, 0.25);
+}
+
+.retro-btn:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 0px 0px 0px rgba(255, 255, 255, 0);
+}
+
+/* Retro Square-Edged Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #141416;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .hide-scrollbar {
@@ -26,6 +89,19 @@
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+@keyframes blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+.retro-cursor {
+  animation: blink 1s infinite;
 }
 
 @keyframes shimmer {
@@ -40,7 +116,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: scale(0.97);
+    transform: scale(0.98);
   }
   to {
     opacity: 1;
@@ -48,7 +124,82 @@
   }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-shimmer {
+  animation: shimmer 1.8s infinite linear;
 }
+
+.animate-fade-in {
+  animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-pop {
+  animation: pop 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes beaconAmber {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 7px rgba(245, 158, 11, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+}
+
+.retro-beacon-amber {
+  animation: beaconAmber 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+@keyframes beaconEmerald {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 7px rgba(52, 211, 153, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+  }
+}
+
+.retro-beacon-emerald {
+  animation: beaconEmerald 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+
 

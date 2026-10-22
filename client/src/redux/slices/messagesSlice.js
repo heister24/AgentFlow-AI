@@ -4,6 +4,7 @@ const messageSlice = createSlice({
   name: "message",
   initialState: {
     selectedConvMsgs: [],
+    isAgentThinking: false,
   },
   reducers: {
     setSelectedConvMsg: (state, action) => {
@@ -12,9 +13,12 @@ const messageSlice = createSlice({
     addMsgToSelectedConv: (state, action) => {
       state.selectedConvMsgs.push(action.payload);
     },
+    setAgentThinking: (state, action) => {
+      state.isAgentThinking = Boolean(action.payload);
+    },
   },
 });
 
-export const { setSelectedConvMsg, addMsgToSelectedConv } =
+export const { setSelectedConvMsg, addMsgToSelectedConv, setAgentThinking } =
   messageSlice.actions;
 export default messageSlice.reducer;

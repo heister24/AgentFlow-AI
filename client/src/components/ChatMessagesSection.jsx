@@ -16,13 +16,15 @@ import GeneratedPptCard from "./GeneratedPptCard";
 const ChatMessagesSection = () => {
   const dispatch = useDispatch();
   const { selectedConversation } = useSelector((state) => state.conversation);
-  const { selectedConvMsgs = [] } = useSelector((state) => state.message);
+  const { selectedConvMsgs = [], isAgentThinking = false } = useSelector(
+    (state) => state.message,
+  );
   const messagesEndRef = useRef(null);
   const [copiedCodeIndex, setCopiedCodeIndex] = useState(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [selectedConvMsgs]);
+  }, [selectedConvMsgs, isAgentThinking]);
 
   const showWelcome = !selectedConversation && selectedConvMsgs.length === 0;
 
@@ -37,34 +39,38 @@ const ChatMessagesSection = () => {
   };
 
   return (
-    <section className="flex h-full min-h-0 flex-col overflow-hidden bg-[#0d0d0d]">
+    <section className="flex h-full min-h-0 flex-col overflow-hidden bg-transparent">
       {showWelcome ? (
         <div className="flex flex-1 items-center justify-center px-5">
           <div className="max-w-xl text-center">
-            <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+            <div className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-mono text-gray-300 mb-4 retro-shadow-sm">
+              <span className="text-emerald-400 font-bold">&gt;</span>
+              <span>SYSTEM READY</span>
+              <span className="inline-block w-1.5 h-3.5 bg-emerald-400 retro-cursor ml-1" />
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
               How can I help you today?
             </h1>
             <p className="mt-3 text-sm leading-6 text-gray-400 sm:text-base">
-              Welcome to AgentFlow AI. Ask a question, explore an idea, or start
-              a conversation.
+              Welcome to AgentFlow. Ask a question, explore an idea, or run a workflow.
             </p>
           </div>
         </div>
       ) : (
-        <div className="hide-scrollbar flex-1 space-y-6 overflow-y-auto px-4 py-6 sm:px-8 lg:px-12">
+        <div className="hide-scrollbar flex-1 space-y-6 overflow-y-auto px-4 pt-10 pb-6 sm:px-8 sm:pt-12 lg:px-12">
           {selectedConvMsgs.map((msg, index) => {
             const isUser = msg.role === "user";
 
             return (
               <div
                 key={msg._id || index}
-                className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}
+                className={`flex w-full animate-slide-up ${isUser ? "justify-end" : "justify-start"}`}
               >
                 <div
                   className={`max-w-[90%] break-words sm:max-w-[82%] lg:max-w-[78%] transition-all ${
                     isUser
-                      ? "rounded-2xl rounded-br-sm border border-white/10 bg-[#222222] px-4 py-3 text-white shadow-sm"
-                      : "rounded-2xl rounded-bl-sm border border-white/10 bg-[#171717] px-5 py-4 text-gray-200 shadow-sm"
+                      ? "rounded-xl rounded-br-sm border border-white/15 bg-[#222222] px-4 py-3 text-white retro-shadow-sm"
+                      : "rounded-xl rounded-bl-sm border border-white/15 bg-[#171717] px-5 py-4 text-gray-200 retro-shadow-sm"
                   }`}
                 >
                   {/* Uploaded File (e.g. PDF) */}
@@ -160,7 +166,7 @@ const ChatMessagesSection = () => {
                           const isCopied = copiedCodeIndex === snippetId;
 
                           return (
-                            <div className="my-4 min-w-0 max-w-full overflow-hidden rounded-xl border border-white/10 bg-[#101010] shadow-md">
+                            <div className="my-4 min-w-0 max-w-full overflow-hidden rounded-xl border border-white/10 bg-[#101010] retro-shadow-sm transition-all">
                               <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-[#1c1c1c] px-4 py-2">
                                 <span className="text-xs font-medium font-mono text-gray-300">
                                   {language}
@@ -170,18 +176,13 @@ const ChatMessagesSection = () => {
                                   onClick={() =>
                                     handleCopyCode(code, snippetId)
                                   }
-                                  className="flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+                                  className="retro-btn flex items-center gap-1 rounded-md px-2.5 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
                                 >
                                   {isCopied ? (
-                                    <>
-                                      <Check
-                                        size={13}
-                                        className="text-emerald-400"
-                                      />
-                                      <span className="text-emerald-400 font-medium">
-                                        Copied
-                                      </span>
-                                    </>
+                                    <span className="flex items-center gap-1 text-emerald-400 animate-pop font-medium">
+                                      <Check size={13} />
+                                      <span>Copied</span>
+                                    </span>
                                   ) : (
                                     <>
                                       <Copy size={13} />
@@ -303,27 +304,32 @@ const ChatMessagesSection = () => {
                       ),
                     }}
                   >
-                    {msg.content}
+                    {(msg.content || "")
+                      .replace(
+                        /\*?Secure S3 (?:presentation )?download link generated by AgentFlow AI\.?\*?/gi,
+                        "",
+                      )
+                      .trim()}
                   </Markdown>
 
                   {/* Sandbox Card */}
                   {!isUser && msg.artifacts?.[0]?.files?.length > 0 && (
-                    <div className="mt-4 rounded-xl border border-white/10 bg-[#1f1f1f] p-3.5 transition-colors duration-200 hover:border-white/20 shadow-sm">
+                    <div className="mt-4 rounded-xl border border-white/15 bg-[#1a1a1c] p-3.5 retro-shadow-sm transition-all duration-200">
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center gap-2.5">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300">
-                            <Layers size={16} />
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-gray-300 retro-shadow-sm">
+                            <Layers size={15} />
                           </div>
                           <div>
                             <div className="text-xs font-semibold text-white">
-                              Generated Code Sandbox
+                              Code Sandbox
                             </div>
-                            <div className="text-[11px] text-gray-400">
-                              {msg.artifacts[0].files.length}{" "}
+                            <div className="text-[11px] font-mono text-gray-400">
+                              [ {msg.artifacts[0].files.length}{" "}
                               {msg.artifacts[0].files.length === 1
                                 ? "file"
                                 : "files"}{" "}
-                              ready
+                              ready ]
                             </div>
                           </div>
                         </div>
@@ -333,9 +339,9 @@ const ChatMessagesSection = () => {
                             dispatch(setActiveArtifact(msg.artifacts[0]));
                             dispatch(setArtifactOpen(true));
                           }}
-                          className="flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-1.5 text-xs font-medium text-[#111111] shadow-sm transition-all duration-200 hover:bg-gray-100 active:scale-95 cursor-pointer"
+                          className="retro-btn flex items-center gap-1.5 rounded-lg border border-white/15 bg-white px-3.5 py-1.5 text-xs font-mono font-medium text-[#111111] shadow-sm transition-all hover:bg-gray-100 active:scale-95 cursor-pointer"
                         >
-                          <Eye size={14} />
+                          <Eye size={13} />
                           <span>Open Sandbox</span>
                         </button>
                       </div>
@@ -344,9 +350,9 @@ const ChatMessagesSection = () => {
                         {msg.artifacts[0].files.map((file, idx) => (
                           <span
                             key={idx}
-                            className="flex items-center gap-1.5 rounded-md border border-white/10 bg-[#141414] px-2.5 py-1 text-[11px] font-mono text-gray-300"
+                            className="flex items-center gap-1.5 rounded-md border border-white/10 bg-[#121214] px-2.5 py-1 text-[11px] font-mono text-gray-300"
                           >
-                            <FileCode size={13} className="text-gray-400" />
+                            <FileCode size={12} className="text-gray-400" />
                             {file.name}
                           </span>
                         ))}
@@ -357,6 +363,28 @@ const ChatMessagesSection = () => {
               </div>
             );
           })}
+
+          {/* Agent Processing / Thinking Indicator */}
+          {isAgentThinking && (
+            <div className="flex w-full justify-start animate-slide-up">
+              <div className="flex items-center gap-2.5 rounded-xl rounded-bl-sm border border-white/15 bg-[#171717] px-4 py-2.5 text-xs font-mono text-gray-300 retro-shadow-sm">
+                <span className="text-emerald-400 font-bold">&gt;</span>
+                <span className="tracking-wide text-gray-300">PROCESSING</span>
+                <span className="inline-flex items-center gap-1 ml-0.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span
+                    className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"
+                    style={{ animationDelay: "150ms" }}
+                  />
+                  <span
+                    className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"
+                    style={{ animationDelay: "300ms" }}
+                  />
+                </span>
+              </div>
+            </div>
+          )}
+
           <div ref={messagesEndRef} />
         </div>
       )}

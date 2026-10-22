@@ -167,20 +167,20 @@ const Payment = () => {
   const userCurrentPlanId = userData?.plan?.toLowerCase() || "free";
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white p-5 sm:p-10 flex flex-col justify-between">
+    <div className="min-h-screen bg-[#0d0d0d] text-white p-5 sm:p-10 flex flex-col justify-between retro-grid">
       {/* Top Nav */}
       <div className="w-full max-w-5xl mx-auto flex items-center justify-between mb-8">
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 text-xs font-medium text-gray-400 hover:text-white transition-colors cursor-pointer"
+          className="flex items-center gap-2 text-xs font-mono text-gray-400 hover:text-white transition-colors cursor-pointer"
         >
           <ArrowLeft size={15} />
-          <span>Back</span>
+          <span>&lt; Back</span>
         </button>
 
         {userData && (
-          <div className="text-xs text-gray-400">
+          <div className="text-xs font-mono text-gray-400">
             <span>Balance: </span>
             <span className="font-semibold text-white">
               {(userData.credits ?? 100).toLocaleString("en-IN")}
@@ -194,17 +194,16 @@ const Payment = () => {
       <div className="w-full max-w-5xl mx-auto my-auto">
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-            Plans & Pricing
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight font-mono">
+            [ Plans & Pricing ]
           </h1>
           <p className="text-xs sm:text-sm text-gray-400 mt-2">
             Simple and transparent credit plans. Cancel anytime.
           </p>
-
           {/* Status Message Notification */}
           {statusMessage && (
             <div
-              className={`mt-4 max-w-lg mx-auto flex items-center gap-2.5 rounded-xl border px-4 py-2 text-xs font-medium text-left shadow-lg ${
+              className={`mt-4 max-w-lg mx-auto flex items-center gap-2.5 rounded-lg border px-4 py-2 text-xs font-mono text-left retro-shadow animate-pop ${
                 statusMessage.type === "success"
                   ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
                   : statusMessage.type === "error"
@@ -233,10 +232,10 @@ const Payment = () => {
             return (
               <div
                 key={plan.id}
-                className={`flex flex-col rounded-2xl border p-6 transition-colors ${
+                className={`flex flex-col rounded-xl border p-6 retro-card transition-all duration-200 animate-slide-up ${
                   plan.popular
-                    ? "border-white/20 bg-[#161618]"
-                    : "border-white/10 bg-[#141416]"
+                    ? "border-white/25 bg-[#161618] retro-shadow-dark ring-1 ring-white/10 hover:border-white/40"
+                    : "border-white/10 bg-[#141416] retro-shadow hover:border-white/30"
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -244,11 +243,11 @@ const Payment = () => {
                     {plan.name}
                   </h3>
                   {plan.popular ? (
-                    <span className="rounded-md border border-white/20 px-1.5 py-0.5 text-[10px] text-gray-300">
+                    <span className="rounded-md border border-white/20 bg-white/5 px-2 py-0.5 text-[10px] font-mono text-gray-200 retro-beacon-amber">
                       Popular
                     </span>
                   ) : isCurrent ? (
-                    <span className="rounded-md border border-white/15 px-1.5 py-0.5 text-[10px] text-gray-400">
+                    <span className="rounded-md border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] font-mono text-gray-400">
                       Active
                     </span>
                   ) : null}
@@ -283,14 +282,14 @@ const Payment = () => {
                   type="button"
                   disabled={isCurrent || plan.amount === 0 || isLoading}
                   onClick={() => handleSelectPlan(plan)}
-                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-medium transition-all duration-150 flex items-center justify-center gap-2 ${
+                  className={`w-full py-2.5 px-4 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2 ${
                     isCurrent
                       ? "bg-white/5 text-gray-500 cursor-default"
                       : plan.popular
-                        ? "bg-white text-black hover:bg-gray-200 cursor-pointer active:scale-95"
+                        ? "bg-white text-black hover:bg-gray-200 cursor-pointer retro-btn"
                         : plan.amount === 0
                           ? "bg-white/5 text-gray-400 cursor-default"
-                          : "border border-white/15 bg-white/10 text-white hover:bg-white/15 cursor-pointer active:scale-95"
+                          : "border border-white/15 bg-white/10 text-white hover:bg-white/15 cursor-pointer retro-btn"
                   }`}
                 >
                   {isLoading ? (

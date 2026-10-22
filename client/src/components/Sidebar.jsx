@@ -22,6 +22,8 @@ import {
   addConversation,
   setConversations,
   setSelectedConversation,
+  setSidebarOpen,
+  toggleSidebar,
 } from "../redux/slices/conversationSlice";
 import getConversationById from "../features/getConversationById";
 import deleteConversationById from "../features/deleteConversationById";
@@ -40,12 +42,11 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { conversations, selectedConversation } = useSelector(
+  const { conversations, selectedConversation, sidebarOpen } = useSelector(
     (state) => state.conversation,
   );
   const { userData } = useSelector((state) => state.user);
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [conversationMenuOpen, setConversationMenuOpen] = useState(null);
   const [editTitle, setEditTitle] = useState(null);
   const [title, setTitle] = useState("");
@@ -53,7 +54,7 @@ const Sidebar = () => {
   const [avatarError, setAvatarError] = useState(false);
 
   const toggleSidebarOpen = () => {
-    setSidebarOpen((prev) => !prev);
+    dispatch(toggleSidebar());
     setConversationMenuOpen(null);
   };
 
@@ -161,6 +162,9 @@ const Sidebar = () => {
   // Open a conversation
   const handleOpenConversation = async (id) => {
     setConversationMenuOpen(null);
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      dispatch(setSidebarOpen(false));
+    }
 
     try {
       const response = await getConversationById(id);
@@ -201,11 +205,22 @@ const Sidebar = () => {
   };
 
   return (
-    <aside
-      className={`${
-        sidebarOpen ? "w-64 min-w-[16rem]" : "w-16 min-w-16"
-      } flex h-screen shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#232428] p-3 text-white transition-all duration-300`}
-    >
+    <>
+      {/* Mobile Drawer Backdrop */}
+      {sidebarOpen && (
+        <div
+          onClick={() => dispatch(setSidebarOpen(false))}
+          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-xs md:hidden animate-fade-in"
+        />
+      )}
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 md:relative md:z-auto flex h-screen shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#232428] p-3 text-white transition-all duration-300 ${
+          sidebarOpen
+            ? "w-72 max-w-[85vw] md:w-64 md:min-w-[16rem] translate-x-0 shadow-2xl md:shadow-none"
+            : "-translate-x-full md:translate-x-0 md:w-16 md:min-w-16"
+        }`}
+      >
       {/* Header */}
       <div className="mb-4 flex min-h-10 items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
@@ -258,7 +273,7 @@ const Sidebar = () => {
           type="button"
           onClick={handleCreateNewChat}
           title="New chat"
-          className={`flex h-10 w-full items-center rounded-lg border border-white/10 bg-white/5 text-sm font-medium text-gray-200 transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer active:scale-[0.98] ${
+          className={`flex h-10 w-full items-center rounded-lg border border-white/10 bg-white/5 text-sm font-medium text-gray-200 transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer retro-btn ${
             sidebarOpen ? "gap-2.5 px-3" : "justify-center px-0"
           }`}
         >
@@ -270,12 +285,12 @@ const Sidebar = () => {
       {/* Conversation Area */}
       {sidebarOpen ? (
         <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden pr-1">
-          <p className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-            Conversations
+          <p className="mb-2 px-2 text-[10px] font-mono font-semibold uppercase tracking-wider text-gray-500">
+            [ Conversations ]
           </p>
 
           {conversations.length === 0 ? (
-            <div className="px-2 py-6 text-center text-xs text-gray-500">
+            <div className="px-2 py-6 text-center text-xs font-mono text-gray-500">
               No conversations yet
             </div>
           ) : (
@@ -290,15 +305,15 @@ const Sidebar = () => {
                     key={con._id}
                     className={`group relative min-w-0 rounded-lg text-sm transition-all duration-150 ${
                       isActive
-                        ? "bg-white/15 font-medium text-white shadow-sm"
-                        : "text-gray-300 hover:bg-white/10 hover:text-white"
+                        ? "bg-white/15 font-medium text-white retro-shadow-sm border border-white/15"
+                        : "text-gray-300 hover:bg-white/10 hover:text-white hover:translate-x-0.5"
                     }`}
                   >
                     {/* Conversation title */}
                     <div className="flex min-h-9 min-w-0 items-center gap-2 px-2.5 py-1">
                       <MessageSquare
                         size={15}
-                        className={`shrink-0 ${
+                        className={`shrink-0 transition-transform duration-200 group-hover:scale-105 ${
                           isActive
                             ? "text-white"
                             : "text-gray-400 group-hover:text-gray-300"
@@ -351,7 +366,7 @@ const Sidebar = () => {
 
                     {/* Action menu */}
                     {isMenuOpen && (
-                      <div className="mx-2 mb-2 flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#1b1c20] p-1.5 shadow-lg">
+                      <div className="mx-2 mb-2 flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#1b1c20] p-1.5 shadow-lg animate-pop origin-top">
                         {isEditing ? (
                           <>
                             <button
@@ -427,7 +442,7 @@ const Sidebar = () => {
             <button
               type="button"
               onClick={() => navigate("/payment")}
-              className="flex items-center gap-1.5 rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-medium text-gray-200 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
+              className="retro-btn flex items-center gap-1.5 rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-medium text-gray-200 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
             >
               <CreditCard size={12} className="text-gray-400" />
               <span>Billing</span>
@@ -440,7 +455,7 @@ const Sidebar = () => {
             type="button"
             onClick={() => navigate("/payment")}
             title={`Billing (${(userData?.credits ?? 100).toLocaleString()} credits)`}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+            className="retro-btn flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
           >
             <Receipt size={17} />
           </button>
@@ -495,6 +510,7 @@ const Sidebar = () => {
         </div>
       </div>
     </aside>
+    </>
   );
 };
 

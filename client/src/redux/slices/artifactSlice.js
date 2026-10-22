@@ -13,7 +13,11 @@ const artifactSlice = createSlice({
   initialState,
   reducers: {
     setActiveArtifact: (state, action) => {
-      const artifact = action.payload;
+      const payload = action.payload;
+      const artifact =
+        payload && payload.files ? payload : payload?.artifact || null;
+      const shouldOpen = payload?.open === true;
+
       state.activeArtifact = artifact;
       if (
         artifact &&
@@ -25,7 +29,9 @@ const artifactSlice = createSlice({
           f.name?.toLowerCase().endsWith(".html"),
         );
         state.activeTab = hasHtml ? "preview" : "code";
-        state.isOpen = true;
+        if (shouldOpen) {
+          state.isOpen = true;
+        }
       }
     },
     setSelectedFileName: (state, action) => {

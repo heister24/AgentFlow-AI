@@ -68,12 +68,19 @@ export const GeneratedPdfCard = ({ href, title }) => {
   };
 
   return (
-    <div className="my-3.5 w-full select-none">
-      <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] shadow-xl transition-all duration-300 hover:border-white/20 hover:shadow-2xl hover:shadow-blue-500/5">
+    <div className="my-3.5 w-full select-none animate-slide-up">
+      <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] retro-card hover:border-red-500/35">
+        {/* Animated download progress strip */}
+        {downloading && (
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-red-500/30 overflow-hidden z-20">
+            <div className="h-full w-full bg-linear-to-r from-red-400 via-rose-300 to-red-400 animate-shimmer" />
+          </div>
+        )}
+
         {/* Top Header Bar */}
         <div className="flex items-center justify-between border-b border-white/10 bg-[#1c1c1c]/90 px-4 py-2.5 backdrop-blur-md">
-          <div className="flex items-center gap-2">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="flex items-center gap-2.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 retro-beacon-emerald inline-block" />
             <span className="text-xs font-medium tracking-wide text-gray-200">
               PDF Document Ready
             </span>
@@ -84,15 +91,13 @@ export const GeneratedPdfCard = ({ href, title }) => {
               type="button"
               onClick={handleCopyLink}
               title="Copy PDF URL"
-              className="flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+              className="retro-btn flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
             >
               {copied ? (
-                <>
-                  <Check size={13} className="text-emerald-400" />
-                  <span className="text-emerald-400 text-[11px] font-medium">
-                    Copied
-                  </span>
-                </>
+                <span className="flex items-center gap-1 text-emerald-400 animate-pop">
+                  <Check size={13} />
+                  <span className="text-[11px] font-medium">Copied</span>
+                </span>
               ) : (
                 <>
                   <Copy size={13} />
@@ -108,22 +113,24 @@ export const GeneratedPdfCard = ({ href, title }) => {
         {/* Content Card Body */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4">
           <div className="flex items-start gap-3.5 min-w-0">
-            {/* PDF Red Badge Icon */}
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-red-500/20 to-red-600/10 border border-red-500/30 text-red-400 shadow-inner">
+            {/* PDF Red Badge Icon with interactive hover scale */}
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-red-500/20 to-red-600/10 border border-red-500/30 text-red-400 shadow-inner transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-1">
               <FileText size={24} />
             </div>
 
             {/* Document Details */}
             <div className="min-w-0 flex-1">
-              <h4 className="text-sm font-semibold text-white tracking-tight truncate" title={cleanTitle}>
+              <h4 className="text-sm font-semibold text-white tracking-tight truncate group-hover:text-red-200/90 transition-colors" title={cleanTitle}>
                 {cleanTitle || "PDF Document"}
               </h4>
               <p className="mt-0.5 text-xs text-gray-400 flex items-center gap-1.5 flex-wrap">
-                <span className="text-gray-300">
+                <span className="text-gray-300 font-medium">
                   A4 Document
                 </span>
                 <span className="text-gray-600">•</span>
-                <span>A4 Executive Format</span>
+                <span>Executive Format</span>
+                <span className="text-gray-600">•</span>
+                <span className="font-mono text-[11px] text-gray-400">.pdf</span>
               </p>
             </div>
           </div>
@@ -134,7 +141,7 @@ export const GeneratedPdfCard = ({ href, title }) => {
             <button
               type="button"
               onClick={handleOpenPdf}
-              className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-gray-200 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+              className="retro-btn flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-gray-200 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
             >
               <ExternalLink size={13} />
               <span>View PDF</span>
@@ -145,7 +152,7 @@ export const GeneratedPdfCard = ({ href, title }) => {
               type="button"
               onClick={handleDownload}
               disabled={downloading}
-              className="flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-1.5 text-xs font-medium text-[#111111] shadow-sm transition-all duration-200 hover:bg-gray-100 active:scale-95 cursor-pointer disabled:opacity-50"
+              className="retro-btn flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-1.5 text-xs font-medium text-[#111111] shadow-sm transition-all duration-200 hover:bg-gray-100 active:scale-95 cursor-pointer disabled:opacity-50"
             >
               {downloading ? (
                 <>
@@ -164,7 +171,7 @@ export const GeneratedPdfCard = ({ href, title }) => {
 
         {/* Footer info banner */}
         <div className="border-t border-white/5 bg-[#121212] px-4 py-2 flex items-center justify-between text-[11px] text-gray-500">
-          <span>Official AgentFlow AI Document</span>
+          <span>AgentFlow Executive Document</span>
           <span className="font-mono">PDFKit • Verified</span>
         </div>
       </div>

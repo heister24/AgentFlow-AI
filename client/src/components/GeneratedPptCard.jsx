@@ -89,12 +89,19 @@ export const GeneratedPptCard = ({ href, title }) => {
   };
 
   return (
-    <div className="my-3.5 w-full select-none">
-      <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] shadow-xl transition-all duration-300 hover:border-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/5">
+    <div className="my-3.5 w-full select-none animate-slide-up">
+      <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] retro-card hover:border-amber-500/35">
+        {/* Animated download progress strip */}
+        {downloading && (
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-amber-500/30 overflow-hidden z-20">
+            <div className="h-full w-full bg-linear-to-r from-amber-400 via-orange-400 to-amber-400 animate-shimmer" />
+          </div>
+        )}
+
         {/* Top Header Bar */}
         <div className="flex items-center justify-between border-b border-white/10 bg-[#1c1c1c]/90 px-4 py-2.5 backdrop-blur-md">
-          <div className="flex items-center gap-2">
-            <span className="flex h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+          <div className="flex items-center gap-2.5">
+            <span className="h-2 w-2 rounded-full bg-amber-400 retro-beacon-amber inline-block" />
             <span className="text-xs font-medium tracking-wide text-gray-200">
               PowerPoint Deck Ready
             </span>
@@ -105,15 +112,13 @@ export const GeneratedPptCard = ({ href, title }) => {
               type="button"
               onClick={handleCopyLink}
               title="Copy Presentation URL"
-              className="flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+              className="retro-btn flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
             >
               {copied ? (
-                <>
-                  <Check size={13} className="text-emerald-400" />
-                  <span className="text-emerald-400 text-[11px] font-medium">
-                    Copied
-                  </span>
-                </>
+                <span className="flex items-center gap-1 text-emerald-400 animate-pop">
+                  <Check size={13} />
+                  <span className="text-[11px] font-medium">Copied</span>
+                </span>
               ) : (
                 <>
                   <Copy size={13} />
@@ -129,27 +134,27 @@ export const GeneratedPptCard = ({ href, title }) => {
         {/* Content Card Body */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4">
           <div className="flex items-start gap-3.5 min-w-0">
-            {/* PowerPoint Amber/Orange Badge Icon */}
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-amber-500/20 to-orange-600/15 border border-orange-500/30 text-orange-400 shadow-inner">
+            {/* PowerPoint Amber/Orange Badge Icon with interactive hover scale */}
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-amber-500/20 to-orange-600/15 border border-orange-500/30 text-orange-400 shadow-inner transition-transform duration-300 group-hover:scale-105 group-hover:rotate-1">
               <Presentation size={24} />
             </div>
 
             {/* Presentation Details */}
             <div className="min-w-0 flex-1">
               <h4
-                className="text-sm font-semibold text-white tracking-tight truncate"
+                className="text-sm font-semibold text-white tracking-tight truncate group-hover:text-amber-200/90 transition-colors"
                 title={cleanTitle}
               >
                 {cleanTitle || "Presentation"}
               </h4>
               <p className="mt-0.5 text-xs text-gray-400 flex items-center gap-1.5 flex-wrap">
-                <span className="text-gray-300">
+                <span className="text-gray-300 font-medium">
                   Slide-Ready
                 </span>
                 <span className="text-gray-600">•</span>
                 <span>16:9 Widescreen</span>
                 <span className="text-gray-600">•</span>
-                <span className="text-gray-400">.pptx Format</span>
+                <span className="font-mono text-[11px] text-gray-400">.pptx</span>
               </p>
             </div>
           </div>
@@ -161,7 +166,7 @@ export const GeneratedPptCard = ({ href, title }) => {
               <button
                 type="button"
                 onClick={handleOpenPpt}
-                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-gray-200 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+                className="retro-btn flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-gray-200 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
               >
                 <ExternalLink size={13} />
                 <span>View URL</span>
@@ -173,7 +178,7 @@ export const GeneratedPptCard = ({ href, title }) => {
               type="button"
               onClick={handleDownload}
               disabled={downloading}
-              className="flex items-center gap-1.5 rounded-lg bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-medium px-3.5 py-1.5 text-xs shadow-md transition-all duration-200 active:scale-95 cursor-pointer disabled:opacity-50"
+              className="retro-btn flex items-center gap-1.5 rounded-lg bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-medium px-3.5 py-1.5 text-xs shadow-md transition-all duration-200 active:scale-95 cursor-pointer disabled:opacity-50"
             >
               {downloading ? (
                 <>
@@ -192,7 +197,7 @@ export const GeneratedPptCard = ({ href, title }) => {
 
         {/* Footer info banner */}
         <div className="border-t border-white/5 bg-[#121212] px-4 py-2 flex items-center justify-between text-[11px] text-gray-500">
-          <span>Official AgentFlow AI Presentation</span>
+          <span>AgentFlow Presentation Document</span>
           <span className="font-mono">PptxGenJS • Verified</span>
         </div>
       </div>

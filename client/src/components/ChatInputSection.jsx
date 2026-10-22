@@ -16,7 +16,10 @@ import {
 import { useEffect, useRef, useState } from "react";
 import sendRequestToAgent from "../features/sendRequestToAgent";
 import { useDispatch, useSelector } from "react-redux";
-import { addMsgToSelectedConv } from "../redux/slices/messagesSlice";
+import {
+  addMsgToSelectedConv,
+  setAgentThinking,
+} from "../redux/slices/messagesSlice";
 import createConversation from "../features/createConversation";
 import {
   addConversation,
@@ -60,6 +63,7 @@ const ChatInputSection = () => {
 
     try {
       setIsSubmitting(true);
+      dispatch(setAgentThinking(true));
       let conversationId = selectedConversation?._id;
       if (!conversationId) {
         const conversation = await createConversation();
@@ -127,6 +131,7 @@ const ChatInputSection = () => {
       );
     } finally {
       setIsSubmitting(false);
+      dispatch(setAgentThinking(false));
     }
   };
 
@@ -159,14 +164,14 @@ const ChatInputSection = () => {
   const AgentIcon = currentAgent.icon;
 
   return (
-    <div className="w-full bg-[#0d0d0d] px-3 pb-3 sm:px-6 sm:pb-4">
+    <div className="w-full bg-transparent px-3 pb-3 sm:px-6 sm:pb-4">
       <div className="mx-auto w-full max-w-3xl">
-        {/* Compact, professional input box matching Sidebar theme */}
-        <div className="relative rounded-2xl border border-white/10 bg-[#202020] shadow-[0_4px_24px_rgba(0,0,0,0.35)] transition-all duration-200">
+        {/* Input box synced with message bubble background */}
+        <div className="relative rounded-xl border border-white/15 bg-[#222222] retro-shadow focus-within:border-white/30 focus-within:shadow-[3px_3px_0px_rgba(255,255,255,0.2)] transition-all duration-200">
           {/* File Attachment Chip */}
           {selectedFile && (
             <div className="flex items-center gap-2 px-4 pt-2.5">
-              <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-gray-200">
+              <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-gray-200 animate-slide-up">
                 <Paperclip size={12} className="text-blue-400" />
                 <span className="max-w-60 truncate">{selectedFile.name}</span>
                 <button
@@ -175,7 +180,7 @@ const ChatInputSection = () => {
                     setSelectedFile(null);
                     if (fileRef.current) fileRef.current.value = "";
                   }}
-                  className="ml-1 text-gray-400 hover:text-white transition-colors"
+                  className="ml-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
                 >
                   <X size={12} />
                 </button>
@@ -205,7 +210,7 @@ const ChatInputSection = () => {
                   type="button"
                   onClick={() => setAgentMenuOpen((prev) => !prev)}
                   title="Switch Agent"
-                  className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-gray-300 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+                  className="retro-btn flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-gray-300 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
                 >
                   <AgentIcon size={13} className="text-gray-300" />
                   <span>{currentAgent.label}</span>
@@ -219,7 +224,7 @@ const ChatInputSection = () => {
 
                 {/* Floating Agent Menu */}
                 {agentMenuOpen && (
-                  <div className="absolute bottom-full left-0 mb-2 w-44 rounded-xl border border-white/10 bg-[#1a1a1a] p-1.5 shadow-2xl backdrop-blur-md z-50">
+                  <div className="absolute bottom-full left-0 mb-2 w-44 rounded-xl border border-white/10 bg-[#1a1a1a] p-1.5 shadow-2xl backdrop-blur-md z-50 animate-pop origin-bottom-left">
                     <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
                       Select Agent
                     </div>
@@ -272,9 +277,13 @@ const ChatInputSection = () => {
                 aria-label="Attach file"
                 onClick={() => fileRef.current.click()}
                 title="Attach file"
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+                className="group flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-90"
               >
-                <Paperclip size={16} strokeWidth={1.8} />
+                <Paperclip
+                  size={16}
+                  strokeWidth={1.8}
+                  className="transition-transform duration-200 group-hover:-rotate-12"
+                />
               </button>
 
               {/* Voice Input Button */}
@@ -282,9 +291,13 @@ const ChatInputSection = () => {
                 type="button"
                 aria-label="Voice input"
                 title="Voice input"
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+                className="group flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-90"
               >
-                <Mic size={16} strokeWidth={1.8} />
+                <Mic
+                  size={16}
+                  strokeWidth={1.8}
+                  className="transition-transform duration-200 group-hover:scale-110"
+                />
               </button>
             </div>
 
@@ -301,12 +314,20 @@ const ChatInputSection = () => {
                 disabled={input.trim().length === 0 || isSubmitting}
                 aria-label="Send message"
                 onClick={handleSendRequest}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#151820] shadow-sm transition-all duration-200 hover:bg-gray-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+                className={`group flex h-8 w-8 shrink-0 items-center justify-center rounded-lg retro-btn transition-all duration-150 cursor-pointer ${
+                  input.trim().length > 0 && !isSubmitting
+                    ? "bg-white text-[#151820] hover:scale-105"
+                    : "bg-white/10 text-gray-400 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
+                }`}
               >
                 {isSubmitting ? (
                   <Loader2 size={15} className="animate-spin text-gray-700" />
                 ) : (
-                  <Send size={15} strokeWidth={2.2} />
+                  <Send
+                    size={14}
+                    strokeWidth={2.2}
+                    className="transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
                 )}
               </button>
             </div>
@@ -315,7 +336,7 @@ const ChatInputSection = () => {
 
         {/* Disclaimer */}
         <p className="mt-2 text-center text-[11px] tracking-wide text-gray-500">
-          AgentFlow AI can make mistakes. Verify important information.
+          AgentFlow can make mistakes. Verify important information.
         </p>
       </div>
     </div>

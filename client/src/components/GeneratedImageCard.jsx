@@ -75,13 +75,14 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
   };
 
   return (
-    <div className="my-4 w-full select-none">
-      <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] shadow-xl transition-all duration-300 hover:border-white/20 hover:shadow-2xl">
+    <div className="my-4 w-full select-none animate-slide-up">
+      <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] retro-card hover:border-white/25">
         {/* Top Header Bar */}
         <div className="flex items-center justify-between border-b border-white/10 bg-[#1c1c1c]/90 px-3.5 py-2.5 backdrop-blur-md">
           <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-cyan-400 retro-beacon-emerald inline-block" />
             <span className="text-xs font-medium tracking-wide text-gray-200">
-              Image
+              Image Preview
             </span>
           </div>
 
@@ -90,15 +91,13 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
               type="button"
               onClick={handleCopyLink}
               title="Copy Image URL"
-              className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+              className="retro-btn flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
             >
               {copied ? (
-                <>
-                  <Check size={13} className="text-emerald-400" />
-                  <span className="text-emerald-400 text-[11px] font-medium">
-                    Copied
-                  </span>
-                </>
+                <span className="flex items-center gap-1 text-emerald-400 animate-pop">
+                  <Check size={13} />
+                  <span className="text-[11px] font-medium">Copied</span>
+                </span>
               ) : (
                 <>
                   <Copy size={13} />
@@ -114,7 +113,7 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
               onClick={handleDownload}
               disabled={downloading}
               title="Download High-Res Image"
-              className="flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-xs font-medium text-white transition hover:bg-white/20 cursor-pointer active:scale-95 disabled:opacity-50"
+              className="retro-btn flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-xs font-medium text-white transition hover:bg-white/20 cursor-pointer active:scale-95 disabled:opacity-50"
             >
               {downloading ? (
                 <RotateCw size={13} className="animate-spin text-gray-300" />

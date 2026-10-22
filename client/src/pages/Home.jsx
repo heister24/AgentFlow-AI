@@ -44,14 +44,14 @@ const Home = () => {
   return (
     <div className="h-screen w-full flex bg-[#0d0d0d] text-white overflow-hidden">
       {userData ? (
-        <div className="flex h-full w-full">
+        <div className="flex h-full w-full relative">
           <Sidebar />
           <ChatArea />
           <Sandbox />
         </div>
       ) : (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#181818] p-8 shadow-2xl shadow-black/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#181818] p-6 sm:p-8 shadow-2xl shadow-black/50">
             <div className="flex flex-col gap-2 mb-8 text-center">
               <h2 className="text-2xl font-semibold">
                 Welcome to AgentFlow-AI

@@ -4,7 +4,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Check, Copy, Eye, FileCode, Layers } from "lucide-react";
+import { Check, Copy, Eye, FileCode, FileText, Layers } from "lucide-react";
 import {
   setActiveArtifact,
   setArtifactOpen,
@@ -67,6 +67,16 @@ const ChatMessagesSection = () => {
                       : "rounded-2xl rounded-bl-sm border border-white/10 bg-[#171717] px-5 py-4 text-gray-200 shadow-sm"
                   }`}
                 >
+                  {/* Uploaded File (e.g. PDF) */}
+                  {msg.fileName && (
+                    <div className="mb-3 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-[#161616] px-3 py-1.5 text-xs text-gray-200">
+                      <FileText size={14} className="text-red-400 shrink-0" />
+                      <span className="font-medium truncate max-w-55">
+                        {msg.fileName}
+                      </span>
+                    </div>
+                  )}
+
                   {/* Uploaded Images */}
                   {msg.images?.length > 0 && (
                     <div
@@ -237,7 +247,9 @@ const ChatMessagesSection = () => {
                             children.toLowerCase().includes("pdf"));
 
                         if (isPdf) {
-                          return <GeneratedPdfCard href={href} title={children} />;
+                          return (
+                            <GeneratedPdfCard href={href} title={children} />
+                          );
                         }
 
                         const isPpt =
@@ -251,7 +263,9 @@ const ChatMessagesSection = () => {
                               children.toLowerCase().includes("ppt")));
 
                         if (isPpt) {
-                          return <GeneratedPptCard href={href} title={children} />;
+                          return (
+                            <GeneratedPptCard href={href} title={children} />
+                          );
                         }
 
                         return (

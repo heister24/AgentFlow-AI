@@ -178,6 +178,8 @@ export const deductCredits = async (req, res) => {
       pdf: 10,
       ppt: 10,
       image: 10,
+      imageAnalyzer: 5,
+      pdfRAG: 5,
     };
 
     const user = await User.findById(userId);
@@ -188,10 +190,14 @@ export const deductCredits = async (req, res) => {
     }
 
     const costOfAgent = cost[agent] || 2;
+    // console.log(costOfAgent);  
 
-    if (user.credits < costOfAgent) {
-      return res.json({
-        message: "You dont have enough credits for this request",
+    if (Number(user.credits) < Number(costOfAgent)) {
+      return res.status(402).json({
+        success: false,
+        message: `Insufficient credits. This request requires ${costOfAgent} credits, but you have ${user.credits}.`,
+        credits: user.credits,
+        required: costOfAgent,
       });
     }
 

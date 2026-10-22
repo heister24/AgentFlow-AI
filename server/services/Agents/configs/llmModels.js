@@ -53,7 +53,11 @@ export const getModel = (agent) => {
     case "pdf":
       return pdfLLM;
     case "ppt":
-      return pptLLM
+      return pptLLM;
+    case "imageAnalyzer":
+      return geminiLLM;
+    case "pdfRAG":
+      return geminiLLM;
     default:
       return groqLLM;
   }

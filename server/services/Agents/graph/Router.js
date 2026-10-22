@@ -1,12 +1,27 @@
 import { getModel } from "../configs/llmModels.js";
 
 export const router = async (state) => {
+  if (state.file?.mimetype === "application/pdf") {
+    return {
+      ...state,
+      agent: "pdfRAG",
+    };
+  }
+
+  if (state.file?.mimetype?.startsWith("image/")) {
+    return {
+      ...state,
+      agent: "imageAnalyzer",
+    };
+  }
+
   if (state.agent && state.agent !== "auto") {
     return {
       ...state,
       agent: state.agent,
     };
   }
+
   const llm = await getModel("router");
   const prompt = `
 You are a router agent responsible for directing user requests
@@ -49,7 +64,9 @@ image
 User Query:${state.prompt}`;
 
   const response = await llm.invoke(prompt);
-  const rawAgent = String(response.content || "").trim().toLowerCase();
+  const rawAgent = String(response.content || "")
+    .trim()
+    .toLowerCase();
   const validAgents = ["chat", "coding", "search", "pdf", "ppt", "image"];
   let matchedAgent = "chat";
   for (const agentName of validAgents) {

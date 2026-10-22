@@ -10,6 +10,7 @@ import {
   Paperclip,
   Presentation,
   Send,
+  X,
   Zap,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -28,12 +29,14 @@ import { setUserData } from "../redux/slices/userSlice";
 const ChatInputSection = () => {
   const [input, setInput] = useState("");
   const [selectedAgent, setSelectedAgent] = useState("auto");
+  const [selectedFile, setSelectedFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [agentMenuOpen, setAgentMenuOpen] = useState(false);
   const dispatch = useDispatch();
   const { selectedConversation } = useSelector((state) => state.conversation);
 
   const chatInputRef = useRef(null);
+  const fileRef = useRef(null);
   const menuRef = useRef(null);
 
   // Close agent dropdown on click outside
@@ -65,19 +68,40 @@ const ChatInputSection = () => {
         conversationId = conversation._id;
       }
 
-      dispatch(addMsgToSelectedConv({ role: "user", content: message }));
+      const formData = new FormData();
+      formData.append("prompt", message);
+      formData.append("conversationId", conversationId);
+      formData.append("agent", selectedAgent.toLowerCase());
+      if (selectedFile) {
+        formData.append("file", selectedFile);
+      }
+
+      const previewImage =
+        selectedFile && selectedFile.type?.startsWith("image/")
+          ? URL.createObjectURL(selectedFile)
+          : null;
+
+      dispatch(
+        addMsgToSelectedConv({
+          role: "user",
+          content: message,
+          ...(previewImage ? { images: [previewImage] } : {}),
+          ...(selectedFile ? { fileName: selectedFile.name } : {}),
+        }),
+      );
       setInput("");
+      setSelectedFile(null);
+
+      if (fileRef.current) {
+        fileRef.current.value = "";
+      }
 
       if (chatInputRef.current) {
         chatInputRef.current.style.height = "auto";
         chatInputRef.current.style.overflowY = "hidden";
       }
 
-      const response = await sendRequestToAgent(
-        message,
-        conversationId,
-        selectedAgent.toLowerCase(),
-      );
+      const response = await sendRequestToAgent(formData);
 
       dispatch(
         addMsgToSelectedConv({
@@ -139,6 +163,26 @@ const ChatInputSection = () => {
       <div className="mx-auto w-full max-w-3xl">
         {/* Compact, professional input box matching Sidebar theme */}
         <div className="relative rounded-2xl border border-white/10 bg-[#202020] shadow-[0_4px_24px_rgba(0,0,0,0.35)] transition-all duration-200">
+          {/* File Attachment Chip */}
+          {selectedFile && (
+            <div className="flex items-center gap-2 px-4 pt-2.5">
+              <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-gray-200">
+                <Paperclip size={12} className="text-blue-400" />
+                <span className="max-w-[220px] truncate">{selectedFile.name}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedFile(null);
+                    if (fileRef.current) fileRef.current.value = "";
+                  }}
+                  className="ml-1 text-gray-400 hover:text-white transition-colors"
+                >
+                  <X size={12} />
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Textarea */}
           <textarea
             placeholder={`Ask ${selectedAgent === "auto" ? "anything" : selectedAgent + " agent"}...`}
@@ -211,9 +255,22 @@ const ChatInputSection = () => {
               </div>
 
               {/* Attach File Button */}
+              <input
+                type="file"
+                accept=".pdf,image/*"
+                hidden
+                ref={fileRef}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    setSelectedFile(file);
+                  }
+                }}
+              />
               <button
                 type="button"
                 aria-label="Attach file"
+                onClick={() => fileRef.current.click()}
                 title="Attach file"
                 className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
               >

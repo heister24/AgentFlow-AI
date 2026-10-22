@@ -6,6 +6,7 @@ export const agent = async (req, res) => {
   try {
     const { prompt, conversationId, agent } = req.body;
     const userId = req.headers["x-user-id"];
+    const file = req.file;
 
     if (typeof prompt !== "string" || !prompt.trim() || !conversationId) {
       return res.status(400).json({
@@ -20,6 +21,7 @@ export const agent = async (req, res) => {
       conversationId,
       agent,
       userId,
+      file,
     });
 
     const aiResponse = response.aiResponse;

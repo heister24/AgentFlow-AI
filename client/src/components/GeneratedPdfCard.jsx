@@ -5,7 +5,6 @@ import {
   ExternalLink,
   Copy,
   Check,
-  FileCheck,
   RotateCw,
 } from "lucide-react";
 
@@ -16,12 +15,12 @@ export const GeneratedPdfCard = ({ href, title }) => {
   // Extract clean title text
   const cleanTitle =
     typeof title === "string"
-      ? title.replace(/^[📄\s*]+|[📄\s*]+$/g, "")
+      ? title.replace(/^[📄\s*]+|[📄\s*]+$/gu, "")
       : Array.isArray(title)
         ? title
             .map((t) => (typeof t === "string" ? t : t?.props?.children || ""))
             .join(" ")
-            .replace(/^[📄\s*]+|[📄\s*]+$/g, "")
+            .replace(/^[📄\s*]+|[📄\s*]+$/gu, "")
         : "Executive PDF Document";
 
   const handleCopyLink = async (e) => {
@@ -117,11 +116,11 @@ export const GeneratedPdfCard = ({ href, title }) => {
             {/* Document Details */}
             <div className="min-w-0 flex-1">
               <h4 className="text-sm font-semibold text-white tracking-tight truncate" title={cleanTitle}>
-                {cleanTitle || "Generated PDF Document"}
+                {cleanTitle || "PDF Document"}
               </h4>
               <p className="mt-0.5 text-xs text-gray-400 flex items-center gap-1.5 flex-wrap">
-                <span className="inline-flex items-center gap-1 text-emerald-400">
-                  <FileCheck size={12} /> Publication Grade
+                <span className="text-gray-300">
+                  A4 Document
                 </span>
                 <span className="text-gray-600">•</span>
                 <span>A4 Executive Format</span>

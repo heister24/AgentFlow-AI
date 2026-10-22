@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { ArrowLeft, Check, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  Loader2,
+  ShieldCheck,
+  Zap,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 import createOrder from "../features/createOrder";
 import verifyPayment from "../features/verifyPayment";
 import getCurrentUser from "../features/getCurrentUser";
@@ -57,16 +65,16 @@ const Payment = () => {
       description: "Basic access for standard conversation and tests.",
       features: [
         "100 credits included",
-        "Chat Agent access",
+        "Chat access",
         "Standard response speed",
         "30-day validity",
       ],
     },
     {
       ...PLANS.basic,
-      description: "For everyday tasks and multimodal agent workflows.",
+      description: "For everyday tasks and multimodal workflows.",
       features: [
-        "1,000 credits included",
+        "500 credits included",
         "All specialized agents",
         "Image, PDF & PPT generation",
         "Code sandbox execution",
@@ -77,8 +85,8 @@ const Payment = () => {
       ...PLANS.plus,
       description: "For power users requiring high credit volume.",
       features: [
-        "5,000 credits included",
-        "Priority agent processing",
+        "1,000 credits included",
+        "Priority processing",
         "Unlimited sandbox previews",
         "Advanced multimodal tools",
         "30-day validity",
@@ -94,31 +102,51 @@ const Payment = () => {
       setLoadingPlan(plan.id);
       setStatusMessage(null);
 
-      // Payment gateway integration point
-      console.log("Selected plan:", plan);
       setStatusMessage({
         type: "info",
         text: `Opening payment for ${plan.name} (₹${plan.amount})...`,
       });
+
       const response = await createOrder(plan);
-      console.log(response);
       const options = {
         key: import.meta.env.VITE_RAZORPAY_TEST_API_KEY,
         amount: response.order.amount,
         currency: response.order.currency,
         name: "AgentFlow-AI",
-        description: `${response.plan.name}`,
+        description: `${response.plan.name} Plan (${response.plan.credits} Credits)`,
         order_id: response.order.id,
-        handler: async (response) => {
+        handler: async (paymentRes) => {
           try {
+            setStatusMessage({
+              type: "info",
+              text: "Verifying your payment...",
+            });
+
             const res = await verifyPayment(
-              response.razorpay_order_id,
-              response.razorpay_payment_id,
-              response.razorpay_signature,
+              paymentRes.razorpay_order_id,
+              paymentRes.razorpay_payment_id,
+              paymentRes.razorpay_signature,
             );
-            console.log(res);
+
+            if (res && res.success !== false) {
+              const updatedUser = await getCurrentUser();
+              if (updatedUser) dispatch(setUserData(updatedUser));
+              setStatusMessage({
+                type: "success",
+                text: "Payment successful! Your credits and plan have been updated.",
+              });
+            } else {
+              setStatusMessage({
+                type: "error",
+                text: res?.message || "Payment verification failed.",
+              });
+            }
           } catch (error) {
-            console.log(error);
+            console.error("Payment verification error:", error);
+            setStatusMessage({
+              type: "error",
+              text: "Unable to verify payment. Please contact support if your account was charged.",
+            });
           }
         },
       };
@@ -129,7 +157,7 @@ const Payment = () => {
       console.error("Payment error:", error);
       setStatusMessage({
         type: "error",
-        text: "Unable to start payment. Please try again.",
+        text: "Unable to initialize payment. Please try again.",
       });
     } finally {
       setLoadingPlan(null);
@@ -173,16 +201,26 @@ const Payment = () => {
             Simple and transparent credit plans. Cancel anytime.
           </p>
 
+          {/* Status Message Notification */}
           {statusMessage && (
-            <p
-              className={`mt-3 text-xs ${
-                statusMessage.type === "error"
-                  ? "text-red-400"
-                  : "text-gray-300"
+            <div
+              className={`mt-4 max-w-lg mx-auto flex items-center gap-2.5 rounded-xl border px-4 py-2 text-xs font-medium text-left shadow-lg ${
+                statusMessage.type === "success"
+                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                  : statusMessage.type === "error"
+                    ? "border-red-500/30 bg-red-500/10 text-red-300"
+                    : "border-blue-500/30 bg-blue-500/10 text-blue-300"
               }`}
             >
-              {statusMessage.text}
-            </p>
+              {statusMessage.type === "success" ? (
+                <CheckCircle2 size={15} className="shrink-0 text-emerald-400" />
+              ) : statusMessage.type === "error" ? (
+                <AlertCircle size={15} className="shrink-0 text-red-400" />
+              ) : (
+                <Loader2 size={15} className="shrink-0 animate-spin text-blue-400" />
+              )}
+              <span>{statusMessage.text}</span>
+            </div>
           )}
         </div>
 
@@ -249,10 +287,10 @@ const Payment = () => {
                     isCurrent
                       ? "bg-white/5 text-gray-500 cursor-default"
                       : plan.popular
-                        ? "bg-white text-black hover:bg-gray-200 cursor-pointer active:scale-98"
+                        ? "bg-white text-black hover:bg-gray-200 cursor-pointer active:scale-95"
                         : plan.amount === 0
                           ? "bg-white/5 text-gray-400 cursor-default"
-                          : "border border-white/15 bg-white/10 text-white hover:bg-white/15 cursor-pointer active:scale-98"
+                          : "border border-white/15 bg-white/10 text-white hover:bg-white/15 cursor-pointer active:scale-95"
                   }`}
                 >
                   {isLoading ? (
@@ -271,6 +309,18 @@ const Payment = () => {
               </div>
             );
           })}
+        </div>
+
+        {/* Trust Badges */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-gray-400">
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={14} className="text-gray-400" />
+            <span>Secure Razorpay Payments</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Zap size={14} className="text-gray-400" />
+            <span>Instant Credit Delivery</span>
+          </div>
         </div>
       </div>
 

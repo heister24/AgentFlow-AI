@@ -6,7 +6,6 @@ import {
   Copy,
   Check,
   RotateCw,
-  Sparkles,
 } from "lucide-react";
 
 export const GeneratedPptCard = ({ href, title }) => {
@@ -16,12 +15,12 @@ export const GeneratedPptCard = ({ href, title }) => {
   // Extract clean title text
   const cleanTitle =
     typeof title === "string"
-      ? title.replace(/^[📊\s*]+|[📊\s*]+$/g, "")
+      ? title.replace(/^[📊\s*]+|[📊\s*]+$/gu, "")
       : Array.isArray(title)
         ? title
             .map((t) => (typeof t === "string" ? t : t?.props?.children || ""))
             .join(" ")
-            .replace(/^[📊\s*]+|[📊\s*]+$/g, "")
+            .replace(/^[📊\s*]+|[📊\s*]+$/gu, "")
         : "Executive Presentation";
 
   const handleCopyLink = async (e) => {
@@ -141,11 +140,11 @@ export const GeneratedPptCard = ({ href, title }) => {
                 className="text-sm font-semibold text-white tracking-tight truncate"
                 title={cleanTitle}
               >
-                {cleanTitle || "Generated Presentation"}
+                {cleanTitle || "Presentation"}
               </h4>
               <p className="mt-0.5 text-xs text-gray-400 flex items-center gap-1.5 flex-wrap">
-                <span className="inline-flex items-center gap-1 text-amber-400">
-                  <Sparkles size={12} /> Slide-Ready
+                <span className="text-gray-300">
+                  Slide-Ready
                 </span>
                 <span className="text-gray-600">•</span>
                 <span>16:9 Widescreen</span>

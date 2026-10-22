@@ -61,7 +61,7 @@ const ChatMessagesSection = () => {
                 className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[90%] wrap-break-word sm:max-w-[82%] lg:max-w-[78%] transition-all ${
+                  className={`max-w-[90%] break-words sm:max-w-[82%] lg:max-w-[78%] transition-all ${
                     isUser
                       ? "rounded-2xl rounded-br-sm border border-white/10 bg-[#222222] px-4 py-3 text-white shadow-sm"
                       : "rounded-2xl rounded-bl-sm border border-white/10 bg-[#171717] px-5 py-4 text-gray-200 shadow-sm"
@@ -69,9 +69,9 @@ const ChatMessagesSection = () => {
                 >
                   {/* Uploaded File (e.g. PDF) */}
                   {msg.fileName && (
-                    <div className="mb-3 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-[#161616] px-3 py-1.5 text-xs text-gray-200">
+                    <div className="mb-3 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-[#141416] px-3 py-1.5 text-xs text-gray-200">
                       <FileText size={14} className="text-red-400 shrink-0" />
-                      <span className="font-medium truncate max-w-55">
+                      <span className="font-medium truncate max-w-56">
                         {msg.fileName}
                       </span>
                     </div>
@@ -221,7 +221,7 @@ const ChatMessagesSection = () => {
 
                         return (
                           <code
-                            className="wrap-break-word rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-xs text-gray-200"
+                            className="break-words rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-xs text-gray-200"
                             {...props}
                           >
                             {children}

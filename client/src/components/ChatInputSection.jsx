@@ -168,7 +168,7 @@ const ChatInputSection = () => {
             <div className="flex items-center gap-2 px-4 pt-2.5">
               <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-gray-200">
                 <Paperclip size={12} className="text-blue-400" />
-                <span className="max-w-[220px] truncate">{selectedFile.name}</span>
+                <span className="max-w-60 truncate">{selectedFile.name}</span>
                 <button
                   type="button"
                   onClick={() => {

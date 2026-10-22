@@ -12,7 +12,6 @@ import {
   FileCode,
   RefreshCw,
   Layers,
-  Sparkles,
 } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -81,7 +80,10 @@ const Sandbox = () => {
   const [copied, setCopied] = useState(false);
   const [iframeKey, setIframeKey] = useState(0);
 
-  const files = activeArtifact?.files || [];
+  const files = useMemo(
+    () => activeArtifact?.files || [],
+    [activeArtifact?.files],
+  );
 
   const selectedFile = useMemo(() => {
     if (!files.length) return null;
@@ -319,7 +321,7 @@ const Sandbox = () => {
         {files.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center p-6 text-center">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-[#181818] text-gray-300 mb-3 shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
-              <Sparkles size={22} />
+              <FileCode size={22} />
             </div>
             <h4 className="text-base font-medium text-gray-200">
               No Files in Sandbox

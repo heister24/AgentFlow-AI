@@ -9,6 +9,8 @@ import {
   MessageSquare,
   LogOut,
   Receipt,
+  CreditCard,
+  User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -48,6 +50,7 @@ const Sidebar = () => {
   const [editTitle, setEditTitle] = useState(null);
   const [title, setTitle] = useState("");
   const [saving, setSaving] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   const toggleSidebarOpen = () => {
     setSidebarOpen((prev) => !prev);
@@ -200,21 +203,21 @@ const Sidebar = () => {
   return (
     <aside
       className={`${
-        sidebarOpen ? "w-65 min-w-65" : "w-14 min-w-14"
+        sidebarOpen ? "w-64 min-w-[16rem]" : "w-16 min-w-16"
       } flex h-screen shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#232428] p-3 text-white transition-all duration-300`}
     >
       {/* Header */}
-      <div className="mb-5 flex min-h-10 items-center justify-between gap-2">
+      <div className="mb-4 flex min-h-10 items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <button
             type="button"
             onClick={toggleSidebarOpen}
             title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-300 transition-colors hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
           >
             <PanelLeftClose
-              size={19}
-              className={`transition-transform ${
+              size={18}
+              className={`transition-transform duration-300 ${
                 sidebarOpen ? "" : "rotate-180"
               }`}
             />
@@ -224,13 +227,14 @@ const Sidebar = () => {
             <div className="flex min-w-0 items-center gap-2">
               <span
                 onClick={() => navigate("/")}
-                className="cursor-pointer truncate text-base font-semibold"
+                className="cursor-pointer truncate text-sm font-semibold tracking-tight text-white hover:text-gray-200"
               >
                 AgentFlow-AI
               </span>
 
-              <span className="shrink-0 rounded-md border border-white/20 px-1.5 py-0.5 text-[10px] text-gray-400">
-                free
+              {/* Dynamic Plan Badge */}
+              <span className="shrink-0 rounded-md border border-white/20 px-1.5 py-0.5 text-[10px] text-gray-400 capitalize">
+                {userData?.plan || "free"}
               </span>
             </div>
           )}
@@ -241,188 +245,242 @@ const Sidebar = () => {
             type="button"
             onClick={handleCreateNewChat}
             title="New chat"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-300 transition-colors hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
           >
-            <PenIcon size={17} />
+            <PenIcon size={15} />
           </button>
         )}
       </div>
 
       {/* New Chat */}
-      <div className="mb-5">
+      <div className="mb-4">
         <button
           type="button"
           onClick={handleCreateNewChat}
           title="New chat"
-          className={`flex h-10 w-full items-center rounded-lg text-sm font-medium text-gray-200 transition-colors hover:bg-white/10 hover:text-white ${
-            sidebarOpen ? "gap-3 px-3" : "justify-center px-0"
+          className={`flex h-10 w-full items-center rounded-lg border border-white/10 bg-white/5 text-sm font-medium text-gray-200 transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer active:scale-[0.98] ${
+            sidebarOpen ? "gap-2.5 px-3" : "justify-center px-0"
           }`}
         >
-          <Plus size={19} className="shrink-0" />
+          <Plus size={18} className="shrink-0 text-gray-300" />
           {sidebarOpen && <span>New Chat</span>}
         </button>
       </div>
 
       {/* Conversation Area */}
-      {sidebarOpen && (
+      {sidebarOpen ? (
         <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden pr-1">
-          <p className="mb-2 px-3 text-xs font-medium text-gray-500">
-            Your conversations
+          <p className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+            Conversations
           </p>
 
-          <ul className="space-y-1">
-            {conversations.map((con) => {
-              const isEditing = editTitle === con._id;
-              const isMenuOpen = conversationMenuOpen === con._id;
-              const isActive = selectedConversation?._id === con._id;
+          {conversations.length === 0 ? (
+            <div className="px-2 py-6 text-center text-xs text-gray-500">
+              No conversations yet
+            </div>
+          ) : (
+            <ul className="space-y-1">
+              {conversations.map((con) => {
+                const isEditing = editTitle === con._id;
+                const isMenuOpen = conversationMenuOpen === con._id;
+                const isActive = selectedConversation?._id === con._id;
 
-              return (
-                <li
-                  key={con._id}
-                  className={`relative min-w-0 rounded-lg text-sm text-gray-300
-                  transition-colors hover:bg-white/10 hover:text-white ${isActive ? "bg-white/15" : ""}`}
-                >
-                  {/* Conversation title */}
-                  <div className="flex min-h-10 min-w-0 items-center gap-1 px-2">
-                    <span>
-                      <MessageSquare size={15} />
-                    </span>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={title}
-                        autoFocus
-                        maxLength={100}
-                        onChange={(e) => setTitle(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleSaveTitle(con._id);
-                          }
-
-                          if (e.key === "Escape") {
-                            handleCancelEdit();
-                          }
-                        }}
-                        placeholder="Conversation title"
-                        className="h-8 min-w-0 flex-1 rounded-md border border-white/20 bg-[#1b1c20] px-2 text-sm text-white outline-none"
+                return (
+                  <li
+                    key={con._id}
+                    className={`group relative min-w-0 rounded-lg text-sm transition-all duration-150 ${
+                      isActive
+                        ? "bg-white/15 font-medium text-white shadow-sm"
+                        : "text-gray-300 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {/* Conversation title */}
+                    <div className="flex min-h-9 min-w-0 items-center gap-2 px-2.5 py-1">
+                      <MessageSquare
+                        size={15}
+                        className={`shrink-0 ${
+                          isActive
+                            ? "text-white"
+                            : "text-gray-400 group-hover:text-gray-300"
+                        }`}
                       />
-                    ) : (
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={title}
+                          autoFocus
+                          maxLength={100}
+                          onChange={(e) => setTitle(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              handleSaveTitle(con._id);
+                            }
+
+                            if (e.key === "Escape") {
+                              handleCancelEdit();
+                            }
+                          }}
+                          placeholder="Conversation title"
+                          className="h-7 min-w-0 flex-1 rounded-md border border-white/20 bg-[#1b1c20] px-2 text-xs text-white outline-none"
+                        />
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenConversation(con._id)}
+                          title={con.title}
+                          className="h-8 min-w-0 flex-1 truncate text-left text-xs cursor-pointer"
+                        >
+                          {con.title}
+                        </button>
+                      )}
+
+                      {/* Conversation menu trigger */}
                       <button
                         type="button"
-                        onClick={() => handleOpenConversation(con._id)}
-                        title={con.title}
-                        className="h-9 min-w-0 flex-1 truncate rounded-md px-1 text-left text-sm"
+                        onClick={() => handleConversationMenu(con._id)}
+                        title="Conversation options"
+                        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer ${
+                          isMenuOpen
+                            ? "opacity-100 bg-white/10 text-white"
+                            : "opacity-0 group-hover:opacity-100"
+                        }`}
                       >
-                        {con.title}
+                        <EllipsisVertical size={14} />
                       </button>
-                    )}
-
-                    {/* Conversation menu */}
-                    <button
-                      type="button"
-                      onClick={() => handleConversationMenu(con._id)}
-                      title="Conversation options"
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
-                    >
-                      <EllipsisVertical size={17} />
-                    </button>
-                  </div>
-
-                  {/* Action menu */}
-                  {isMenuOpen && (
-                    <div className="mx-2 mb-2 flex items-center gap-2 rounded-lg border border-white/10 bg-[#1b1c20] p-2">
-                      {isEditing ? (
-                        <>
-                          <button
-                            type="button"
-                            disabled={saving || !title.trim()}
-                            onClick={() => handleSaveTitle(con._id)}
-                            className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md bg-blue-500 px-2 text-xs font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            <Check size={14} />
-                            {saving ? "Saving..." : "Save"}
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={handleCancelEdit}
-                            title="Cancel editing"
-                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
-                          >
-                            <X size={15} />
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            type="button"
-                            onClick={() => handleEditTitle(con)}
-                            className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md bg-blue-500/15 px-2 text-xs font-medium text-blue-300 transition-colors hover:bg-blue-500/25"
-                          >
-                            <PenIcon size={13} />
-                            Edit title
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteConversation(con._id)}
-                            className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md bg-red-500/10 px-2 text-xs font-medium text-red-300 transition-colors hover:bg-red-500/20"
-                          >
-                            <Trash2 size={13} />
-                            Delete
-                          </button>
-                        </>
-                      )}
                     </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+
+                    {/* Action menu */}
+                    {isMenuOpen && (
+                      <div className="mx-2 mb-2 flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#1b1c20] p-1.5 shadow-lg">
+                        {isEditing ? (
+                          <>
+                            <button
+                              type="button"
+                              disabled={saving || !title.trim()}
+                              onClick={() => handleSaveTitle(con._id)}
+                              className="flex h-7 flex-1 items-center justify-center gap-1 rounded-md bg-blue-500 px-2 text-xs font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                              <Check size={13} />
+                              <span>{saving ? "Saving..." : "Save"}</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={handleCancelEdit}
+                              title="Cancel editing"
+                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer"
+                            >
+                              <X size={14} />
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => handleEditTitle(con)}
+                              className="flex h-7 flex-1 items-center justify-center gap-1.5 rounded-md bg-white/10 px-2 text-xs font-medium text-gray-200 transition-colors hover:bg-white/15 cursor-pointer"
+                            >
+                              <PenIcon size={12} />
+                              <span>Edit</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteConversation(con._id)}
+                              className="flex h-7 flex-1 items-center justify-center gap-1.5 rounded-md bg-red-500/10 px-2 text-xs font-medium text-red-300 transition-colors hover:bg-red-500/20 cursor-pointer"
+                            >
+                              <Trash2 size={12} />
+                              <span>Delete</span>
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      ) : (
+        <div className="flex-1" />
+      )}
+
+      {/* Credits & Billing Quick Widget */}
+      {sidebarOpen ? (
+        <div className="mb-3 rounded-lg border border-white/10 bg-[#1b1c20] p-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-white/10 text-gray-300">
+                <Receipt size={14} />
+              </div>
+              <div>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
+                  Credits
+                </p>
+                <p className="text-xs font-semibold text-white">
+                  {(userData?.credits ?? 100).toLocaleString("en-IN")}
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate("/payment")}
+              className="flex items-center gap-1.5 rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-medium text-gray-200 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
+            >
+              <CreditCard size={12} className="text-gray-400" />
+              <span>Billing</span>
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="mb-3 flex justify-center">
+          <button
+            type="button"
+            onClick={() => navigate("/payment")}
+            title={`Billing (${(userData?.credits ?? 100).toLocaleString()} credits)`}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+          >
+            <Receipt size={17} />
+          </button>
         </div>
       )}
 
       {/* User Info and action Area */}
-      <div
-        className={`mt-auto border-t border-white/10 ${
-          sidebarOpen ? "pt-4" : "pt-3"
-        }`}
-      >
+      <div className="border-t border-white/10 pt-3">
         <div
           className={`flex items-center ${
-            sidebarOpen ? "gap-3" : "flex-col gap-3"
+            sidebarOpen ? "gap-2.5" : "flex-col gap-2"
           }`}
         >
-          <img
-            src={userData?.avatar}
-            alt=""
-            className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-white/20"
-          />
+          {userData?.avatar && !avatarError ? (
+            <img
+              src={userData.avatar}
+              alt={userData.name || "User"}
+              onError={() => setAvatarError(true)}
+              className="h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-white/20"
+            />
+          ) : (
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white ring-1 ring-white/20">
+              {userData?.name ? (
+                userData.name.charAt(0).toUpperCase()
+              ) : (
+                <User size={15} />
+              )}
+            </div>
+          )}
 
           {sidebarOpen && (
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-white">
-                {userData?.name}
+              <p className="truncate text-xs font-medium text-white">
+                {userData?.name || "User"}
               </p>
-              <p className="truncate text-xs text-gray-400">
+              <p className="truncate text-[11px] text-gray-400">
                 {userData?.email}
               </p>
             </div>
           )}
-
-          {/* Billing Icon */}
-          <button
-            type="button"
-            onClick={() => navigate("/payment")}
-            title="Billing"
-            aria-label="Billing"
-            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/10 hover:text-white ${
-              sidebarOpen ? "" : ""
-            }`}
-          >
-            <Receipt size={17} />
-            {sidebarOpen && <span className="sr-only">Billing</span>}
-          </button>
 
           {/* Logout */}
           <button
@@ -430,12 +488,9 @@ const Sidebar = () => {
             onClick={handleLogoutUser}
             title="Logout"
             aria-label="Logout"
-            className={`flex h-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/10 hover:text-white ${
-              sidebarOpen ? "w-9 shrink-0" : "w-8"
-            }`}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
           >
-            <LogOut size={17} />
-            {sidebarOpen && <span className="sr-only">Logout</span>}
+            <LogOut size={16} />
           </button>
         </div>
       </div>

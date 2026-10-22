@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 
-export const GeneratedImageCard = ({ src, alt = "Generated AI Image" }) => {
+export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -54,7 +54,7 @@ export const GeneratedImageCard = ({ src, alt = "Generated AI Image" }) => {
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = blobUrl;
-      link.download = `ai-image-${Date.now()}.${blob.type.includes("jpeg") ? "jpg" : "png"}`;
+      link.download = `image-${Date.now()}.${blob.type.includes("jpeg") ? "jpg" : "png"}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -76,12 +76,12 @@ export const GeneratedImageCard = ({ src, alt = "Generated AI Image" }) => {
 
   return (
     <div className="my-4 w-full select-none">
-      <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] shadow-xl transition-all duration-300 hover:border-white/20 hover:shadow-2xl hover:shadow-indigo-500/10">
+      <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] shadow-xl transition-all duration-300 hover:border-white/20 hover:shadow-2xl">
         {/* Top Header Bar */}
         <div className="flex items-center justify-between border-b border-white/10 bg-[#1c1c1c]/90 px-3.5 py-2.5 backdrop-blur-md">
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium tracking-wide text-gray-200">
-              Generated Artwork
+              Image
             </span>
           </div>
 

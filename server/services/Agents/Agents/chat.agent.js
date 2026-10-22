@@ -10,26 +10,37 @@ import deductCredits from "../utils/deductCredits.js";
 const formatSearchContext = (searchToolResult) => {
   if (!searchToolResult) return "";
 
+  const sections = [];
+
+  // 1. Direct answer synthesized by Tavily (crucial for recent sports results, breaking news, etc.)
+  if (searchToolResult.answer && typeof searchToolResult.answer === "string") {
+    sections.push(`SUMMARY / DIRECT ANSWER:\n${searchToolResult.answer.trim()}`);
+  }
+
   const results = Array.isArray(searchToolResult)
     ? searchToolResult
     : Array.isArray(searchToolResult.results)
       ? searchToolResult.results
       : [];
 
-  if (results.length === 0) return "";
+  if (results.length > 0) {
+    const snippets = results.slice(0, 6).map((item, i) => {
+      const title = item.title ? `[${i + 1}] ${item.title}` : `[${i + 1}] Source`;
+      const url = item.url ? ` (${item.url})` : "";
+      const cleanContent = String(item.content || item.snippet || "")
+        .replace(/\s+/g, " ")
+        .slice(0, 800)
+        .trim();
 
-  const snippets = results.slice(0, 4).map((item, i) => {
-    const title = item.title ? `[${i + 1}] ${item.title}` : `[${i + 1}] Source`;
-    const url = item.url ? ` (${item.url})` : "";
-    const cleanContent = String(item.content || item.snippet || "")
-      .replace(/\s+/g, " ")
-      .slice(0, 350)
-      .trim();
+      return `${title}${url}\n${cleanContent}`;
+    });
 
-    return `${title}${url}\n${cleanContent}`;
-  });
+    sections.push(`SOURCE ARTICLES & REPORTS:\n${snippets.join("\n\n")}`);
+  }
 
-  return `\n\nWEB SEARCH RESULTS:\n${snippets.join("\n\n")}\n\nUse the above search results to provide an up-to-date, accurate answer with relevant citations. Do not mention internal tool names.\n`;
+  if (sections.length === 0) return "";
+
+  return `\n\nWEB SEARCH RESULTS:\n${sections.join("\n\n")}\n\nIMPORTANT: Use the above search results and summary to provide an accurate, up-to-date answer. If reporting a sports match, state the match winner, team totals, key player scores/wickets, and venue.\n`;
 };
 
 export const chatAgent = async (state) => {

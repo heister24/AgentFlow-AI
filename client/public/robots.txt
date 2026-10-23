@@ -1,0 +1,16 @@
+# Robots.txt for AgentFlow
+# https://agentflow.ai
+
+User-agent: *
+Allow: /
+Allow: /payment
+
+# Disallow private/internal app endpoints
+Disallow: /api/
+Disallow: /auth/
+
+# Crawl-delay recommendation (optional for general bots)
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://agentflow.ai/sitemap.xml

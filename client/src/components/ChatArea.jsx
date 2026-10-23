@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Layers, PanelLeft } from "lucide-react";
 import ChatInputSection from "./ChatInputSection";
@@ -8,6 +9,11 @@ import { setSidebarOpen } from "../redux/slices/conversationSlice";
 const ChatArea = () => {
   const dispatch = useDispatch();
   const { activeArtifact, isOpen } = useSelector((state) => state.artifact);
+  const [promptDraft, setPromptDraft] = useState(null);
+
+  const handleSelectPrompt = (prompt, agent) => {
+    setPromptDraft({ prompt, agent, timestamp: Date.now() });
+  };
 
   return (
     <div className="relative flex h-screen min-w-0 flex-1 flex-col overflow-hidden bg-[#0d0d0d] retro-grid">
@@ -39,8 +45,8 @@ const ChatArea = () => {
         </div>
       )}
 
-      <ChatMessagesSection />
-      <ChatInputSection />
+      <ChatMessagesSection onSelectPrompt={handleSelectPrompt} />
+      <ChatInputSection promptDraft={promptDraft} />
     </div>
   );
 };

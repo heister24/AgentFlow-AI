@@ -1,8 +1,14 @@
 import api from "../utils/api";
 
-const createConversation = async () => {
+const createConversation = async (title) => {
   try {
-    const { data } = await api.get("/chat/create-conversation");
+    const chatTitle =
+      typeof title === "string" && title.trim().length > 0
+        ? title.trim().slice(0, 25)
+        : undefined;
+    const { data } = await api.get("/chat/create-conversation", {
+      params: chatTitle ? { title: chatTitle } : {},
+    });
     return data.conversation;
   } catch (error) {
     console.error(

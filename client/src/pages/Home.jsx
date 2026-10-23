@@ -8,6 +8,7 @@ import { setUserData } from "../redux/slices/userSlice";
 import ChatArea from "../components/ChatArea";
 import Sandbox from "../components/Sandbox";
 import Sidebar from "../components/Sidebar";
+import AgentFlowLogo from "../components/AgentFlowLogo";
 
 const Home = () => {
   const { userData, loading } = useSelector((state) => state.user);
@@ -52,9 +53,10 @@ const Home = () => {
       ) : (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#181818] p-6 sm:p-8 shadow-2xl shadow-black/50">
-            <div className="flex flex-col gap-2 mb-8 text-center">
+            <div className="flex flex-col items-center gap-2 mb-8 text-center">
+              <AgentFlowLogo size={44} className="mb-2" />
               <h2 className="text-2xl font-semibold">
-                Welcome to AgentFlow-AI
+                Welcome to AgentFlow
               </h2>
               <p className="text-sm text-gray-400">Please Login to continue</p>
             </div>

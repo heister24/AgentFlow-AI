@@ -52,10 +52,17 @@ export const searchAgent = async (state) => {
 
     await deductCredits(state.userId, "search");
 
+    const rawImages = result?.images || [];
+    const formattedImages = Array.isArray(rawImages)
+      ? rawImages
+          .map((img) => (typeof img === "string" ? img : img?.url || img?.src))
+          .filter((url) => typeof url === "string" && url.trim().length > 0)
+      : [];
+
     return {
       ...state,
       searchToolResult: result,
-      images: result?.images || [],
+      images: formattedImages.slice(0, 6),
     };
   } catch (error) {
     console.error("Error in searchAgent:", error);

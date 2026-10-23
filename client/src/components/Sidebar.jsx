@@ -11,7 +11,12 @@ import {
   Receipt,
   CreditCard,
   User,
+  Crown,
+  Zap,
+  Compass,
+  ArrowUpRight,
 } from "lucide-react";
+import AgentFlowLogo from "./AgentFlowLogo";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,6 +43,60 @@ import {
   clearArtifact,
 } from "../redux/slices/artifactSlice";
 
+const PLAN_CONFIG = {
+  plus: {
+    name: "Plus",
+    badgeLabel: "PLUS",
+    icon: Crown,
+    iconColor: "text-amber-400",
+    badgeBg: "bg-linear-to-r from-amber-500/20 via-orange-500/15 to-amber-500/20",
+    badgeBorder: "border-amber-400/50",
+    badgeText: "text-amber-300 font-bold tracking-wider",
+    cardBg: "bg-linear-to-b from-[#251a0d]/95 to-[#161311]/95",
+    cardBorder: "border-amber-500/40",
+    cardGlow: "shadow-[0_0_15px_rgba(245,158,11,0.15)]",
+    dotColor: "bg-amber-400",
+    ringColor: "ring-2 ring-amber-400/70 shadow-[0_0_8px_rgba(245,158,11,0.35)]",
+    upgradeText: "Manage",
+    upgradeBg: "hover:bg-amber-500/20 hover:border-amber-400/50 text-amber-200",
+    progressBar: "bg-linear-to-r from-amber-400 to-orange-400",
+  },
+  basic: {
+    name: "Basic",
+    badgeLabel: "BASIC",
+    icon: Zap,
+    iconColor: "text-cyan-400",
+    badgeBg: "bg-cyan-500/15",
+    badgeBorder: "border-cyan-400/50",
+    badgeText: "text-cyan-300 font-bold tracking-wider",
+    cardBg: "bg-linear-to-b from-[#0e1d24]/95 to-[#11161a]/95",
+    cardBorder: "border-cyan-500/40",
+    cardGlow: "shadow-[0_0_15px_rgba(6,182,212,0.15)]",
+    dotColor: "bg-cyan-400",
+    ringColor: "ring-2 ring-cyan-400/70 shadow-[0_0_8px_rgba(6,182,212,0.35)]",
+    upgradeText: "Upgrade",
+    upgradeBg: "hover:bg-cyan-500/20 hover:border-cyan-400/50 text-cyan-200",
+    progressBar: "bg-linear-to-r from-cyan-400 to-blue-500",
+  },
+  free: {
+    name: "Free",
+    badgeLabel: "FREE",
+    icon: Compass,
+    iconColor: "text-emerald-400",
+    badgeBg: "bg-white/5",
+    badgeBorder: "border-white/15",
+    badgeText: "text-gray-300 font-medium",
+    cardBg: "bg-[#18181c]",
+    cardBorder: "border-white/10",
+    cardGlow: "shadow-none",
+    dotColor: "bg-emerald-400",
+    ringColor: "ring-1 ring-white/20",
+    upgradeText: "Upgrade",
+    upgradeBg: "hover:bg-white/15 text-gray-200",
+    progressBar: "bg-linear-to-r from-emerald-400 to-teal-400",
+  },
+};
+
 const Sidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -46,6 +105,18 @@ const Sidebar = () => {
     (state) => state.conversation,
   );
   const { userData } = useSelector((state) => state.user);
+
+  const userPlanKey = (userData?.plan || "free").toLowerCase();
+  const currentPlan = PLAN_CONFIG[userPlanKey] || PLAN_CONFIG.free;
+  const PlanIcon = currentPlan.icon;
+  const credits = userData?.credits ?? 100;
+  const totalCredits =
+    userData?.totalCredits ||
+    (userPlanKey === "plus" ? 1000 : userPlanKey === "basic" ? 500 : 100);
+  const creditPercent = Math.min(
+    Math.max(Math.round((credits / totalCredits) * 100), 0),
+    100,
+  );
 
   const [conversationMenuOpen, setConversationMenuOpen] = useState(null);
   const [editTitle, setEditTitle] = useState(null);
@@ -239,17 +310,13 @@ const Sidebar = () => {
           </button>
 
           {sidebarOpen && (
-            <div className="flex min-w-0 items-center gap-2">
-              <span
-                onClick={() => navigate("/")}
-                className="cursor-pointer truncate text-sm font-semibold tracking-tight text-white hover:text-gray-200"
-              >
-                AgentFlow-AI
-              </span>
-
-              {/* Dynamic Plan Badge */}
-              <span className="shrink-0 rounded-md border border-white/20 px-1.5 py-0.5 text-[10px] text-gray-400 capitalize">
-                {userData?.plan || "free"}
+            <div
+              onClick={() => navigate("/")}
+              className="flex min-w-0 items-center gap-2 cursor-pointer group"
+            >
+              <AgentFlowLogo size={20} />
+              <span className="truncate text-sm font-semibold tracking-tight text-white group-hover:text-gray-200">
+                AgentFlow
               </span>
             </div>
           )}
@@ -421,43 +488,58 @@ const Sidebar = () => {
         <div className="flex-1" />
       )}
 
-      {/* Credits & Billing Quick Widget */}
+      {/* Compact Credits & Plan Widget */}
       {sidebarOpen ? (
-        <div className="mb-3 rounded-lg border border-white/10 bg-[#1b1c20] p-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-white/10 text-gray-300">
-                <Receipt size={14} />
+        <div className="mb-2.5 rounded-lg border border-white/10 bg-[#16161a] p-2.5 transition-all">
+          <div className="flex items-center justify-between mb-1.5">
+            {/* Left: Plan Icon & Name + Credits count */}
+            <div className="flex items-center gap-1.5 min-w-0">
+              <div className="flex items-center gap-1">
+                <PlanIcon size={13} className={currentPlan.iconColor} />
+                <span className="font-mono text-xs font-semibold text-white">
+                  {currentPlan.name}
+                </span>
               </div>
-              <div>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
-                  Credits
-                </p>
-                <p className="text-xs font-semibold text-white">
-                  {(userData?.credits ?? 100).toLocaleString("en-IN")}
-                </p>
-              </div>
+              <span className="text-gray-600 font-mono text-[10px]">•</span>
+              <span className="font-mono text-[11px] text-gray-300">
+                {credits.toLocaleString("en-IN")}{" "}
+                <span className="text-[10px] text-gray-500 font-normal">
+                  / {totalCredits.toLocaleString("en-IN")}
+                </span>
+              </span>
             </div>
 
+            {/* Right: Sleek Upgrade Link */}
             <button
               type="button"
               onClick={() => navigate("/payment")}
-              className="retro-btn flex items-center gap-1.5 rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-medium text-gray-200 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-mono font-medium text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition cursor-pointer active:scale-95 shrink-0"
             >
-              <CreditCard size={12} className="text-gray-400" />
-              <span>Billing</span>
+              <span>{currentPlan.upgradeText}</span>
+              <ArrowUpRight size={10} className="text-gray-400" />
             </button>
+          </div>
+
+          {/* Minimal 2px Progress Bar */}
+          <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">
+            <div
+              className={`h-full rounded-full transition-all duration-300 ${currentPlan.progressBar}`}
+              style={{ width: `${creditPercent}%` }}
+            />
           </div>
         </div>
       ) : (
-        <div className="mb-3 flex justify-center">
+        <div className="mb-2.5 flex justify-center">
           <button
             type="button"
             onClick={() => navigate("/payment")}
-            title={`Billing (${(userData?.credits ?? 100).toLocaleString()} credits)`}
-            className="retro-btn flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+            title={`${currentPlan.name} Plan • ${credits.toLocaleString("en-IN")} credits`}
+            className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
           >
-            <Receipt size={17} />
+            <PlanIcon size={14} className={currentPlan.iconColor} />
+            <span
+              className={`absolute top-1 right-1 h-1.5 w-1.5 rounded-full ${currentPlan.dotColor}`}
+            />
           </button>
         </div>
       )}
@@ -474,10 +556,12 @@ const Sidebar = () => {
               src={userData.avatar}
               alt={userData.name || "User"}
               onError={() => setAvatarError(true)}
-              className="h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-white/20"
+              className={`h-9 w-9 shrink-0 rounded-full object-cover ${currentPlan.ringColor}`}
             />
           ) : (
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white ring-1 ring-white/20">
+            <div
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white ${currentPlan.ringColor}`}
+            >
               {userData?.name ? (
                 userData.name.charAt(0).toUpperCase()
               ) : (
@@ -488,9 +572,16 @@ const Sidebar = () => {
 
           {sidebarOpen && (
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-medium text-white">
-                {userData?.name || "User"}
-              </p>
+              <div className="flex items-center gap-1.5">
+                <p className="truncate text-xs font-medium text-white">
+                  {userData?.name || "User"}
+                </p>
+                <span
+                  className={`inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider border ${currentPlan.badgeBorder} ${currentPlan.badgeBg} ${currentPlan.badgeText}`}
+                >
+                  {currentPlan.badgeLabel}
+                </span>
+              </div>
               <p className="truncate text-[11px] text-gray-400">
                 {userData?.email}
               </p>

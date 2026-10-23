@@ -26,6 +26,16 @@ const conversationSlice = createSlice({
     toggleSidebar: (state) => {
       state.sidebarOpen = !state.sidebarOpen;
     },
+    updateConversationTitleInList: (state, action) => {
+      const { id, title } = action.payload;
+      const conv = state.conversations.find((c) => c._id === id);
+      if (conv) {
+        conv.title = title;
+      }
+      if (state.selectedConversation?._id === id) {
+        state.selectedConversation.title = title;
+      }
+    },
   },
 });
 
@@ -35,5 +45,6 @@ export const {
   setSelectedConversation,
   setSidebarOpen,
   toggleSidebar,
+  updateConversationTitleInList,
 } = conversationSlice.actions;
 export default conversationSlice.reducer;

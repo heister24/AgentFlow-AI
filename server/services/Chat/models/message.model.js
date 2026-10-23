@@ -34,6 +34,9 @@ const messageSchema = new mongoose.Schema(
     content: {
       type: String,
     },
+    fileName: {
+      type: String,
+    },
     images: [String],
     artifacts: [artifactsSchema],
   },

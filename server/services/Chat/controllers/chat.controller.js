@@ -3,13 +3,16 @@ import Message from "../models/message.model.js";
 
 export const createConversation = async (req, res) => {
   try {
-    // console.log("Chat service headers:", req.headers);
-    // console.log("Received user ID:", req.headers["x-user-id"]);
     const userId = req.headers["x-user-id"];
-    // console.log(userId);
+    const rawTitle = req.query?.title || req.body?.title;
+    const title =
+      typeof rawTitle === "string" && rawTitle.trim().length > 0
+        ? rawTitle.trim().slice(0, 25)
+        : undefined;
 
     const conversation = await Conversation.create({
       userId: userId,
+      ...(title ? { title } : {}),
     });
     return res.status(201).json({
       success: true,
@@ -61,7 +64,7 @@ export const getConversationById = async (req, res) => {
 
 export const updateConversation = async (req, res) => {
   try {
-    const { title, conversationId } = req.body;
+    const { title, conversationId, onlyIfDefault } = req.body;
 
     if (typeof title !== "string" || !title.trim() || !conversationId) {
       return res.status(400).json({
@@ -70,16 +73,29 @@ export const updateConversation = async (req, res) => {
       });
     }
 
-    const conversation = await Conversation.findByIdAndUpdate(
-      conversationId,
-      { title: title.trim() },
+    const trimmedTitle = title.trim().slice(0, 25);
+
+    const filter = { _id: conversationId };
+    if (onlyIfDefault) {
+      filter.$or = [
+        { title: "New Chat" },
+        { title: { $exists: false } },
+        { title: "" },
+      ];
+    }
+
+    const conversation = await Conversation.findOneAndUpdate(
+      filter,
+      { title: trimmedTitle },
       { new: true, runValidators: true },
     );
 
     if (!conversation) {
-      return res.status(404).json({
+      return res.status(onlyIfDefault ? 200 : 404).json({
         success: false,
-        message: "Conversation not found",
+        message: onlyIfDefault
+          ? "Title already customized"
+          : "Conversation not found",
       });
     }
 
@@ -140,13 +156,15 @@ export const deleteConversationById = async (req, res) => {
 
 export const saveMessage = async (req, res) => {
   try {
-    const { conversationId, role, content, images, artifacts } = req.body;
+    const { conversationId, role, content, images, artifacts, fileName } =
+      req.body;
     const message = await Message.create({
       conversationId,
       role,
       content,
       images,
       artifacts,
+      fileName,
     });
     return res.status(200).json(message);
   } catch (error) {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   Download,
   Copy,
@@ -75,7 +76,7 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
   };
 
   return (
-    <div className="my-4 w-full select-none animate-slide-up">
+    <div className="my-3 w-full max-w-lg select-none animate-slide-up">
       <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] retro-card hover:border-white/25">
         {/* Top Header Bar */}
         <div className="flex items-center justify-between border-b border-white/10 bg-[#1c1c1c]/90 px-3.5 py-2.5 backdrop-blur-md">
@@ -129,7 +130,7 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
 
         {/* Image Container with Shimmer Skeleton */}
         <div
-          className="relative min-h-65 w-full overflow-hidden bg-[#0d0d0d] cursor-pointer flex items-center justify-center"
+          className="relative min-h-48 sm:min-h-56 max-h-80 sm:max-h-96 w-full overflow-hidden bg-[#0d0d0d] cursor-pointer flex items-center justify-center"
           onClick={() => loaded && !error && setIsModalOpen(true)}
         >
           {/* Skeleton Loader while image is fetching */}
@@ -186,7 +187,7 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
             loading="lazy"
             onLoad={() => setLoaded(true)}
             onError={() => setError(true)}
-            className={`w-full max-h-145 object-contain transition-all duration-500 ${
+            className={`w-full max-h-80 sm:max-h-96 object-contain transition-all duration-500 ${
               loaded && !error ? "opacity-100 scale-100" : "opacity-0 scale-95"
             } group-hover:scale-[1.01]`}
           />
@@ -216,62 +217,75 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
       </div>
 
       {/* High-Resolution Fullscreen Modal / Lightbox */}
-      {isModalOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setIsModalOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 sm:p-8 backdrop-blur-md animate-fade-in"
-        >
-          {/* Modal Header Toolbar */}
+      {isModalOpen &&
+        createPortal(
           <div
-            onClick={(e) => e.stopPropagation()}
-            className="fixed top-4 right-4 z-50 flex items-center gap-2 rounded-xl border border-white/10 bg-[#1a1a1a]/80 p-1.5 backdrop-blur-lg shadow-xl"
+            role="dialog"
+            aria-modal="true"
+            onClick={() => setIsModalOpen(false)}
+            className="fixed inset-0 z-9999 flex flex-col items-center justify-between bg-black/95 p-4 sm:p-6 backdrop-blur-md select-none animate-fade-in"
           >
-            <button
-              type="button"
-              onClick={handleDownload}
-              title="Download image"
-              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-white transition hover:bg-white/10 cursor-pointer"
+            {/* Modal Header Toolbar */}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-6xl flex items-center justify-between pb-2 shrink-0 border-b border-white/10"
             >
-              <Download size={14} />
-              <span className="hidden sm:inline">Download</span>
-            </button>
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-cyan-400 inline-block" />
+                <span className="text-xs font-mono text-gray-300">
+                  {alt || "Image Preview"}
+                </span>
+              </div>
 
-            <a
-              href={src}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Open original in new tab"
-              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-gray-300 transition hover:bg-white/10 hover:text-white"
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleDownload}
+                  title="Download image"
+                  className="retro-btn flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-white/15 cursor-pointer"
+                >
+                  <Download size={14} />
+                  <span className="hidden sm:inline">Download</span>
+                </button>
+
+                <a
+                  href={src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Open original in new tab"
+                  className="retro-btn flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-gray-300 transition hover:bg-white/15 hover:text-white"
+                >
+                  <ExternalLink size={14} />
+                  <span className="hidden sm:inline">Original</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  title="Close (Esc)"
+                  className="retro-btn flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition hover:bg-white/15 hover:text-white cursor-pointer"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Image Display */}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="relative flex-1 w-full max-w-6xl flex items-center justify-center min-h-0 py-3"
             >
-              <ExternalLink size={14} />
-              <span className="hidden sm:inline">Open original</span>
-            </a>
-
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(false)}
-              title="Close (Esc)"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer"
-            >
-              <X size={18} />
-            </button>
-          </div>
-
-          {/* Modal Image Display */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative max-h-[90vh] max-w-[90vw] overflow-hidden rounded-2xl border border-white/10 bg-[#0d0d0d] shadow-2xl"
-          >
-            <img
-              src={src}
-              alt={alt}
-              className="max-h-[85vh] max-w-[88vw] object-contain rounded-2xl select-none"
-            />
-          </div>
-        </div>
-      )}
+              <div className="relative flex items-center justify-center max-h-full max-w-full overflow-hidden rounded-2xl border border-white/15 bg-[#0d0d0d] shadow-2xl">
+                <img
+                  src={src}
+                  alt={alt}
+                  className="max-h-[75vh] max-w-[85vw] object-contain rounded-2xl select-none"
+                />
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };

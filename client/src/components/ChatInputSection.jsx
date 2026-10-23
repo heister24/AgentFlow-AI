@@ -21,15 +21,17 @@ import {
   setAgentThinking,
 } from "../redux/slices/messagesSlice";
 import createConversation from "../features/createConversation";
+import editConversationTitle from "../features/editConversationTitle";
 import {
   addConversation,
   setSelectedConversation,
+  updateConversationTitleInList,
 } from "../redux/slices/conversationSlice";
 import { setActiveArtifact } from "../redux/slices/artifactSlice";
 import getCurrentUser from "../features/getCurrentUser";
 import { setUserData } from "../redux/slices/userSlice";
 
-const ChatInputSection = () => {
+const ChatInputSection = ({ promptDraft }) => {
   const [input, setInput] = useState("");
   const [selectedAgent, setSelectedAgent] = useState("auto");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -41,6 +43,23 @@ const ChatInputSection = () => {
   const chatInputRef = useRef(null);
   const fileRef = useRef(null);
   const menuRef = useRef(null);
+
+  // Sync prompt draft from welcome cards
+  useEffect(() => {
+    if (promptDraft?.prompt) {
+      setInput(promptDraft.prompt);
+      if (promptDraft.agent) {
+        setSelectedAgent(promptDraft.agent);
+      }
+      setTimeout(() => {
+        if (chatInputRef.current) {
+          chatInputRef.current.focus();
+          chatInputRef.current.style.height = "auto";
+          chatInputRef.current.style.height = `${Math.min(chatInputRef.current.scrollHeight, 180)}px`;
+        }
+      }, 50);
+    }
+  }, [promptDraft]);
 
   // Close agent dropdown on click outside
   useEffect(() => {
@@ -65,11 +84,26 @@ const ChatInputSection = () => {
       setIsSubmitting(true);
       dispatch(setAgentThinking(true));
       let conversationId = selectedConversation?._id;
+      const chatTitle = message.slice(0, 25);
       if (!conversationId) {
-        const conversation = await createConversation();
+        const conversation = await createConversation(chatTitle);
         dispatch(addConversation(conversation));
         dispatch(setSelectedConversation(conversation));
         conversationId = conversation._id;
+      } else if (
+        !selectedConversation.title ||
+        selectedConversation.title === "New Chat"
+      ) {
+        editConversationTitle(chatTitle, conversationId)
+          .then(() => {
+            dispatch(
+              updateConversationTitleInList({
+                id: conversationId,
+                title: chatTitle,
+              }),
+            );
+          })
+          .catch((err) => console.warn("Title auto-update error:", err));
       }
 
       const formData = new FormData();
@@ -106,6 +140,15 @@ const ChatInputSection = () => {
       }
 
       const response = await sendRequestToAgent(formData);
+
+      if (response?.conversationTitle) {
+        dispatch(
+          updateConversationTitleInList({
+            id: conversationId,
+            title: response.conversationTitle,
+          }),
+        );
+      }
 
       dispatch(
         addMsgToSelectedConv({

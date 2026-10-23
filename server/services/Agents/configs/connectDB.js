@@ -5,7 +5,7 @@ const connectDB = async () => {
     const conn = await mongoose.connect(process.env.MONGO_URI);
     console.log(`Agent Database connected on host ${conn.connection.host}`);
   } catch (error) {
-    console.log("Database connection error at Agent", error);
+    console.error("Database connection error at Agent:", error);
   }
 };
 

@@ -38,7 +38,7 @@ export const createOrder = async (req, res) => {
       plan: selectedPlan,
     });
   } catch (error) {
-    console.log(`Error while creating order : ${error}`);
+    console.error("Error while creating order:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error while creating order",
@@ -86,7 +86,7 @@ export const verifyPayment = async (req, res) => {
       message: "Payment Verified",
     });
   } catch (error) {
-    console.log(`Error while verifying payment : ${error}`);
+    console.error("Error while verifying payment:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error while verifying payment",

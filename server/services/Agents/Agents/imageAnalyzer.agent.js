@@ -53,7 +53,7 @@ export const imageAnalyzerAgent = async (state) => {
 
     const response = await llm.invoke(msgs);
 
-    console.log(response.content);
+    // console.log(response.content);
 
     if (state.userId) {
       await deductCredits(state.userId, "imageAnalyzer");
@@ -69,4 +69,3 @@ export const imageAnalyzerAgent = async (state) => {
     throw error;
   }
 };
-

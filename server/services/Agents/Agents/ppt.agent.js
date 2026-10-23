@@ -179,7 +179,7 @@ const parsePresentationJSON = (
 
 export const pptAgent = async (state) => {
   try {
-    console.log("PPT agent called with prompt:", state.prompt);
+    // console.log("PPT agent called with prompt:", state.prompt);
     const pptLLM = await getModel("ppt");
     const prompt = `
 You are a professional PowerPoint presentation content generator.

@@ -111,7 +111,7 @@ export const logout = async (req, res) => {
       message: "Logged out successfully",
     });
   } catch (error) {
-    console.log(error);
+    console.error("Logout error:", error);
     return res.status(500).json({
       success: false,
       message: "Logout failed",
@@ -160,7 +160,7 @@ export const updateUserAfterPayment = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Payment update error:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server err",
@@ -231,7 +231,7 @@ export const deductCredits = async (req, res) => {
       credits: user.credits,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Credit deduction error:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",

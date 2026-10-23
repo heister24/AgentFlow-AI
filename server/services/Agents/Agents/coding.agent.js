@@ -10,7 +10,7 @@ import deductCredits from "../utils/deductCredits.js";
 
 export const codingAgent = async (state) => {
   try {
-    console.log("Coding agent called for prompt:", state.prompt);
+    // console.log("Coding agent called for prompt:", state.prompt);
     const intentLLM = await getModel("intent");
     const codingLLM = await getModel("coding");
 
@@ -33,7 +33,7 @@ Return ONLY the category name in uppercase. No punctuation, no extra words.
 User Request: ${state.prompt}
       `);
       intent = (intentResponse.content || "").trim().toUpperCase();
-      console.log("Classified coding intent:", intent);
+      // console.log("Classified coding intent:", intent);
     } catch (classifyErr) {
       console.warn(
         "Intent classification fallback to CODE_GENERATION:",
@@ -108,9 +108,9 @@ Whenever you generate code files, complete projects, or script solutions:
       typeof response.content === "string" ? response.content : "";
 
     const extractedFiles = extractFilesFromMarkdown(content);
-    console.log(
-      `Extracted ${extractedFiles.length} file(s) for artifact from response.`,
-    );
+    // console.log(
+    //   `Extracted ${extractedFiles.length} file(s) for artifact from response.`,
+    // );
 
     const artifacts =
       extractedFiles.length > 0

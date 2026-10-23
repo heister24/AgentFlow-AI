@@ -6,7 +6,7 @@ import deductCredits from "../utils/deductCredits.js";
 
 export const imageAgent = async (state) => {
   try {
-    console.log("Image agent responding");
+    // console.log("Image agent responding");
     const llm = await getModel("chat");
     const res = await llm.invoke(`
             You are an elite AI image prompt engineer.

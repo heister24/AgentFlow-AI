@@ -104,5 +104,15 @@ export const agent = async (req, res) => {
       success: false,
       message: "Failed to process agent request",
     });
+  } finally {
+    if (req.file?.path) {
+      try {
+        await fs.promises.unlink(req.file.path);
+      } catch (cleanupError) {
+        if (cleanupError.code !== "ENOENT") {
+          console.error("Failed to remove uploaded file:", cleanupError);
+        }
+      }
+    }
   }
 };

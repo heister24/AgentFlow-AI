@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const uploadDirectory = path.resolve("./temp");
-console.log(uploadDirectory);
+// console.log(uploadDirectory);
 
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory, { recursive: true });

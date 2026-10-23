@@ -183,7 +183,7 @@ const parseDocumentJSON = (rawText, defaultTitle = "Executive Document") => {
 
 export const pdfAgent = async (state) => {
   try {
-    console.log("PDF agent responding to prompt:", state.prompt);
+    // console.log("PDF agent responding to prompt:", state.prompt);
     const pdfLLM = await getModel("pdf");
 
     const prompt = `

@@ -5,7 +5,7 @@ const connectDB = async () => {
     const conn = await mongoose.connect(process.env.MONGO_URL);
     console.log(`Chat Database connected on host ${conn.connection.host}`);
   } catch (error) {
-    console.log(`Chat Database connection error ${error}`);
+    console.error("Chat Database connection error:", error);
   }
 };
 

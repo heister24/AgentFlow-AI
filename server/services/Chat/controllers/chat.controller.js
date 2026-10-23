@@ -20,7 +20,7 @@ export const createConversation = async (req, res) => {
       conversation,
     });
   } catch (error) {
-    console.log(`Error While creating conversation : ${error}`);
+    console.error("Error while creating conversation:", error);
     return res.status(500).json({
       success: false,
       message: "Conversation creation error",
@@ -37,7 +37,7 @@ export const getConversations = async (req, res) => {
     });
     return res.status(200).json(conversations);
   } catch (error) {
-    console.log(`Error While fetching conversations : ${error}`);
+    console.error("Error while fetching conversations:", error);
     return res.status(500).json({
       success: false,
       message: "Get Conversations  error",
@@ -54,7 +54,7 @@ export const getConversationById = async (req, res) => {
     });
     return res.status(200).json({ conversation, messages });
   } catch (error) {
-    console.log(`Error While fetching specific conversation : ${error}`);
+    console.error("Error while fetching specific conversation:", error);
     return res.status(500).json({
       success: false,
       message: " Get specific Conversations error",
@@ -146,7 +146,7 @@ export const deleteConversationById = async (req, res) => {
       conversation: deletedConversation,
     });
   } catch (error) {
-    console.log(`Error while deleting conversation : ${error}`);
+    console.error("Error while deleting conversation:", error);
     return res.status(500).json({
       success: false,
       message: "Internal Error while deleting conversation",
@@ -168,7 +168,7 @@ export const saveMessage = async (req, res) => {
     });
     return res.status(200).json(message);
   } catch (error) {
-    console.log(`Save Message Error : ${error}`);
+    console.error("Save message error:", error);
     return res.status(500).json({
       success: false,
       message: "Save Message error",
@@ -183,7 +183,7 @@ export const getAllMessages = async (req, res) => {
     }).sort({ createdAt: 1 });
     return res.status(200).json(messages);
   } catch (error) {
-    console.log(`Get All Message Error : ${error}`);
+    console.error("Get all messages error:", error);
     return res.status(500).json({
       success: false,
       message: "Get All Message error",

@@ -175,34 +175,34 @@ const Sandbox = () => {
         }`}
       >
       {/* Top Header */}
-      <div className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-4 bg-[#1b1c20]">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-gray-300 retro-shadow-sm">
-            <Layers size={15} />
+      <div className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-3 sm:px-4 bg-[#1b1c20]">
+        <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+          <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-gray-300 retro-shadow-sm">
+            <Layers size={14} />
           </div>
           <div className="min-w-0">
-            <h3 className="truncate text-sm font-semibold text-white">
+            <h3 className="truncate text-xs sm:text-sm font-semibold text-white">
               Code Sandbox
             </h3>
-            <span className="text-[11px] font-mono text-gray-400">
+            <span className="hidden sm:inline text-[11px] font-mono text-gray-400">
               [ {files.length} {files.length === 1 ? "file" : "files"} ]
             </span>
           </div>
         </div>
 
         {/* View Switcher (Code / Preview) & Actions */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
           <div className="flex items-center rounded-lg border border-white/15 bg-[#111111] p-0.5 retro-shadow-sm">
             <button
               type="button"
               onClick={() => dispatch(setActiveTab("code"))}
-              className={`retro-btn flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-mono transition cursor-pointer ${
+              className={`retro-btn flex items-center gap-1 sm:gap-1.5 rounded-md px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-mono transition cursor-pointer ${
                 activeTab === "code"
                   ? "border border-white/20 bg-white/15 text-white font-medium"
                   : "border-transparent text-gray-400 hover:text-gray-200"
               }`}
             >
-              <Code size={13} />
+              <Code size={12} />
               <span>Code</span>
             </button>
             <button
@@ -212,7 +212,7 @@ const Sandbox = () => {
               title={
                 hasHtml ? "Live Preview" : "No HTML file available for preview"
               }
-              className={`retro-btn flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-mono transition cursor-pointer ${
+              className={`retro-btn flex items-center gap-1 sm:gap-1.5 rounded-md px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-mono transition cursor-pointer ${
                 activeTab === "preview"
                   ? "border border-white/20 bg-white/15 text-white font-medium"
                   : hasHtml
@@ -220,7 +220,7 @@ const Sandbox = () => {
                     : "border-transparent text-gray-600 cursor-not-allowed shadow-none"
               }`}
             >
-              <Eye size={13} />
+              <Eye size={12} />
               <span>Preview</span>
             </button>
           </div>
@@ -231,9 +231,9 @@ const Sandbox = () => {
               type="button"
               onClick={() => setIframeKey((prev) => prev + 1)}
               title="Reload preview"
-              className="retro-btn flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
+              className="retro-btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
             >
-              <RefreshCw size={14} />
+              <RefreshCw size={13} />
             </button>
           )}
 
@@ -243,17 +243,17 @@ const Sandbox = () => {
                 type="button"
                 onClick={handleCopyCode}
                 title="Copy current file code"
-                className="retro-btn flex h-8 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 text-xs font-mono text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
+                className="retro-btn flex h-7 sm:h-8 items-center gap-1 sm:gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2 sm:px-2.5 text-xs font-mono text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
               >
                 {copied ? (
                   <span className="flex items-center gap-1 text-emerald-400 animate-pop font-medium">
                     <Check size={13} />
-                    <span>Copied</span>
+                    <span className="hidden sm:inline">Copied</span>
                   </span>
                 ) : (
                   <>
                     <Copy size={13} />
-                    <span>Copy</span>
+                    <span className="hidden sm:inline">Copy</span>
                   </>
                 )}
               </button>
@@ -262,9 +262,9 @@ const Sandbox = () => {
                 type="button"
                 onClick={handleDownloadFile}
                 title={`Download ${selectedFile.name}`}
-                className="retro-btn flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
+                className="retro-btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
               >
-                <Download size={14} />
+                <Download size={13} />
               </button>
             </>
           )}
@@ -273,7 +273,7 @@ const Sandbox = () => {
             type="button"
             onClick={() => dispatch(toggleFullscreen())}
             title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-            className="retro-btn flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
+            className="hidden sm:flex retro-btn h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
           >
             {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
           </button>
@@ -282,9 +282,9 @@ const Sandbox = () => {
             type="button"
             onClick={() => dispatch(setArtifactOpen(false))}
             title="Close Sandbox"
-            className="retro-btn flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition hover:bg-red-500/20 hover:text-red-300 hover:border-red-500/30 cursor-pointer active:scale-95"
+            className="retro-btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition hover:bg-red-500/20 hover:text-red-300 hover:border-red-500/30 cursor-pointer active:scale-95"
           >
-            <X size={15} />
+            <X size={14} />
           </button>
         </div>
       </div>

@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { setUserData } from "./redux/slices/userSlice";
 import { Route, Routes } from "react-router-dom";
 import Payment from "./pages/Payment";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsAndConditions from "./pages/TermsAndConditions";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -24,6 +26,8 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/payment" element={<Payment />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/terms" element={<TermsAndConditions />} />
     </Routes>
   );
 };

@@ -4,6 +4,8 @@
 User-agent: *
 Allow: /
 Allow: /payment
+Allow: /privacy
+Allow: /terms
 
 # Disallow private/internal app endpoints
 Disallow: /api/

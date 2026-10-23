@@ -145,6 +145,9 @@ const Sidebar = () => {
         dispatch(clearArtifact());
         setConversationMenuOpen(null);
         setEditTitle(null);
+        if (typeof window !== "undefined" && window.innerWidth < 768) {
+          dispatch(setSidebarOpen(false));
+        }
       }
     } catch (error) {
       console.error("Failed to create conversation:", error);
@@ -255,6 +258,10 @@ const Sidebar = () => {
         dispatch(setActiveArtifact(lastArtifactMsg.artifacts[0]));
       } else {
         dispatch(clearArtifact());
+      }
+
+      if (typeof window !== "undefined" && window.innerWidth < 768) {
+        dispatch(setSidebarOpen(false));
       }
     } catch (error) {
       console.error("Failed to open conversation:", error);

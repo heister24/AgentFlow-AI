@@ -14,6 +14,7 @@ import createOrder from "../features/createOrder";
 import verifyPayment from "../features/verifyPayment";
 import getCurrentUser from "../features/getCurrentUser";
 import { setUserData } from "../redux/slices/userSlice";
+import usePageMeta from "../hooks/usePageMeta";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const PLANS = {
@@ -46,6 +47,15 @@ const Payment = () => {
   const { userData } = useSelector((state) => state.user);
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [statusMessage, setStatusMessage] = useState(null);
+
+  // Dynamic Page-Specific Meta Title & Description
+  usePageMeta({
+    title: "Plans & Pricing — AgentFlow",
+    description:
+      "Choose the right plan for your autonomous workflow. Upgrade to unlock more credits, interactive code sandboxes, live web intelligence, and slide presentations.",
+    keywords:
+      "AgentFlow pricing, AI plans, buy credits, AgentFlow subscription, AI agents pricing",
+  });
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -167,20 +177,20 @@ const Payment = () => {
   const userCurrentPlanId = userData?.plan?.toLowerCase() || "free";
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white p-5 sm:p-10 flex flex-col justify-between retro-grid">
+    <div className="min-h-screen bg-[#0d0d0d] text-white p-4 sm:p-8 md:p-10 flex flex-col justify-between retro-grid">
       {/* Top Nav */}
-      <div className="w-full max-w-5xl mx-auto flex items-center justify-between mb-8">
+      <div className="w-full max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-3 mb-6 sm:mb-8">
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 text-xs font-mono text-gray-400 hover:text-white transition-colors cursor-pointer"
+          className="flex items-center gap-2 text-xs font-mono text-gray-400 hover:text-white transition-colors cursor-pointer active:scale-95"
         >
           <ArrowLeft size={15} />
           <span>&lt; Back</span>
         </button>
 
         {userData && (
-          <div className="text-xs font-mono text-gray-400">
+          <div className="flex items-center gap-1 text-xs font-mono text-gray-400 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1">
             <span>Balance: </span>
             <span className="font-semibold text-white">
               {(userData.credits ?? 100).toLocaleString("en-IN")}
@@ -193,7 +203,7 @@ const Payment = () => {
       {/* Main Container */}
       <div className="w-full max-w-5xl mx-auto my-auto">
         {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-6 sm:mb-10">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight font-mono">
             [ Plans & Pricing ]
           </h1>
@@ -224,7 +234,7 @@ const Payment = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
           {plans.map((plan) => {
             const isCurrent = userCurrentPlanId === plan.id;
             const isLoading = loadingPlan === plan.id;
@@ -232,7 +242,7 @@ const Payment = () => {
             return (
               <div
                 key={plan.id}
-                className={`flex flex-col rounded-xl border p-6 retro-card transition-all duration-200 animate-slide-up ${
+                className={`flex flex-col rounded-xl border p-5 sm:p-6 retro-card transition-all duration-200 animate-slide-up ${
                   plan.popular
                     ? "border-white/25 bg-[#161618] retro-shadow-dark ring-1 ring-white/10 hover:border-white/40"
                     : "border-white/10 bg-[#141416] retro-shadow hover:border-white/30"
@@ -324,8 +334,26 @@ const Payment = () => {
       </div>
 
       {/* Footer */}
-      <div className="text-center text-[11px] text-gray-600 mt-8">
-        AgentFlow-AI
+      <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center text-[11px] text-gray-500 font-mono">
+        <span>&copy; {new Date().getFullYear()} AgentFlow</span>
+        <span className="hidden sm:inline text-gray-700">•</span>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate("/privacy")}
+            className="hover:text-gray-300 transition cursor-pointer underline"
+          >
+            Privacy Policy
+          </button>
+          <span>•</span>
+          <button
+            type="button"
+            onClick={() => navigate("/terms")}
+            className="hover:text-gray-300 transition cursor-pointer underline"
+          >
+            Terms &amp; Conditions
+          </button>
+        </div>
       </div>
     </div>
   );

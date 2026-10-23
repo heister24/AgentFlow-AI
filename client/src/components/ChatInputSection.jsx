@@ -241,25 +241,25 @@ const ChatInputSection = ({ promptDraft }) => {
             onKeyDown={handleKeyDown}
             disabled={isSubmitting}
             rows={1}
-            className="hide-scrollbar block min-h-10.5 max-h-48 w-full resize-none overflow-y-auto bg-transparent px-4 pt-3 pb-1 text-[14px] leading-6 text-white outline-none disabled:opacity-60 sm:text-[15px]"
+            className="hide-scrollbar block min-h-10.5 max-h-48 w-full resize-none overflow-y-auto bg-transparent px-3 pt-2.5 pb-1 sm:px-4 sm:pt-3 text-[16px] sm:text-[14px] leading-6 text-white outline-none disabled:opacity-60"
           />
 
           {/* Action Toolbar */}
-          <div className="flex items-center justify-between gap-2 px-3 pb-2.5 pt-1">
-            <div className="flex items-center gap-1.5" ref={menuRef}>
+          <div className="flex items-center justify-between gap-1.5 sm:gap-2 px-2.5 sm:px-3 pb-2 sm:pb-2.5 pt-1">
+            <div className="flex items-center gap-1 sm:gap-1.5" ref={menuRef}>
               {/* Compact Agent Selector Dropdown */}
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => setAgentMenuOpen((prev) => !prev)}
                   title="Switch Agent"
-                  className="retro-btn flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-gray-300 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+                  className="retro-btn flex items-center gap-1 sm:gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2 sm:px-2.5 py-1 text-xs font-medium text-gray-300 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
                 >
-                  <AgentIcon size={13} className="text-gray-300" />
-                  <span>{currentAgent.label}</span>
+                  <AgentIcon size={13} className="text-gray-300 shrink-0" />
+                  <span className="max-w-[75px] sm:max-w-none truncate">{currentAgent.label}</span>
                   <ChevronDown
                     size={12}
-                    className={`text-gray-400 transition-transform duration-200 ${
+                    className={`text-gray-400 transition-transform duration-200 shrink-0 ${
                       agentMenuOpen ? "rotate-180" : ""
                     }`}
                   />

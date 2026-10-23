@@ -60,6 +60,70 @@ const QUICK_PROMPTS = [
   },
 ];
 
+const AgentGeneratingIndicator = () => {
+  const [stageIndex, setStageIndex] = useState(0);
+
+  const stages = [
+    "Thinking & analyzing prompt...",
+    "Gathering context & sources...",
+    "Synthesizing response...",
+    "Generating output...",
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStageIndex((prev) => (prev < stages.length - 1 ? prev + 1 : prev));
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [stages.length]);
+
+  return (
+    <div className="flex w-full justify-start animate-slide-up">
+      <div className="max-w-[94%] sm:max-w-[85%] lg:max-w-[78%] rounded-xl rounded-bl-sm border border-white/15 bg-[#171717] px-4 py-3 sm:px-5 sm:py-4 text-gray-200 retro-shadow-sm min-w-[270px] sm:min-w-[340px]">
+        {/* Status header with logo & cycling shimmer message */}
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <AgentFlowLogo size={16} className="shrink-0" />
+            <span className="text-xs font-mono font-medium tracking-tight animate-shimmer-text truncate">
+              {stages[stageIndex]}
+            </span>
+          </div>
+
+          {/* Smooth wave dots */}
+          <div className="flex items-center gap-1 shrink-0">
+            <span className="h-1.5 w-1.5 rounded-full bg-white/80 animate-wave-dot-1" />
+            <span className="h-1.5 w-1.5 rounded-full bg-white/80 animate-wave-dot-2" />
+            <span className="h-1.5 w-1.5 rounded-full bg-white/80 animate-wave-dot-3" />
+          </div>
+        </div>
+
+        {/* Shimmering generation skeleton lines */}
+        <div className="space-y-2 pt-0.5">
+          <div className="h-2.5 w-4/5 overflow-hidden rounded-full bg-white/10">
+            <div className="h-full w-full bg-linear-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+          </div>
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/10">
+            <div
+              className="h-full w-full bg-linear-to-r from-transparent via-white/20 to-transparent animate-shimmer"
+              style={{ animationDelay: "200ms" }}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="h-2.5 w-1/2 overflow-hidden rounded-full bg-white/10">
+              <div
+                className="h-full w-full bg-linear-to-r from-transparent via-white/20 to-transparent animate-shimmer"
+                style={{ animationDelay: "400ms" }}
+              />
+            </div>
+            <span className="inline-block h-3.5 w-1 bg-white/70 retro-cursor rounded-xs" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ChatMessagesSection = ({ onSelectPrompt }) => {
   const dispatch = useDispatch();
   const { selectedConversation } = useSelector((state) => state.conversation);
@@ -126,7 +190,7 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
           </div>
         </div>
       ) : (
-        <div className="hide-scrollbar flex-1 space-y-6 overflow-y-auto px-4 pt-10 pb-6 sm:px-8 sm:pt-12 lg:px-12">
+        <div className="hide-scrollbar flex-1 space-y-5 sm:space-y-6 overflow-y-auto px-3.5 pt-4 pb-6 sm:px-8 sm:pt-8 lg:px-12">
           {selectedConvMsgs.map((msg, index) => {
             const isUser = msg.role === "user";
 
@@ -136,10 +200,10 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                 className={`flex w-full animate-slide-up ${isUser ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[90%] break-words sm:max-w-[82%] lg:max-w-[78%] transition-all ${
+                  className={`max-w-[94%] break-words sm:max-w-[85%] lg:max-w-[78%] transition-all ${
                     isUser
-                      ? "rounded-xl rounded-br-sm border border-white/15 bg-[#222222] px-4 py-3 text-white retro-shadow-sm"
-                      : "rounded-xl rounded-bl-sm border border-white/15 bg-[#171717] px-5 py-4 text-gray-200 retro-shadow-sm"
+                      ? "rounded-xl rounded-br-sm border border-white/15 bg-[#222222] px-3.5 py-2.5 sm:px-4 sm:py-3 text-white retro-shadow-sm"
+                      : "rounded-xl rounded-bl-sm border border-white/15 bg-[#171717] px-3.5 py-3 sm:px-5 sm:py-4 text-gray-200 retro-shadow-sm"
                   }`}
                 >
                   {/* Uploaded File (e.g. PDF) */}
@@ -245,8 +309,8 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                           const isCopied = copiedCodeIndex === snippetId;
 
                           return (
-                            <div className="my-4 min-w-0 max-w-full overflow-hidden rounded-xl border border-white/10 bg-[#101010] retro-shadow-sm transition-all">
-                              <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-[#1c1c1c] px-4 py-2">
+                            <div className="my-3 sm:my-4 min-w-0 max-w-full overflow-hidden rounded-xl border border-white/10 bg-[#101010] retro-shadow-sm transition-all">
+                              <div className="flex items-center justify-between gap-2 sm:gap-3 border-b border-white/10 bg-[#1c1c1c] px-3 py-1.5 sm:px-4 sm:py-2">
                                 <span className="text-xs font-medium font-mono text-gray-300">
                                   {language}
                                 </span>
@@ -255,7 +319,7 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                                   onClick={() =>
                                     handleCopyCode(code, snippetId)
                                   }
-                                  className="retro-btn flex items-center gap-1 rounded-md px-2.5 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+                                  className="retro-btn flex items-center gap-1 rounded-md px-2 py-0.5 sm:px-2.5 sm:py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
                                 >
                                   {isCopied ? (
                                     <span className="flex items-center gap-1 text-emerald-400 animate-pop font-medium">
@@ -265,7 +329,8 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                                   ) : (
                                     <>
                                       <Copy size={13} />
-                                      <span>Copy code</span>
+                                      <span className="hidden sm:inline">Copy code</span>
+                                      <span className="sm:hidden">Copy</span>
                                     </>
                                   )}
                                 </button>
@@ -277,10 +342,10 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                                 PreTag="div"
                                 customStyle={{
                                   margin: 0,
-                                  padding: "16px",
+                                  padding: "12px",
                                   background: "#101010",
-                                  fontSize: "13px",
-                                  lineHeight: "1.7",
+                                  fontSize: "12.5px",
+                                  lineHeight: "1.65",
                                   overflowX: "auto",
                                   borderRadius: 0,
                                   maxWidth: "100%",
@@ -443,26 +508,8 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
             );
           })}
 
-          {/* Agent Processing / Thinking Indicator */}
-          {isAgentThinking && (
-            <div className="flex w-full justify-start animate-slide-up">
-              <div className="flex items-center gap-2.5 rounded-xl rounded-bl-sm border border-white/15 bg-[#171717] px-4 py-2.5 text-xs font-mono text-gray-300 retro-shadow-sm">
-                <span className="text-emerald-400 font-bold">&gt;</span>
-                <span className="tracking-wide text-gray-300">PROCESSING</span>
-                <span className="inline-flex items-center gap-1 ml-0.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span
-                    className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"
-                    style={{ animationDelay: "150ms" }}
-                  />
-                  <span
-                    className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"
-                    style={{ animationDelay: "300ms" }}
-                  />
-                </span>
-              </div>
-            </div>
-          )}
+          {/* Agent Generating / Thinking Indicator */}
+          {isAgentThinking && <AgentGeneratingIndicator />}
 
           <div ref={messagesEndRef} />
         </div>

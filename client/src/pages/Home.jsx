@@ -3,16 +3,32 @@ import api from "../utils/api";
 import { auth, googleProvider } from "../utils/firebase";
 import { FcGoogle } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { setUserData } from "../redux/slices/userSlice";
 
 import ChatArea from "../components/ChatArea";
 import Sandbox from "../components/Sandbox";
 import Sidebar from "../components/Sidebar";
 import AgentFlowLogo from "../components/AgentFlowLogo";
+import usePageMeta from "../hooks/usePageMeta";
 
 const Home = () => {
   const { userData, loading } = useSelector((state) => state.user);
+  const { selectedConversation } = useSelector((state) => state.conversation);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // Dynamic Page-Specific Meta Title & Description
+  usePageMeta({
+    title: selectedConversation?.title
+      ? `${selectedConversation.title} — AgentFlow`
+      : "AgentFlow — Autonomous AI Workflows & Intelligence",
+    description: selectedConversation?.title
+      ? `Conversation "${selectedConversation.title}" on AgentFlow. Multi-agent workflows, code sandbox, presentations, and live web intelligence.`
+      : "AgentFlow is an autonomous AI agent platform combining real-time web search, interactive React code sandboxes, presentation generation, and deep reasoning workflows.",
+    keywords:
+      "AgentFlow, AI agents, autonomous workflow, React sandbox, web search, AI presentations",
+  });
 
   const handleLogin = async (token) => {
     try {
@@ -27,7 +43,6 @@ const Home = () => {
     try {
       const response = await signInWithPopup(auth, googleProvider);
       const token = await response.user.getIdToken();
-      console.log(token)
       await handleLogin(token);
     } catch (error) {
       console.error("Google sign-in popup error:", error);
@@ -51,24 +66,47 @@ const Home = () => {
           <Sandbox />
         </div>
       ) : (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#181818] p-6 sm:p-8 shadow-2xl shadow-black/50">
-            <div className="flex flex-col items-center gap-2 mb-8 text-center">
-              <AgentFlowLogo size={44} className="mb-2" />
-              <h2 className="text-2xl font-semibold">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
+          <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-[#161618] p-6 sm:p-8 shadow-2xl shadow-black/70 animate-fade-in text-center">
+            {/* Header / Brand */}
+            <div className="flex flex-col items-center gap-2 mb-6">
+              <AgentFlowLogo size={40} className="mb-1" />
+              <h2 className="text-xl font-bold tracking-tight text-white font-mono">
                 Welcome to AgentFlow
               </h2>
-              <p className="text-sm text-gray-400">Please Login to continue</p>
+              <p className="text-xs text-gray-400">
+                Sign in to access your autonomous AI workspaces.
+              </p>
             </div>
 
+            {/* Primary Google Login Button */}
             <button
               type="button"
               onClick={googleLogin}
-              className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-gray-700 bg-white px-5 py-3 font-medium text-gray-800 transition-all duration-200 hover:bg-gray-100"
+              className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-white/15 bg-white px-4 py-2.5 text-xs font-semibold text-gray-900 shadow-sm transition hover:bg-gray-100 active:scale-[0.99]"
             >
-              <span>Sign in with</span>
-              <FcGoogle className="text-xl" />
+              <FcGoogle className="text-lg shrink-0" />
+              <span>Continue with Google</span>
             </button>
+
+            {/* Privacy & Terms Links */}
+            <div className="mt-6 flex items-center justify-center gap-2 text-[10px] text-gray-500 font-mono">
+              <button
+                type="button"
+                onClick={() => navigate("/privacy")}
+                className="hover:text-gray-300 transition cursor-pointer"
+              >
+                Privacy Policy
+              </button>
+              <span>•</span>
+              <button
+                type="button"
+                onClick={() => navigate("/terms")}
+                className="hover:text-gray-300 transition cursor-pointer"
+              >
+                Terms of Service
+              </button>
+            </div>
           </div>
         </div>
       )}

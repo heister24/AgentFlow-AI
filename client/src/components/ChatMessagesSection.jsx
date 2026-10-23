@@ -258,9 +258,9 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                     remarkPlugins={[remarkGfm]}
                     components={{
                       p: ({ children }) => (
-                        <p className="text-[15px] leading-7 last:mb-0 text-gray-200">
+                        <div className="text-[15px] leading-7 last:mb-0 text-gray-200 my-1.5">
                           {children}
-                        </p>
+                        </div>
                       ),
                       ul: ({ children }) => (
                         <ul className="my-2.5 ml-5 list-disc space-y-1 text-[15px] leading-7 marker:text-gray-400">

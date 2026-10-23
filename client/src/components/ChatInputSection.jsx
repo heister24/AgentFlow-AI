@@ -209,6 +209,7 @@ const ChatInputSection = ({ promptDraft }) => {
   return (
     <div className="w-full bg-transparent px-3 pb-3 sm:px-6 sm:pb-4">
       <div className="mx-auto w-full max-w-3xl">
+
         {/* Input box synced with message bubble background */}
         <div className="relative rounded-xl border border-white/15 bg-[#222222] retro-shadow focus-within:border-white/30 focus-within:shadow-[3px_3px_0px_rgba(255,255,255,0.2)] transition-all duration-200">
           {/* File Attachment Chip */}
@@ -256,7 +257,9 @@ const ChatInputSection = ({ promptDraft }) => {
                   className="retro-btn flex items-center gap-1 sm:gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2 sm:px-2.5 py-1 text-xs font-medium text-gray-300 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
                 >
                   <AgentIcon size={13} className="text-gray-300 shrink-0" />
-                  <span className="max-w-[75px] sm:max-w-none truncate">{currentAgent.label}</span>
+                  <span className="max-w-[75px] sm:max-w-none truncate">
+                    {currentAgent.label}
+                  </span>
                   <ChevronDown
                     size={12}
                     className={`text-gray-400 transition-transform duration-200 shrink-0 ${
@@ -354,17 +357,23 @@ const ChatInputSection = ({ promptDraft }) => {
 
               <button
                 type="button"
-                disabled={input.trim().length === 0 || isSubmitting}
-                aria-label="Send message"
+                disabled={isSubmitting || input.trim().length === 0}
+                aria-label={isSubmitting ? "Generating response..." : "Send message"}
                 onClick={handleSendRequest}
-                className={`group flex h-8 w-8 shrink-0 items-center justify-center rounded-lg retro-btn transition-all duration-150 cursor-pointer ${
-                  input.trim().length > 0 && !isSubmitting
-                    ? "bg-white text-[#151820] hover:scale-105"
-                    : "bg-white/10 text-gray-400 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
+                className={`group relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg retro-btn transition-all duration-200 ${
+                  isSubmitting
+                    ? "send-btn-loading"
+                    : input.trim().length > 0
+                      ? "bg-white text-[#151820] hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                      : "bg-white/10 text-gray-500 cursor-not-allowed opacity-40 shadow-none"
                 }`}
               >
                 {isSubmitting ? (
-                  <Loader2 size={15} className="animate-spin text-gray-700" />
+                  <Loader2
+                    size={16}
+                    strokeWidth={2.75}
+                    className="send-spinner text-[#121214]"
+                  />
                 ) : (
                   <Send
                     size={14}

@@ -3,6 +3,7 @@ import "dotenv/config";
 import cookieParser from "cookie-parser";
 import connectDB from "./configs/connectDB.js";
 import agentRouter from "./routes/agent.routes.js";
+import agentLimit from "./configs/agentLimit.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get("/health", (req, res) => {
   res.send("Agent API running");
 });
 
+app.use(agentLimit);
 app.use("/", agentRouter);
 
 app.listen(port, () => {

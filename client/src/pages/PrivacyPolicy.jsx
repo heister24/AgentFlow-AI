@@ -15,9 +15,9 @@ const PrivacyPolicy = () => {
   });
 
   return (
-    <div className="min-h-screen w-full bg-[#0d0d0d] text-white selection:bg-white/20 selection:text-white retro-grid">
+    <div className="min-h-screen w-full bg-[#0B0B0C] text-white selection:bg-[#C8102E]/30 selection:text-white retro-grid">
       {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-[#0d0d0d]/90 backdrop-blur-md">
+      <header className="sticky top-0 z-30 border-b border-[#1D1E24] bg-[#0E0F12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3.5 sm:px-6">
           <div
             onClick={() => navigate("/")}
@@ -32,7 +32,7 @@ const PrivacyPolicy = () => {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-mono text-gray-300 transition hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[#8A8D93]/20 bg-white/5 px-3 py-1.5 text-xs font-mono text-[#8A8D93] transition hover:border-[#C8102E]/40 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
           >
             <ArrowLeft size={13} />
             <span>Back</span>
@@ -47,19 +47,19 @@ const PrivacyPolicy = () => {
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-mono">
             Privacy Policy
           </h1>
-          <p className="mt-1.5 text-xs text-gray-500">
+          <p className="mt-1.5 text-xs text-[#8A8D93]">
             Last Updated: October 2026
           </p>
         </div>
 
         {/* Content Box */}
-        <div className="space-y-7 rounded-xl border border-white/10 bg-[#141416]/90 p-6 sm:p-8 text-gray-300 text-sm leading-relaxed backdrop-blur-sm shadow-xl">
+        <div className="space-y-7 rounded-xl border border-[#20222A] bg-[#111216]/95 p-6 sm:p-8 text-gray-300 text-sm leading-relaxed backdrop-blur-sm shadow-xl">
           {/* Section 1 */}
           <section className="space-y-2.5">
-            <h2 className="text-sm font-semibold text-white font-mono uppercase tracking-wider">
+            <h2 className="text-sm font-semibold text-white font-mono uppercase tracking-wider border-l-2 border-[#C8102E] pl-2.5">
               1. Information We Collect
             </h2>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-[#8A8D93]">
               When you use AgentFlow, we collect information required to operate and maintain your workspaces:
             </p>
             <ul className="list-disc pl-5 space-y-1.5 text-xs text-gray-400">

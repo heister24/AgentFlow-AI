@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <!-- Right Facet: Pure Brilliant White to Platinum Silver -->
+    <linearGradient id="af-facet-light" x1="16.6" y1="4.8" x2="27" y2="27" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="60%" stop-color="#F1F5F9" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </linearGradient>
+
+    <!-- Left Facet: Polished Titanium Slate / Graphite -->
+    <linearGradient id="af-facet-dark" x1="15.4" y1="4.8" x2="5" y2="27" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#94A3B8" />
+      <stop offset="50%" stop-color="#64748B" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+
+    <!-- Ambient Cherry Red & Dark drop shadow -->
+    <filter id="af-sharp-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-color="#C8102E" flood-opacity="0.4" />
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.7" />
+    </filter>
+  </defs>
+
+  <!-- Modern Jet Black squircle badge container ensuring perfect contrast on light and dark tabs -->
+  <rect width="32" height="32" rx="7" fill="#0B0B0C" />
+  <rect x="0.5" y="0.5" width="31" height="31" rx="6.5" stroke="#8A8D93" stroke-opacity="0.25" stroke-width="1" />
+
+  <g filter="url(#af-sharp-shadow)">
+    <!-- Left Titanium Facet -->
+    <path d="M15.4 4.8L5.2 26.8L15.4 20.2V4.8Z" fill="url(#af-facet-dark)" />
+
+    <!-- Right Brilliant White Facet -->
+    <path d="M16.6 4.8V20.2L26.8 26.8L16.6 4.8Z" fill="url(#af-facet-light)" />
+  </g>
+</svg>

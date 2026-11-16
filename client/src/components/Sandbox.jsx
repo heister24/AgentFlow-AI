@@ -168,23 +168,23 @@ const Sandbox = () => {
       />
 
       <aside
-        className={`flex flex-col border-l border-white/15 bg-[#141416] text-gray-200 transition-all duration-300 z-50 retro-shadow-dark ${
+        className={`flex flex-col border-l border-[#1D1E24] bg-[#0B0B0C] text-gray-200 transition-all duration-300 z-50 retro-shadow-dark ${
           isFullscreen
-            ? "fixed inset-0 w-screen h-screen bg-[#141416]"
+            ? "fixed inset-0 w-screen h-screen bg-[#0B0B0C]"
             : "fixed inset-y-0 right-0 w-full sm:w-[520px] md:w-[600px] lg:relative lg:inset-auto lg:h-screen lg:w-[48%] xl:w-[50%] shrink-0 shadow-2xl lg:shadow-none"
         }`}
       >
       {/* Top Header */}
-      <div className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-3 sm:px-4 bg-[#1b1c20]">
+      <div className="flex h-14 shrink-0 items-center justify-between border-b border-[#1D1E24] px-3 sm:px-4 bg-[#0E0F12]">
         <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-          <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-gray-300 retro-shadow-sm">
+          <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg border border-[#C8102E]/40 bg-[#C8102E]/10 text-[#FF4D68] retro-shadow-sm">
             <Layers size={14} />
           </div>
           <div className="min-w-0">
             <h3 className="truncate text-xs sm:text-sm font-semibold text-white">
               Code Sandbox
             </h3>
-            <span className="hidden sm:inline text-[11px] font-mono text-gray-400">
+            <span className="hidden sm:inline text-[11px] font-mono text-[#8A8D93]">
               [ {files.length} {files.length === 1 ? "file" : "files"} ]
             </span>
           </div>
@@ -192,14 +192,14 @@ const Sandbox = () => {
 
         {/* View Switcher (Code / Preview) & Actions */}
         <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-          <div className="flex items-center rounded-lg border border-white/15 bg-[#111111] p-0.5 retro-shadow-sm">
+          <div className="flex items-center rounded-lg border border-[#232530] bg-[#121317] p-0.5 retro-shadow-sm">
             <button
               type="button"
               onClick={() => dispatch(setActiveTab("code"))}
               className={`retro-btn flex items-center gap-1 sm:gap-1.5 rounded-md px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-mono transition cursor-pointer ${
                 activeTab === "code"
-                  ? "border border-white/20 bg-white/15 text-white font-medium"
-                  : "border-transparent text-gray-400 hover:text-gray-200"
+                  ? "border border-[#C8102E]/60 bg-[#C8102E]/20 text-white font-medium shadow-[0_0_10px_rgba(200,16,46,0.25)]"
+                  : "border-transparent text-[#8A8D93] hover:text-white"
               }`}
             >
               <Code size={12} />
@@ -214,10 +214,10 @@ const Sandbox = () => {
               }
               className={`retro-btn flex items-center gap-1 sm:gap-1.5 rounded-md px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-mono transition cursor-pointer ${
                 activeTab === "preview"
-                  ? "border border-white/20 bg-white/15 text-white font-medium"
+                  ? "border border-[#C8102E]/60 bg-[#C8102E]/20 text-white font-medium shadow-[0_0_10px_rgba(200,16,46,0.25)]"
                   : hasHtml
-                    ? "border-transparent text-gray-400 hover:text-gray-200"
-                    : "border-transparent text-gray-600 cursor-not-allowed shadow-none"
+                    ? "border-transparent text-[#8A8D93] hover:text-white"
+                    : "border-transparent text-[#8A8D93]/40 cursor-not-allowed shadow-none"
               }`}
             >
               <Eye size={12} />
@@ -231,7 +231,7 @@ const Sandbox = () => {
               type="button"
               onClick={() => setIframeKey((prev) => prev + 1)}
               title="Reload preview"
-              className="retro-btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
+              className="retro-btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-[#8A8D93]/20 bg-white/5 text-[#8A8D93] transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
             >
               <RefreshCw size={13} />
             </button>
@@ -243,10 +243,10 @@ const Sandbox = () => {
                 type="button"
                 onClick={handleCopyCode}
                 title="Copy current file code"
-                className="retro-btn flex h-7 sm:h-8 items-center gap-1 sm:gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2 sm:px-2.5 text-xs font-mono text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
+                className="retro-btn flex h-7 sm:h-8 items-center gap-1 sm:gap-1.5 rounded-lg border border-[#8A8D93]/20 bg-white/5 px-2 sm:px-2.5 text-xs font-mono text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
               >
                 {copied ? (
-                  <span className="flex items-center gap-1 text-emerald-400 animate-pop font-medium">
+                  <span className="flex items-center gap-1 text-[#FF4D68] animate-pop font-medium">
                     <Check size={13} />
                     <span className="hidden sm:inline">Copied</span>
                   </span>
@@ -262,7 +262,7 @@ const Sandbox = () => {
                 type="button"
                 onClick={handleDownloadFile}
                 title={`Download ${selectedFile.name}`}
-                className="retro-btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
+                className="retro-btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-[#8A8D93]/20 bg-white/5 text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
               >
                 <Download size={13} />
               </button>
@@ -273,7 +273,7 @@ const Sandbox = () => {
             type="button"
             onClick={() => dispatch(toggleFullscreen())}
             title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-            className="hidden sm:flex retro-btn h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
+            className="hidden sm:flex retro-btn h-8 w-8 items-center justify-center rounded-lg border border-[#8A8D93]/20 bg-white/5 text-gray-300 transition hover:bg-white/15 hover:text-white cursor-pointer active:scale-95"
           >
             {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
           </button>
@@ -282,7 +282,7 @@ const Sandbox = () => {
             type="button"
             onClick={() => dispatch(setArtifactOpen(false))}
             title="Close Sandbox"
-            className="retro-btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition hover:bg-red-500/20 hover:text-red-300 hover:border-red-500/30 cursor-pointer active:scale-95"
+            className="retro-btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-[#8A8D93]/20 bg-white/5 text-[#8A8D93] transition hover:bg-[#C8102E]/20 hover:text-[#FF6B81] hover:border-[#C8102E]/40 cursor-pointer active:scale-95"
           >
             <X size={14} />
           </button>
@@ -291,7 +291,7 @@ const Sandbox = () => {
 
       {/* File Tabs Bar */}
       {files.length > 0 && (
-        <div className="flex shrink-0 items-center gap-1.5 overflow-x-auto hide-scrollbar border-b border-white/10 bg-[#161618] px-3 py-2">
+        <div className="flex shrink-0 items-center gap-1.5 overflow-x-auto hide-scrollbar border-b border-[#1D1E24] bg-[#111216] px-3 py-2">
           {files.map((file) => {
             const isSelected = selectedFile?.name === file.name;
             const badgeColor = getFileBadgeColor(file.name);
@@ -311,8 +311,8 @@ const Sandbox = () => {
                 }}
                 className={`retro-btn group flex shrink-0 items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-mono transition-all cursor-pointer active:scale-95 ${
                   isSelected
-                    ? "border-white/25 bg-white/15 text-white font-medium retro-shadow-sm"
-                    : "border-white/5 bg-white/5 text-gray-400 hover:border-white/15 hover:bg-white/10 hover:text-gray-200"
+                    ? "border-[#C8102E]/60 bg-[#C8102E]/15 text-white font-medium retro-shadow-sm shadow-[0_0_8px_rgba(200,16,46,0.2)]"
+                    : "border-[#8A8D93]/15 bg-white/5 text-[#8A8D93] hover:border-[#8A8D93]/35 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 <FileCode size={13} className={badgeColor} />

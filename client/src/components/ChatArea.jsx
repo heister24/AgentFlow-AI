@@ -17,16 +17,16 @@ const ChatArea = () => {
   };
 
   return (
-    <div className="relative flex h-screen min-w-0 flex-1 flex-col overflow-hidden bg-[#0d0d0d] retro-grid">
+    <div className="relative flex h-screen min-w-0 flex-1 flex-col overflow-hidden bg-[#0B0B0C] retro-grid">
       {/* Mobile Top Navigation Header */}
-      <header className="flex h-12 w-full shrink-0 items-center justify-between border-b border-white/10 bg-[#121214]/95 px-3 backdrop-blur-md md:hidden z-30">
+      <header className="flex h-12 w-full shrink-0 items-center justify-between border-b border-[#1D1E24] bg-[#0E0F12]/95 px-3 backdrop-blur-md md:hidden z-30">
         <div className="flex items-center gap-2.5 min-w-0">
           <button
             type="button"
             onClick={() => dispatch(setSidebarOpen(true))}
             title="Open Menu"
             aria-label="Open conversation menu"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-200 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#8A8D93]/20 bg-white/5 text-gray-200 transition-colors hover:border-[#C8102E]/40 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
           >
             <PanelLeft size={16} />
           </button>
@@ -44,11 +44,11 @@ const ChatArea = () => {
             type="button"
             onClick={() => dispatch(setArtifactOpen(true))}
             title="Open Sandbox"
-            className="flex shrink-0 items-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-2.5 py-1 text-xs font-mono font-medium text-white transition hover:bg-white/15 active:scale-95 cursor-pointer"
+            className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[#C8102E]/40 bg-[#C8102E]/10 px-2.5 py-1 text-xs font-mono font-medium text-white transition hover:bg-[#C8102E]/20 active:scale-95 cursor-pointer"
           >
             <Layers size={13} className="text-gray-300" />
             <span>Sandbox</span>
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#C8102E] retro-beacon-cherry" />
           </button>
         )}
       </header>
@@ -60,11 +60,11 @@ const ChatArea = () => {
             type="button"
             onClick={() => dispatch(setArtifactOpen(true))}
             title="Open Code Sandbox"
-            className="retro-btn inline-flex w-fit items-center gap-2 rounded-lg border border-white/15 bg-[#1b1c20]/95 px-3 py-1.5 text-xs font-mono font-medium text-gray-200 shadow-md backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-white/30 hover:bg-[#232428] hover:text-white cursor-pointer active:scale-95"
+            className="retro-btn inline-flex w-fit items-center gap-2 rounded-lg border border-[#C8102E]/40 bg-[#14151B]/95 px-3 py-1.5 text-xs font-mono font-medium text-gray-200 shadow-md backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C8102E] hover:bg-[#1A1B23] hover:text-white cursor-pointer active:scale-95"
           >
             <Layers size={13} className="text-gray-300" />
             <span>Sandbox ({activeArtifact.files?.length || 0})</span>
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 retro-beacon-emerald" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#C8102E] retro-beacon-cherry" />
           </button>
         </div>
       )}

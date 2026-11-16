@@ -69,18 +69,18 @@ export const GeneratedPdfCard = ({ href, title }) => {
 
   return (
     <div className="my-3.5 w-full select-none animate-slide-up">
-      <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] retro-card hover:border-red-500/35">
+      <div className="group relative overflow-hidden rounded-2xl border border-[#20222A] bg-[#111216] retro-card hover:border-[#C8102E]/50">
         {/* Animated download progress strip */}
         {downloading && (
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-red-500/30 overflow-hidden z-20">
-            <div className="h-full w-full bg-linear-to-r from-red-400 via-rose-300 to-red-400 animate-shimmer" />
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#C8102E]/30 overflow-hidden z-20">
+            <div className="h-full w-full bg-linear-to-r from-[#C8102E] via-rose-300 to-[#C8102E] animate-shimmer" />
           </div>
         )}
 
         {/* Top Header Bar */}
-        <div className="flex items-center justify-between border-b border-white/10 bg-[#1c1c1c]/90 px-4 py-2.5 backdrop-blur-md">
+        <div className="flex items-center justify-between border-b border-[#20222A] bg-[#14151B]/95 px-4 py-2.5 backdrop-blur-md">
           <div className="flex items-center gap-2.5">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 retro-beacon-emerald inline-block" />
+            <span className="h-2 w-2 rounded-full bg-[#C8102E] retro-beacon-cherry inline-block" />
             <span className="text-xs font-medium tracking-wide text-gray-200">
               PDF Document Ready
             </span>
@@ -91,10 +91,10 @@ export const GeneratedPdfCard = ({ href, title }) => {
               type="button"
               onClick={handleCopyLink}
               title="Copy PDF URL"
-              className="retro-btn flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+              className="retro-btn flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs text-[#8A8D93] transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
             >
               {copied ? (
-                <span className="flex items-center gap-1 text-emerald-400 animate-pop">
+                <span className="flex items-center gap-1 text-[#FF4D68] animate-pop">
                   <Check size={13} />
                   <span className="text-[11px] font-medium">Copied</span>
                 </span>
@@ -152,11 +152,11 @@ export const GeneratedPdfCard = ({ href, title }) => {
               type="button"
               onClick={handleDownload}
               disabled={downloading}
-              className="retro-btn flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-1.5 text-xs font-medium text-[#111111] shadow-sm transition-all duration-200 hover:bg-gray-100 active:scale-95 cursor-pointer disabled:opacity-50"
+              className="btn-cherry flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-medium shadow-sm transition-all duration-200 active:scale-95 cursor-pointer disabled:opacity-50"
             >
               {downloading ? (
                 <>
-                  <RotateCw size={13} className="animate-spin text-gray-800" />
+                  <RotateCw size={13} className="animate-spin text-white" />
                   <span>Downloading...</span>
                 </>
               ) : (
@@ -170,7 +170,7 @@ export const GeneratedPdfCard = ({ href, title }) => {
         </div>
 
         {/* Footer info banner */}
-        <div className="border-t border-white/5 bg-[#121212] px-4 py-2 flex items-center justify-between text-[11px] text-gray-500">
+        <div className="border-t border-[#1C1D24] bg-[#0E0F12] px-4 py-2 flex items-center justify-between text-[11px] text-[#8A8D93]">
           <span>AgentFlow Executive Document</span>
           <span className="font-mono">PDFKit • Verified</span>
         </div>

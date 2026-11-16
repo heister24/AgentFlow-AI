@@ -1,45 +1,63 @@
 @import "tailwindcss";
 
+@theme {
+  --color-jet-black: #0B0B0C;
+  --color-smoke-grey: #8A8D93;
+  --color-cherry-red: #C8102E;
+  --color-cherry-hover: #D91B3A;
+  --color-cherry-dark: #9E0B22;
+}
+
 :root {
   font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
   letter-spacing: -0.01em;
+  color-scheme: dark;
 }
 
 code, kbd, samp, pre {
   font-family: "JetBrains Mono", monospace;
 }
 
-/* Retro Grid Background Pattern */
-.retro-grid {
-  background-color: #0d0d0d;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-  background-size: 20px 20px;
+::selection {
+  background-color: rgba(200, 16, 46, 0.35);
+  color: #ffffff;
 }
 
-/* Retro Box Shadows with crisp hard offsets */
+/* Retro Grid Background Pattern - Jet Black Base */
+.retro-grid {
+  background-color: #0B0B0C;
+  background-image: radial-gradient(rgba(138, 141, 147, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Retro Box Shadows */
 .retro-shadow-sm {
-  box-shadow: 1px 1px 0px rgba(255, 255, 255, 0.15);
+  box-shadow: 1px 1px 0px rgba(138, 141, 147, 0.18);
 }
 
 .retro-shadow {
-  box-shadow: 2px 2px 0px rgba(255, 255, 255, 0.14);
+  box-shadow: 2px 2px 0px rgba(138, 141, 147, 0.16);
 }
 
 .retro-shadow-dark {
-  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.7), 3px 3px 0px rgba(255, 255, 255, 0.1);
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.8), 3px 3px 0px rgba(138, 141, 147, 0.14);
 }
 
-/* Interactive Retro Card with subtle hover lift */
+.retro-shadow-cherry {
+  box-shadow: 0 0 16px rgba(200, 16, 46, 0.25), 2px 2px 0px rgba(200, 16, 46, 0.4);
+}
+
+/* Interactive Retro Card */
 .retro-card {
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.2s ease;
-  box-shadow: 1.5px 1.5px 0px rgba(255, 255, 255, 0.12);
+  box-shadow: 1.5px 1.5px 0px rgba(138, 141, 147, 0.14);
 }
 
 .retro-card:hover {
   transform: translateY(-2px);
-  box-shadow: 3px 3px 0px rgba(255, 255, 255, 0.2);
+  box-shadow: 3px 3px 0px rgba(138, 141, 147, 0.25);
 }
 
 /* Tactile Retro Button */
@@ -50,36 +68,57 @@ code, kbd, samp, pre {
               background-color 0.15s ease,
               border-color 0.15s ease,
               color 0.15s ease;
-  box-shadow: 2px 2px 0px rgba(255, 255, 255, 0.15);
+  box-shadow: 2px 2px 0px rgba(138, 141, 147, 0.15);
 }
 
 .retro-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 2.5px 2.5px 0px rgba(255, 255, 255, 0.25);
+  box-shadow: 2.5px 2.5px 0px rgba(138, 141, 147, 0.3);
 }
 
 .retro-btn:active:not(:disabled) {
   transform: translate(1px, 1px);
-  box-shadow: 0px 0px 0px rgba(255, 255, 255, 0);
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
 }
 
-/* Retro Square-Edged Scrollbar */
+/* Cherry Red Tactile Button */
+.btn-cherry {
+  background-color: #C8102E;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 12px rgba(200, 16, 46, 0.3), 2px 2px 0px rgba(0, 0, 0, 0.5);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-cherry:hover:not(:disabled) {
+  background-color: #D91B3A;
+  box-shadow: 0 0 18px rgba(200, 16, 46, 0.5), 2.5px 2.5px 0px rgba(0, 0, 0, 0.6);
+  transform: translateY(-1px);
+}
+
+.btn-cherry:active:not(:disabled) {
+  background-color: #B30E29;
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 8px rgba(200, 16, 46, 0.2);
+}
+
+/* Square-Edged Scrollbar - Jet Black & Smoke Grey */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #141416;
+  background: #0B0B0C;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(138, 141, 147, 0.25);
   border-radius: 0px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(200, 16, 46, 0.5);
 }
 
 .hide-scrollbar {
@@ -163,6 +202,25 @@ code, kbd, samp, pre {
   animation: pop 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+@keyframes beaconCherry {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(200, 16, 46, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0);
+  }
+}
+
+.retro-beacon-cherry {
+  animation: beaconCherry 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
 @keyframes beaconAmber {
   0% {
     transform: scale(0.95);
@@ -212,7 +270,7 @@ code, kbd, samp, pre {
 }
 
 .animate-shimmer-text {
-  background: linear-gradient(90deg, #9ca3af 0%, #ffffff 50%, #9ca3af 100%);
+  background: linear-gradient(90deg, #8A8D93 0%, #ffffff 50%, #C8102E 75%, #8A8D93 100%);
   background-size: 200% auto;
   color: transparent;
   -webkit-background-clip: text;
@@ -256,22 +314,22 @@ code, kbd, samp, pre {
 
 @keyframes sendPulseGlow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.45), 2px 2px 0px rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.6), 2px 2px 0px rgba(0, 0, 0, 0.4);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 12px 2px rgba(255, 255, 255, 0.55), 2px 2px 0px rgba(255, 255, 255, 0.35);
-    transform: scale(1.03);
+    box-shadow: 0 0 16px 3px rgba(200, 16, 46, 0.7), 2px 2px 0px rgba(0, 0, 0, 0.4);
+    transform: scale(1.04);
   }
 }
 
 .send-btn-loading {
-  background-color: #ffffff !important;
-  color: #121214 !important;
+  background-color: #C8102E !important;
+  color: #ffffff !important;
   opacity: 1 !important;
   cursor: wait !important;
-  border-color: rgba(255, 255, 255, 0.9) !important;
-  animation: sendPulseGlow 1.8s infinite ease-in-out !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  animation: sendPulseGlow 1.6s infinite ease-in-out !important;
 }
 
 .send-spinner {

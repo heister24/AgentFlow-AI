@@ -48,52 +48,54 @@ const PLAN_CONFIG = {
     name: "Plus",
     badgeLabel: "PLUS",
     icon: Crown,
-    iconColor: "text-amber-400",
-    badgeBg: "bg-linear-to-r from-amber-500/20 via-orange-500/15 to-amber-500/20",
-    badgeBorder: "border-amber-400/50",
-    badgeText: "text-amber-300 font-bold tracking-wider",
-    cardBg: "bg-linear-to-b from-[#251a0d]/95 to-[#161311]/95",
-    cardBorder: "border-amber-500/40",
-    cardGlow: "shadow-[0_0_15px_rgba(245,158,11,0.15)]",
-    dotColor: "bg-amber-400",
-    ringColor: "ring-2 ring-amber-400/70 shadow-[0_0_8px_rgba(245,158,11,0.35)]",
+    iconColor: "text-[#FF3B56]",
+    badgeBg:
+      "bg-linear-to-r from-[#C8102E]/25 via-[#E02444]/20 to-[#C8102E]/25",
+    badgeBorder: "border-[#C8102E]/60",
+    badgeText: "text-[#FF667D] font-bold tracking-wider",
+    cardBg: "bg-linear-to-b from-[#1C0F13]/95 to-[#120B0D]/95",
+    cardBorder: "border-[#C8102E]/50",
+    cardGlow: "shadow-[0_0_16px_rgba(200,16,46,0.22)]",
+    dotColor: "bg-[#C8102E]",
+    ringColor: "ring-2 ring-[#C8102E]/80 shadow-[0_0_10px_rgba(200,16,46,0.4)]",
     upgradeText: "Manage",
-    upgradeBg: "hover:bg-amber-500/20 hover:border-amber-400/50 text-amber-200",
-    progressBar: "bg-linear-to-r from-amber-400 to-orange-400",
+    upgradeBg: "hover:bg-[#C8102E]/20 hover:border-[#C8102E]/50 text-[#FF8597]",
+    progressBar: "bg-linear-to-r from-[#C8102E] to-[#FF4D68]",
   },
   basic: {
     name: "Basic",
     badgeLabel: "BASIC",
     icon: Zap,
-    iconColor: "text-cyan-400",
-    badgeBg: "bg-cyan-500/15",
-    badgeBorder: "border-cyan-400/50",
-    badgeText: "text-cyan-300 font-bold tracking-wider",
-    cardBg: "bg-linear-to-b from-[#0e1d24]/95 to-[#11161a]/95",
-    cardBorder: "border-cyan-500/40",
-    cardGlow: "shadow-[0_0_15px_rgba(6,182,212,0.15)]",
-    dotColor: "bg-cyan-400",
-    ringColor: "ring-2 ring-cyan-400/70 shadow-[0_0_8px_rgba(6,182,212,0.35)]",
+    iconColor: "text-gray-200",
+    badgeBg: "bg-white/10",
+    badgeBorder: "border-[#8A8D93]/40",
+    badgeText: "text-gray-200 font-bold tracking-wider",
+    cardBg: "bg-linear-to-b from-[#16171C]/95 to-[#111216]/95",
+    cardBorder: "border-[#8A8D93]/30",
+    cardGlow: "shadow-[0_0_12px_rgba(138,141,147,0.15)]",
+    dotColor: "bg-[#8A8D93]",
+    ringColor:
+      "ring-2 ring-[#8A8D93]/60 shadow-[0_0_8px_rgba(138,141,147,0.3)]",
     upgradeText: "Upgrade",
-    upgradeBg: "hover:bg-cyan-500/20 hover:border-cyan-400/50 text-cyan-200",
-    progressBar: "bg-linear-to-r from-cyan-400 to-blue-500",
+    upgradeBg: "hover:bg-white/10 hover:border-[#8A8D93]/50 text-gray-200",
+    progressBar: "bg-linear-to-r from-[#8A8D93] to-gray-200",
   },
   free: {
     name: "Free",
     badgeLabel: "FREE",
     icon: Compass,
-    iconColor: "text-emerald-400",
+    iconColor: "text-[#8A8D93]",
     badgeBg: "bg-white/5",
     badgeBorder: "border-white/15",
-    badgeText: "text-gray-300 font-medium",
-    cardBg: "bg-[#18181c]",
-    cardBorder: "border-white/10",
+    badgeText: "text-[#8A8D93] font-medium",
+    cardBg: "bg-[#121316]",
+    cardBorder: "border-[#202228]",
     cardGlow: "shadow-none",
-    dotColor: "bg-emerald-400",
+    dotColor: "bg-[#8A8D93]",
     ringColor: "ring-1 ring-white/20",
     upgradeText: "Upgrade",
-    upgradeBg: "hover:bg-white/15 text-gray-200",
-    progressBar: "bg-linear-to-r from-emerald-400 to-teal-400",
+    upgradeBg: "hover:bg-[#C8102E]/20 hover:text-white text-[#8A8D93]",
+    progressBar: "bg-linear-to-r from-[#8A8D93]/60 to-[#8A8D93]",
   },
 };
 
@@ -276,6 +278,7 @@ const Sidebar = () => {
     } catch (error) {
       console.error("Failed to log out:", error);
     } finally {
+      localStorage.removeItem("sessionId");
       dispatch(setUserData(null));
       dispatch(setConversations([]));
       dispatch(setSelectedConversation(null));
@@ -293,321 +296,323 @@ const Sidebar = () => {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 md:relative md:z-auto flex h-screen shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#232428] p-3 text-white transition-all duration-300 ${
+        className={`fixed inset-y-0 left-0 z-50 md:relative md:z-auto flex h-screen shrink-0 flex-col overflow-hidden border-r border-[#1D1E24] bg-[#0E0F12] p-3 text-white transition-all duration-300 ${
           sidebarOpen
             ? "w-72 max-w-[85vw] md:w-64 md:min-w-[16rem] translate-x-0 shadow-2xl md:shadow-none"
             : "-translate-x-full md:translate-x-0 md:w-16 md:min-w-16"
         }`}
       >
-      {/* Header */}
-      <div className="mb-4 flex min-h-10 items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2">
-          <button
-            type="button"
-            onClick={toggleSidebarOpen}
-            title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-300 transition-colors hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
-          >
-            <PanelLeftClose
-              size={18}
-              className={`transition-transform duration-300 ${
-                sidebarOpen ? "" : "rotate-180"
-              }`}
-            />
-          </button>
+        {/* Header */}
+        <div className="mb-4 flex min-h-10 items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleSidebarOpen}
+              title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+            >
+              <PanelLeftClose
+                size={18}
+                className={`transition-transform duration-300 ${
+                  sidebarOpen ? "" : "rotate-180"
+                }`}
+              />
+            </button>
+
+            {sidebarOpen && (
+              <div
+                onClick={() => navigate("/")}
+                className="flex min-w-0 items-center gap-2 cursor-pointer group"
+              >
+                <AgentFlowLogo size={20} />
+                <span className="truncate text-sm font-semibold tracking-tight text-white group-hover:text-gray-200">
+                  AgentFlow
+                </span>
+              </div>
+            )}
+          </div>
 
           {sidebarOpen && (
-            <div
-              onClick={() => navigate("/")}
-              className="flex min-w-0 items-center gap-2 cursor-pointer group"
+            <button
+              type="button"
+              onClick={handleCreateNewChat}
+              title="New chat"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
             >
-              <AgentFlowLogo size={20} />
-              <span className="truncate text-sm font-semibold tracking-tight text-white group-hover:text-gray-200">
-                AgentFlow
-              </span>
-            </div>
+              <PenIcon size={15} />
+            </button>
           )}
         </div>
 
-        {sidebarOpen && (
+        {/* New Chat */}
+        <div className="mb-4">
           <button
             type="button"
             onClick={handleCreateNewChat}
             title="New chat"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-300 transition-colors hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+            className={`flex h-10 w-full items-center rounded-lg border border-[#8A8D93]/20 bg-[#14151B] text-sm font-medium text-gray-200 transition-all duration-200 hover:border-[#C8102E]/60 hover:bg-[#1A1B23] hover:text-white hover:shadow-[0_0_12px_rgba(200,16,46,0.18)] cursor-pointer retro-btn ${
+              sidebarOpen ? "gap-2.5 px-3" : "justify-center px-0"
+            }`}
           >
-            <PenIcon size={15} />
+            <Plus size={18} className="shrink-0 text-gray-300" />
+            {sidebarOpen && <span>New Chat</span>}
           </button>
-        )}
-      </div>
+        </div>
 
-      {/* New Chat */}
-      <div className="mb-4">
-        <button
-          type="button"
-          onClick={handleCreateNewChat}
-          title="New chat"
-          className={`flex h-10 w-full items-center rounded-lg border border-white/10 bg-white/5 text-sm font-medium text-gray-200 transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer retro-btn ${
-            sidebarOpen ? "gap-2.5 px-3" : "justify-center px-0"
-          }`}
-        >
-          <Plus size={18} className="shrink-0 text-gray-300" />
-          {sidebarOpen && <span>New Chat</span>}
-        </button>
-      </div>
+        {/* Conversation Area */}
+        {sidebarOpen ? (
+          <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden pr-1">
+            <p className="mb-2 px-2 text-[10px] font-mono font-semibold uppercase tracking-wider text-[#8A8D93]">
+              [ Conversations ]
+            </p>
 
-      {/* Conversation Area */}
-      {sidebarOpen ? (
-        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden pr-1">
-          <p className="mb-2 px-2 text-[10px] font-mono font-semibold uppercase tracking-wider text-gray-500">
-            [ Conversations ]
-          </p>
+            {conversations.length === 0 ? (
+              <div className="px-2 py-6 text-center text-xs font-mono text-[#8A8D93]">
+                No conversations yet
+              </div>
+            ) : (
+              <ul className="space-y-1">
+                {conversations.map((con) => {
+                  const isEditing = editTitle === con._id;
+                  const isMenuOpen = conversationMenuOpen === con._id;
+                  const isActive = selectedConversation?._id === con._id;
 
-          {conversations.length === 0 ? (
-            <div className="px-2 py-6 text-center text-xs font-mono text-gray-500">
-              No conversations yet
-            </div>
-          ) : (
-            <ul className="space-y-1">
-              {conversations.map((con) => {
-                const isEditing = editTitle === con._id;
-                const isMenuOpen = conversationMenuOpen === con._id;
-                const isActive = selectedConversation?._id === con._id;
-
-                return (
-                  <li
-                    key={con._id}
-                    className={`group relative min-w-0 rounded-lg text-sm transition-all duration-150 ${
-                      isActive
-                        ? "bg-white/15 font-medium text-white retro-shadow-sm border border-white/15"
-                        : "text-gray-300 hover:bg-white/10 hover:text-white hover:translate-x-0.5"
-                    }`}
-                  >
-                    {/* Conversation title */}
-                    <div className="flex min-h-9 min-w-0 items-center gap-2 px-2.5 py-1">
-                      <MessageSquare
-                        size={15}
-                        className={`shrink-0 transition-transform duration-200 group-hover:scale-105 ${
-                          isActive
-                            ? "text-white"
-                            : "text-gray-400 group-hover:text-gray-300"
-                        }`}
-                      />
-                      {isEditing ? (
-                        <input
-                          type="text"
-                          value={title}
-                          autoFocus
-                          maxLength={100}
-                          onChange={(e) => setTitle(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              handleSaveTitle(con._id);
-                            }
-
-                            if (e.key === "Escape") {
-                              handleCancelEdit();
-                            }
-                          }}
-                          placeholder="Conversation title"
-                          className="h-7 min-w-0 flex-1 rounded-md border border-white/20 bg-[#1b1c20] px-2 text-xs text-white outline-none"
+                  return (
+                    <li
+                      key={con._id}
+                      className={`group relative min-w-0 rounded-lg text-sm transition-all duration-150 ${
+                        isActive
+                          ? "bg-[#181920] font-medium text-white retro-shadow-sm border border-[#C8102E]/40 border-l-2 border-l-[#C8102E] shadow-[0_0_12px_rgba(200,16,46,0.12)]"
+                          : "text-[#8A8D93] hover:bg-[#14151B] hover:text-white hover:translate-x-0.5"
+                      }`}
+                    >
+                      {/* Conversation title */}
+                      <div className="flex min-h-9 min-w-0 items-center gap-2 px-2.5 py-1">
+                        <MessageSquare
+                          size={15}
+                          className={`shrink-0 transition-transform duration-200 group-hover:scale-105 ${
+                            isActive
+                              ? "text-white"
+                              : "text-gray-400 group-hover:text-gray-300"
+                          }`}
                         />
-                      ) : (
+                        {isEditing ? (
+                          <input
+                            type="text"
+                            value={title}
+                            autoFocus
+                            maxLength={100}
+                            onChange={(e) => setTitle(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                handleSaveTitle(con._id);
+                              }
+
+                              if (e.key === "Escape") {
+                                handleCancelEdit();
+                              }
+                            }}
+                            placeholder="Conversation title"
+                            className="h-7 min-w-0 flex-1 rounded-md border border-white/20 bg-[#1b1c20] px-2 text-xs text-white outline-none"
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleOpenConversation(con._id)}
+                            title={con.title}
+                            className="h-8 min-w-0 flex-1 truncate text-left text-xs cursor-pointer"
+                          >
+                            {con.title}
+                          </button>
+                        )}
+
+                        {/* Conversation menu trigger */}
                         <button
                           type="button"
-                          onClick={() => handleOpenConversation(con._id)}
-                          title={con.title}
-                          className="h-8 min-w-0 flex-1 truncate text-left text-xs cursor-pointer"
+                          onClick={() => handleConversationMenu(con._id)}
+                          title="Conversation options"
+                          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer ${
+                            isMenuOpen
+                              ? "opacity-100 bg-white/10 text-white"
+                              : "opacity-0 group-hover:opacity-100"
+                          }`}
                         >
-                          {con.title}
+                          <EllipsisVertical size={14} />
                         </button>
-                      )}
-
-                      {/* Conversation menu trigger */}
-                      <button
-                        type="button"
-                        onClick={() => handleConversationMenu(con._id)}
-                        title="Conversation options"
-                        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer ${
-                          isMenuOpen
-                            ? "opacity-100 bg-white/10 text-white"
-                            : "opacity-0 group-hover:opacity-100"
-                        }`}
-                      >
-                        <EllipsisVertical size={14} />
-                      </button>
-                    </div>
-
-                    {/* Action menu */}
-                    {isMenuOpen && (
-                      <div className="mx-2 mb-2 flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#1b1c20] p-1.5 shadow-lg animate-pop origin-top">
-                        {isEditing ? (
-                          <>
-                            <button
-                              type="button"
-                              disabled={saving || !title.trim()}
-                              onClick={() => handleSaveTitle(con._id)}
-                              className="flex h-7 flex-1 items-center justify-center gap-1 rounded-md bg-blue-500 px-2 text-xs font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
-                            >
-                              <Check size={13} />
-                              <span>{saving ? "Saving..." : "Save"}</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={handleCancelEdit}
-                              title="Cancel editing"
-                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer"
-                            >
-                              <X size={14} />
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => handleEditTitle(con)}
-                              className="flex h-7 flex-1 items-center justify-center gap-1.5 rounded-md bg-white/10 px-2 text-xs font-medium text-gray-200 transition-colors hover:bg-white/15 cursor-pointer"
-                            >
-                              <PenIcon size={12} />
-                              <span>Edit</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteConversation(con._id)}
-                              className="flex h-7 flex-1 items-center justify-center gap-1.5 rounded-md bg-red-500/10 px-2 text-xs font-medium text-red-300 transition-colors hover:bg-red-500/20 cursor-pointer"
-                            >
-                              <Trash2 size={12} />
-                              <span>Delete</span>
-                            </button>
-                          </>
-                        )}
                       </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
-      ) : (
-        <div className="flex-1" />
-      )}
 
-      {/* Compact Credits & Plan Widget */}
-      {sidebarOpen ? (
-        <div className="mb-2.5 rounded-lg border border-white/10 bg-[#16161a] p-2.5 transition-all">
-          <div className="flex items-center justify-between mb-1.5">
-            {/* Left: Plan Icon & Name + Credits count */}
-            <div className="flex items-center gap-1.5 min-w-0">
-              <div className="flex items-center gap-1">
-                <PlanIcon size={13} className={currentPlan.iconColor} />
-                <span className="font-mono text-xs font-semibold text-white">
-                  {currentPlan.name}
+                      {/* Action menu */}
+                      {isMenuOpen && (
+                        <div className="mx-2 mb-2 flex items-center gap-1.5 rounded-lg border border-[#262832] bg-[#14151B] p-1.5 shadow-xl animate-pop origin-top">
+                          {isEditing ? (
+                            <>
+                              <button
+                                type="button"
+                                disabled={saving || !title.trim()}
+                                onClick={() => handleSaveTitle(con._id)}
+                                className="flex h-7 flex-1 items-center justify-center gap-1 rounded-md bg-[#C8102E] px-2 text-xs font-medium text-white transition-colors hover:bg-[#D91B3A] disabled:cursor-not-allowed disabled:opacity-50"
+                              >
+                                <Check size={13} />
+                                <span>{saving ? "Saving..." : "Save"}</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={handleCancelEdit}
+                                title="Cancel editing"
+                                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#8A8D93] transition hover:bg-white/10 hover:text-white cursor-pointer"
+                              >
+                                <X size={14} />
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => handleEditTitle(con)}
+                                className="flex h-7 flex-1 items-center justify-center gap-1.5 rounded-md bg-white/10 px-2 text-xs font-medium text-gray-200 transition-colors hover:bg-white/15 cursor-pointer"
+                              >
+                                <PenIcon size={12} />
+                                <span>Edit</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleDeleteConversation(con._id)
+                                }
+                                className="flex h-7 flex-1 items-center justify-center gap-1.5 rounded-md bg-[#C8102E]/15 px-2 text-xs font-medium text-[#FF6B81] transition-colors hover:bg-[#C8102E]/25 cursor-pointer"
+                              >
+                                <Trash2 size={12} />
+                                <span>Delete</span>
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        ) : (
+          <div className="flex-1" />
+        )}
+
+        {/* Compact Credits & Plan Widget */}
+        {sidebarOpen ? (
+          <div className="mb-2.5 rounded-lg border border-[#20222A] bg-[#121317] p-2.5 transition-all">
+            <div className="flex items-center justify-between mb-1.5">
+              {/* Left: Plan Icon & Name + Credits count */}
+              <div className="flex items-center gap-1.5 min-w-0">
+                <div className="flex items-center gap-1">
+                  <PlanIcon size={13} className={currentPlan.iconColor} />
+                  <span className="font-mono text-xs font-semibold text-white">
+                    {currentPlan.name}
+                  </span>
+                </div>
+                <span className="text-gray-600 font-mono text-[10px]">•</span>
+                <span className="font-mono text-[11px] text-gray-300">
+                  {credits.toLocaleString("en-IN")}{" "}
+                  <span className="text-[10px] text-[#8A8D93] font-normal">
+                    / {totalCredits.toLocaleString("en-IN")}
+                  </span>
                 </span>
               </div>
-              <span className="text-gray-600 font-mono text-[10px]">•</span>
-              <span className="font-mono text-[11px] text-gray-300">
-                {credits.toLocaleString("en-IN")}{" "}
-                <span className="text-[10px] text-gray-500 font-normal">
-                  / {totalCredits.toLocaleString("en-IN")}
-                </span>
-              </span>
+
+              {/* Right: Sleek Upgrade Link */}
+              <button
+                type="button"
+                onClick={() => navigate("/payment")}
+                className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-mono font-medium text-[#8A8D93] hover:text-white bg-white/5 hover:bg-[#C8102E]/15 border border-[#8A8D93]/20 hover:border-[#C8102E]/50 transition cursor-pointer active:scale-95 shrink-0"
+              >
+                <span>{currentPlan.upgradeText}</span>
+                <ArrowUpRight size={10} className="text-[#8A8D93]" />
+              </button>
             </div>
 
-            {/* Right: Sleek Upgrade Link */}
+            {/* Minimal 2px Progress Bar */}
+            <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">
+              <div
+                className={`h-full rounded-full transition-all duration-300 ${currentPlan.progressBar}`}
+                style={{ width: `${creditPercent}%` }}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="mb-2.5 flex justify-center">
             <button
               type="button"
               onClick={() => navigate("/payment")}
-              className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-mono font-medium text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition cursor-pointer active:scale-95 shrink-0"
+              title={`${currentPlan.name} Plan • ${credits.toLocaleString("en-IN")} credits`}
+              className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-[#20222A] bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
             >
-              <span>{currentPlan.upgradeText}</span>
-              <ArrowUpRight size={10} className="text-gray-400" />
+              <PlanIcon size={14} className={currentPlan.iconColor} />
+              <span
+                className={`absolute top-1 right-1 h-1.5 w-1.5 rounded-full ${currentPlan.dotColor}`}
+              />
             </button>
           </div>
+        )}
 
-          {/* Minimal 2px Progress Bar */}
-          <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">
-            <div
-              className={`h-full rounded-full transition-all duration-300 ${currentPlan.progressBar}`}
-              style={{ width: `${creditPercent}%` }}
-            />
+        {/* User Info and action Area */}
+        <div className="border-t border-[#1C1D24] pt-3">
+          <div
+            className={`flex items-center ${
+              sidebarOpen ? "gap-2.5" : "flex-col gap-2"
+            }`}
+          >
+            {userData?.avatar && !avatarError ? (
+              <img
+                src={userData.avatar}
+                alt={userData.name || "User"}
+                onError={() => setAvatarError(true)}
+                className={`h-9 w-9 shrink-0 rounded-full object-cover ${currentPlan.ringColor}`}
+              />
+            ) : (
+              <div
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white ${currentPlan.ringColor}`}
+              >
+                {userData?.name ? (
+                  userData.name.charAt(0).toUpperCase()
+                ) : (
+                  <User size={15} />
+                )}
+              </div>
+            )}
+
+            {sidebarOpen && (
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5">
+                  <p className="truncate text-xs font-medium text-white">
+                    {userData?.name || "User"}
+                  </p>
+                  <span
+                    className={`inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider border ${currentPlan.badgeBorder} ${currentPlan.badgeBg} ${currentPlan.badgeText}`}
+                  >
+                    {currentPlan.badgeLabel}
+                  </span>
+                </div>
+                <p className="truncate text-[11px] text-[#8A8D93]">
+                  {userData?.email}
+                </p>
+              </div>
+            )}
+
+            {/* Logout */}
+            <button
+              type="button"
+              onClick={handleLogoutUser}
+              title="Logout"
+              aria-label="Logout"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#8A8D93] transition-colors hover:bg-[#C8102E]/15 hover:text-[#FF6B81] cursor-pointer active:scale-95"
+            >
+              <LogOut size={16} />
+            </button>
           </div>
         </div>
-      ) : (
-        <div className="mb-2.5 flex justify-center">
-          <button
-            type="button"
-            onClick={() => navigate("/payment")}
-            title={`${currentPlan.name} Plan • ${credits.toLocaleString("en-IN")} credits`}
-            className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
-          >
-            <PlanIcon size={14} className={currentPlan.iconColor} />
-            <span
-              className={`absolute top-1 right-1 h-1.5 w-1.5 rounded-full ${currentPlan.dotColor}`}
-            />
-          </button>
-        </div>
-      )}
-
-      {/* User Info and action Area */}
-      <div className="border-t border-white/10 pt-3">
-        <div
-          className={`flex items-center ${
-            sidebarOpen ? "gap-2.5" : "flex-col gap-2"
-          }`}
-        >
-          {userData?.avatar && !avatarError ? (
-            <img
-              src={userData.avatar}
-              alt={userData.name || "User"}
-              onError={() => setAvatarError(true)}
-              className={`h-9 w-9 shrink-0 rounded-full object-cover ${currentPlan.ringColor}`}
-            />
-          ) : (
-            <div
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white ${currentPlan.ringColor}`}
-            >
-              {userData?.name ? (
-                userData.name.charAt(0).toUpperCase()
-              ) : (
-                <User size={15} />
-              )}
-            </div>
-          )}
-
-          {sidebarOpen && (
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5">
-                <p className="truncate text-xs font-medium text-white">
-                  {userData?.name || "User"}
-                </p>
-                <span
-                  className={`inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider border ${currentPlan.badgeBorder} ${currentPlan.badgeBg} ${currentPlan.badgeText}`}
-                >
-                  {currentPlan.badgeLabel}
-                </span>
-              </div>
-              <p className="truncate text-[11px] text-gray-400">
-                {userData?.email}
-              </p>
-            </div>
-          )}
-
-          {/* Logout */}
-          <button
-            type="button"
-            onClick={handleLogoutUser}
-            title="Logout"
-            aria-label="Logout"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
-          >
-            <LogOut size={16} />
-          </button>
-        </div>
-      </div>
-    </aside>
+      </aside>
     </>
   );
 };

@@ -1,5 +1,4 @@
 import redis from "../../../shared/redis/redis.js";
-import Message from "../../Chat/models/message.model.js";
 import getMessages from "../utils/getMessages.js";
 
 const CACHE_TTL = 30 * 60; // 30 minutes in seconds

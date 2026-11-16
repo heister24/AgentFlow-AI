@@ -80,7 +80,7 @@ const AgentGeneratingIndicator = () => {
 
   return (
     <div className="flex w-full justify-start animate-slide-up">
-      <div className="max-w-[94%] sm:max-w-[85%] lg:max-w-[78%] rounded-xl rounded-bl-sm border border-white/15 bg-[#171717] px-4 py-3 sm:px-5 sm:py-4 text-gray-200 retro-shadow-sm min-w-[270px] sm:min-w-[340px]">
+      <div className="max-w-[94%] sm:max-w-[85%] lg:max-w-[78%] rounded-xl rounded-bl-sm border border-[#20222B] bg-[#111216] px-4 py-3 sm:px-5 sm:py-4 text-gray-200 retro-shadow-sm min-w-[270px] sm:min-w-[340px]">
         {/* Status header with logo & cycling shimmer message */}
         <div className="flex items-center justify-between gap-3 mb-3">
           <div className="flex items-center gap-2 min-w-0">
@@ -92,31 +92,31 @@ const AgentGeneratingIndicator = () => {
 
           {/* Smooth wave dots */}
           <div className="flex items-center gap-1 shrink-0">
-            <span className="h-1.5 w-1.5 rounded-full bg-white/80 animate-wave-dot-1" />
-            <span className="h-1.5 w-1.5 rounded-full bg-white/80 animate-wave-dot-2" />
-            <span className="h-1.5 w-1.5 rounded-full bg-white/80 animate-wave-dot-3" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#C8102E] animate-wave-dot-1" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#C8102E] animate-wave-dot-2" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#C8102E] animate-wave-dot-3" />
           </div>
         </div>
 
         {/* Shimmering generation skeleton lines */}
         <div className="space-y-2 pt-0.5">
-          <div className="h-2.5 w-4/5 overflow-hidden rounded-full bg-white/10">
-            <div className="h-full w-full bg-linear-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+          <div className="h-2.5 w-4/5 overflow-hidden rounded-full bg-white/5 border border-white/5">
+            <div className="h-full w-full bg-linear-to-r from-transparent via-[#C8102E]/30 to-transparent animate-shimmer" />
           </div>
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/10">
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/5 border border-white/5">
             <div
-              className="h-full w-full bg-linear-to-r from-transparent via-white/20 to-transparent animate-shimmer"
+              className="h-full w-full bg-linear-to-r from-transparent via-[#C8102E]/30 to-transparent animate-shimmer"
               style={{ animationDelay: "200ms" }}
             />
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-2.5 w-1/2 overflow-hidden rounded-full bg-white/10">
+            <div className="h-2.5 w-1/2 overflow-hidden rounded-full bg-white/5 border border-white/5">
               <div
-                className="h-full w-full bg-linear-to-r from-transparent via-white/20 to-transparent animate-shimmer"
+                className="h-full w-full bg-linear-to-r from-transparent via-[#C8102E]/30 to-transparent animate-shimmer"
                 style={{ animationDelay: "400ms" }}
               />
             </div>
-            <span className="inline-block h-3.5 w-1 bg-white/70 retro-cursor rounded-xs" />
+            <span className="inline-block h-3.5 w-1 bg-[#C8102E] retro-cursor rounded-xs" />
           </div>
         </div>
       </div>
@@ -157,15 +157,15 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
           <div className="flex flex-col items-center text-center max-w-md space-y-3.5 animate-fade-in">
             {/* Unique AgentFlow Logo Mark */}
             <div className="flex items-center justify-center mb-1">
-              <AgentFlowLogo size={36} className="transition-transform duration-300 hover:scale-105" />
+              <AgentFlowLogo size={42} className="transition-transform duration-300 hover:scale-105" />
             </div>
 
             {/* Clean Headline */}
             <div>
-              <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-white/90">
+              <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-white font-mono">
                 How can I help you today?
               </h1>
-              <p className="mt-1 text-xs text-gray-400">
+              <p className="mt-1 text-xs text-[#8A8D93]">
                 Ask a question, write code, build pitch decks, or search live web.
               </p>
             </div>
@@ -179,7 +179,7 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                     key={idx}
                     type="button"
                     onClick={() => onSelectPrompt?.(item.prompt, item.agent)}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-xs text-gray-300 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/[0.08] hover:text-white cursor-pointer active:scale-95"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#8A8D93]/20 bg-white/[0.03] px-3.5 py-1.5 text-xs text-[#8A8D93] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C8102E]/60 hover:bg-[#C8102E]/10 hover:text-white hover:shadow-[0_0_12px_rgba(200,16,46,0.2)] cursor-pointer active:scale-95"
                   >
                     <Icon size={13} className={item.iconColor} />
                     <span>{item.label}</span>
@@ -202,8 +202,8 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                 <div
                   className={`max-w-[94%] break-words sm:max-w-[85%] lg:max-w-[78%] transition-all ${
                     isUser
-                      ? "rounded-xl rounded-br-sm border border-white/15 bg-[#222222] px-3.5 py-2.5 sm:px-4 sm:py-3 text-white retro-shadow-sm"
-                      : "rounded-xl rounded-bl-sm border border-white/15 bg-[#171717] px-3.5 py-3 sm:px-5 sm:py-4 text-gray-200 retro-shadow-sm"
+                      ? "rounded-xl rounded-br-sm border border-[#2A2C38] bg-[#16171E] px-3.5 py-2.5 sm:px-4 sm:py-3 text-white retro-shadow-sm"
+                      : "rounded-xl rounded-bl-sm border border-[#1F2129] bg-[#111216] px-3.5 py-3 sm:px-5 sm:py-4 text-gray-200 retro-shadow-sm"
                   }`}
                 >
                   {/* Uploaded File (e.g. PDF) */}
@@ -309,9 +309,9 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                           const isCopied = copiedCodeIndex === snippetId;
 
                           return (
-                            <div className="my-3 sm:my-4 min-w-0 max-w-full overflow-hidden rounded-xl border border-white/10 bg-[#101010] retro-shadow-sm transition-all">
-                              <div className="flex items-center justify-between gap-2 sm:gap-3 border-b border-white/10 bg-[#1c1c1c] px-3 py-1.5 sm:px-4 sm:py-2">
-                                <span className="text-xs font-medium font-mono text-gray-300">
+                            <div className="my-3 sm:my-4 min-w-0 max-w-full overflow-hidden rounded-xl border border-[#20222B] bg-[#0B0B0C] retro-shadow-sm transition-all">
+                              <div className="flex items-center justify-between gap-2 sm:gap-3 border-b border-[#20222B] bg-[#121317] px-3 py-1.5 sm:px-4 sm:py-2">
+                                <span className="text-xs font-medium font-mono text-[#8A8D93]">
                                   {language}
                                 </span>
                                 <button
@@ -319,10 +319,10 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                                   onClick={() =>
                                     handleCopyCode(code, snippetId)
                                   }
-                                  className="retro-btn flex items-center gap-1 rounded-md px-2 py-0.5 sm:px-2.5 sm:py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+                                  className="retro-btn flex items-center gap-1 rounded-md px-2 py-0.5 sm:px-2.5 sm:py-1 text-xs text-[#8A8D93] transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
                                 >
                                   {isCopied ? (
-                                    <span className="flex items-center gap-1 text-emerald-400 animate-pop font-medium">
+                                    <span className="flex items-center gap-1 text-[#FF4D68] animate-pop font-medium">
                                       <Check size={13} />
                                       <span>Copied</span>
                                     </span>
@@ -343,7 +343,7 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                                 customStyle={{
                                   margin: 0,
                                   padding: "12px",
-                                  background: "#101010",
+                                  background: "#0B0B0C",
                                   fontSize: "12.5px",
                                   lineHeight: "1.65",
                                   overflowX: "auto",
@@ -366,7 +366,7 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
 
                         return (
                           <code
-                            className="break-words rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-xs text-gray-200"
+                            className="break-words rounded-md border border-[#8A8D93]/20 bg-white/5 px-1.5 py-0.5 font-mono text-xs text-gray-200"
                             {...props}
                           >
                             {children}
@@ -377,7 +377,7 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                       img: ({ src, alt }) => (
                         <GeneratedImageCard src={src} alt={alt} />
                       ),
-                      hr: () => <hr className="my-4 border-white/10" />,
+                      hr: () => <hr className="my-4 border-[#20222A]" />,
                       strong: ({ children }) => (
                         <strong className="font-semibold text-white">
                           {children}
@@ -418,31 +418,31 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                             href={href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-indigo-400 hover:text-indigo-300 underline decoration-indigo-400/40 hover:decoration-indigo-300 transition"
+                            className="text-[#FF4D68] hover:text-[#FF758A] underline decoration-[#C8102E]/40 hover:decoration-[#FF4D68] transition"
                           >
                             {children}
                           </a>
                         );
                       },
                       table: ({ children }) => (
-                        <div className="my-4 max-w-full overflow-x-auto rounded-xl border border-white/10 bg-[#161616]">
+                        <div className="my-4 max-w-full overflow-x-auto rounded-xl border border-[#20222A] bg-[#0E0F12]">
                           <table className="w-full border-collapse text-left text-sm">
                             {children}
                           </table>
                         </div>
                       ),
                       thead: ({ children }) => (
-                        <thead className="bg-[#1f1f1f] text-gray-100 border-b border-white/10">
+                        <thead className="bg-[#14151B] text-gray-100 border-b border-[#20222A]">
                           {children}
                         </thead>
                       ),
                       th: ({ children }) => (
-                        <th className="border border-white/10 px-3.5 py-2 font-semibold">
+                        <th className="border border-[#20222A] px-3.5 py-2 font-semibold">
                           {children}
                         </th>
                       ),
                       td: ({ children }) => (
-                        <td className="border border-white/10 px-3.5 py-2 text-gray-300">
+                        <td className="border border-[#20222A] px-3.5 py-2 text-[#8A8D93]">
                           {children}
                         </td>
                       ),
@@ -458,17 +458,17 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
 
                   {/* Sandbox Card */}
                   {!isUser && msg.artifacts?.[0]?.files?.length > 0 && (
-                    <div className="mt-4 rounded-xl border border-white/15 bg-[#1a1a1c] p-3.5 retro-shadow-sm transition-all duration-200">
+                    <div className="mt-4 rounded-xl border border-[#C8102E]/35 bg-[#121317] p-3.5 shadow-[0_0_16px_rgba(200,16,46,0.12)] transition-all duration-200">
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center gap-2.5">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-gray-300 retro-shadow-sm">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C8102E]/40 bg-[#C8102E]/10 text-[#FF4D68] retro-shadow-sm">
                             <Layers size={15} />
                           </div>
                           <div>
                             <div className="text-xs font-semibold text-white">
                               Code Sandbox
                             </div>
-                            <div className="text-[11px] font-mono text-gray-400">
+                            <div className="text-[11px] font-mono text-[#8A8D93]">
                               [ {msg.artifacts[0].files.length}{" "}
                               {msg.artifacts[0].files.length === 1
                                 ? "file"
@@ -483,7 +483,7 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                             dispatch(setActiveArtifact(msg.artifacts[0]));
                             dispatch(setArtifactOpen(true));
                           }}
-                          className="retro-btn flex items-center gap-1.5 rounded-lg border border-white/15 bg-white px-3.5 py-1.5 text-xs font-mono font-medium text-[#111111] shadow-sm transition-all hover:bg-gray-100 active:scale-95 cursor-pointer"
+                          className="btn-cherry flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-mono font-medium shadow-sm transition-all active:scale-95 cursor-pointer"
                         >
                           <Eye size={13} />
                           <span>Open Sandbox</span>
@@ -494,9 +494,9 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                         {msg.artifacts[0].files.map((file, idx) => (
                           <span
                             key={idx}
-                            className="flex items-center gap-1.5 rounded-md border border-white/10 bg-[#121214] px-2.5 py-1 text-[11px] font-mono text-gray-300"
+                            className="flex items-center gap-1.5 rounded-md border border-[#20222B] bg-[#0B0B0C] px-2.5 py-1 text-[11px] font-mono text-[#8A8D93]"
                           >
-                            <FileCode size={12} className="text-gray-400" />
+                            <FileCode size={12} className="text-[#8A8D93]" />
                             {file.name}
                           </span>
                         ))}

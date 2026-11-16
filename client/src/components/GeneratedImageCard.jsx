@@ -77,11 +77,11 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
 
   return (
     <div className="my-3 w-full max-w-lg select-none animate-slide-up">
-      <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] retro-card hover:border-white/25">
+      <div className="group relative overflow-hidden rounded-2xl border border-[#20222A] bg-[#111216] retro-card hover:border-[#C8102E]/40">
         {/* Top Header Bar */}
-        <div className="flex items-center justify-between border-b border-white/10 bg-[#1c1c1c]/90 px-3.5 py-2.5 backdrop-blur-md">
+        <div className="flex items-center justify-between border-b border-[#20222A] bg-[#14151B]/95 px-3.5 py-2.5 backdrop-blur-md">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-cyan-400 retro-beacon-emerald inline-block" />
+            <span className="h-2 w-2 rounded-full bg-[#C8102E] retro-beacon-cherry inline-block" />
             <span className="text-xs font-medium tracking-wide text-gray-200">
               Image Preview
             </span>
@@ -92,10 +92,10 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
               type="button"
               onClick={handleCopyLink}
               title="Copy Image URL"
-              className="retro-btn flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+              className="retro-btn flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-[#8A8D93] transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
             >
               {copied ? (
-                <span className="flex items-center gap-1 text-emerald-400 animate-pop">
+                <span className="flex items-center gap-1 text-[#FF4D68] animate-pop">
                   <Check size={13} />
                   <span className="text-[11px] font-medium">Copied</span>
                 </span>
@@ -114,10 +114,10 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
               onClick={handleDownload}
               disabled={downloading}
               title="Download High-Res Image"
-              className="retro-btn flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-xs font-medium text-white transition hover:bg-white/20 cursor-pointer active:scale-95 disabled:opacity-50"
+              className="btn-cherry flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium cursor-pointer active:scale-95 disabled:opacity-50"
             >
               {downloading ? (
-                <RotateCw size={13} className="animate-spin text-gray-300" />
+                <RotateCw size={13} className="animate-spin text-white" />
               ) : (
                 <Download size={13} />
               )}
@@ -130,7 +130,7 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
 
         {/* Image Container with Shimmer Skeleton */}
         <div
-          className="relative min-h-48 sm:min-h-56 max-h-80 sm:max-h-96 w-full overflow-hidden bg-[#0d0d0d] cursor-pointer flex items-center justify-center"
+          className="relative min-h-48 sm:min-h-56 max-h-80 sm:max-h-96 w-full overflow-hidden bg-[#0B0B0C] cursor-pointer flex items-center justify-center"
           onClick={() => loaded && !error && setIsModalOpen(true)}
         >
           {/* Skeleton Loader while image is fetching */}
@@ -205,11 +205,11 @@ export const GeneratedImageCard = ({ src, alt = "Artwork" }) => {
 
         {/* Footer / Alt Prompt Bar */}
         {alt && alt !== "Generated Image" && (
-          <div className="border-t border-white/5 bg-[#121212] px-4 py-2.5 flex items-center justify-between text-xs text-gray-400">
+          <div className="border-t border-[#1C1D24] bg-[#0E0F12] px-4 py-2.5 flex items-center justify-between text-xs text-[#8A8D93]">
             <span className="truncate pr-3 italic text-gray-300" title={alt}>
               &ldquo;{alt}&rdquo;
             </span>
-            <span className="shrink-0 text-[10px] text-gray-500 font-mono">
+            <span className="shrink-0 text-[10px] text-[#8A8D93] font-mono">
               1024×1024
             </span>
           </div>

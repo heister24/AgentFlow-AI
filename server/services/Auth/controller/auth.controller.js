@@ -3,6 +3,26 @@ import { firebaseApp } from "../configs/firebase.js";
 import User from "../models/user.model.js";
 import redis from "../../../shared/redis/redis.js";
 
+const isProduction =
+  process.env.NODE_ENV?.toLowerCase() === "production" ||
+  process.env.NODE_ENV === "PRODUCTION";
+
+const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days in seconds
+const SESSION_TTL_MS = SESSION_TTL_SECONDS * 1000;
+
+const getCookieOptions = () => {
+  const options = {
+    httpOnly: true,
+    secure: isProduction || process.env.COOKIE_SECURE === "true",
+    sameSite: process.env.COOKIE_SAMESITE || (isProduction ? "none" : "lax"),
+    maxAge: SESSION_TTL_MS,
+  };
+  if (process.env.COOKIE_DOMAIN) {
+    options.domain = process.env.COOKIE_DOMAIN;
+  }
+  return options;
+};
+
 export const login = async (req, res) => {
   try {
     const { token } = req.body;
@@ -46,7 +66,6 @@ export const login = async (req, res) => {
     await user.save();
 
     const sessionId = crypto.randomUUID();
-    await redis.set(`user-sessionId`, sessionId);
     await redis.set(`user-sessionId-${user._id}`, sessionId);
     await redis.set(
       `sessionId-${sessionId}`,
@@ -61,19 +80,15 @@ export const login = async (req, res) => {
         planExpires: user.planExpires || null,
       }),
       "EX",
-      7 * 24 * 60 * 60 * 1000,
+      SESSION_TTL_SECONDS,
     );
 
-    res.cookie("sessionId", sessionId, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "PRODUCTION" || false,
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie("sessionId", sessionId, getCookieOptions());
 
     return res.status(200).json({
       success: true,
       message: "User logged in successfully",
+      sessionId: sessionId,
       user: {
         userId: user._id,
         name: user.name,
@@ -97,15 +112,16 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    const sessionId = req.cookies?.sessionId;
+    const authHeader = req.headers.authorization;
+    const bearerToken = authHeader?.startsWith("Bearer ")
+      ? authHeader.split(" ")[1]
+      : null;
+    const sessionId = req.cookies?.sessionId || bearerToken;
     if (sessionId) {
       await redis.del(`sessionId-${sessionId}`);
     }
-    res.clearCookie("sessionId", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "PRODUCTION" || false,
-      sameSite: "strict",
-    });
+    const { maxAge, ...clearOptions } = getCookieOptions();
+    res.clearCookie("sessionId", clearOptions);
     return res.status(200).json({
       success: true,
       message: "Logged out successfully",
@@ -135,9 +151,7 @@ export const updateUserAfterPayment = async (req, res) => {
     user.planExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
     await user.save();
 
-    const sessionId =
-      (await redis.get(`user-sessionId-${userId}`)) ||
-      (await redis.get("user-sessionId"));
+    const sessionId = await redis.get(`user-sessionId-${userId}`);
     if (sessionId) {
       await redis.set(
         `sessionId-${sessionId}`,
@@ -152,7 +166,7 @@ export const updateUserAfterPayment = async (req, res) => {
           planExpires: user.planExpires,
         }),
         "EX",
-        7 * 24 * 60 * 60 * 1000,
+        SESSION_TTL_SECONDS,
       );
     }
 
@@ -190,7 +204,7 @@ export const deductCredits = async (req, res) => {
     }
 
     const costOfAgent = cost[agent] || 2;
-    // console.log(costOfAgent);  
+    // console.log(costOfAgent);
 
     if (Number(user.credits) < Number(costOfAgent)) {
       return res.status(402).json({
@@ -204,9 +218,7 @@ export const deductCredits = async (req, res) => {
     user.credits -= costOfAgent;
     await user.save();
 
-    const sessionId =
-      (await redis.get(`user-sessionId-${userId}`)) ||
-      (await redis.get("user-sessionId"));
+    const sessionId = await redis.get(`user-sessionId-${userId}`);
     if (sessionId) {
       await redis.set(
         `sessionId-${sessionId}`,
@@ -221,7 +233,7 @@ export const deductCredits = async (req, res) => {
           planExpires: user.planExpires,
         }),
         "EX",
-        7 * 24 * 60 * 60 * 1000,
+        SESSION_TTL_SECONDS,
       );
     }
 

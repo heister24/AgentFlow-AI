@@ -33,6 +33,9 @@ const Home = () => {
   const handleLogin = async (token) => {
     try {
       const response = await api.post("/auth/google-login", { token });
+      if (response.data.sessionId) {
+        localStorage.setItem("sessionId", response.data.sessionId);
+      }
       dispatch(setUserData(response.data.user));
     } catch (error) {
       console.error("Login verification failed:", error);
@@ -51,14 +54,14 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-[#0d0d0d] text-white">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+      <div className="h-screen w-full flex items-center justify-center bg-[#0B0B0C] text-white">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#C8102E]/30 border-t-[#C8102E]" />
       </div>
     );
   }
 
   return (
-    <div className="h-screen w-full flex bg-[#0d0d0d] text-white overflow-hidden">
+    <div className="h-screen w-full flex bg-[#0B0B0C] text-white overflow-hidden">
       {userData ? (
         <div className="flex h-full w-full relative">
           <Sidebar />
@@ -66,15 +69,15 @@ const Home = () => {
           <Sandbox />
         </div>
       ) : (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
-          <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-[#161618] p-6 sm:p-8 shadow-2xl shadow-black/70 animate-fade-in text-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="w-full max-w-sm rounded-2xl border border-[#262833] bg-[#121317] p-6 sm:p-8 shadow-2xl shadow-black/80 animate-fade-in text-center">
             {/* Header / Brand */}
             <div className="flex flex-col items-center gap-2 mb-6">
-              <AgentFlowLogo size={40} className="mb-1" />
+              <AgentFlowLogo size={46} className="mb-1" />
               <h2 className="text-xl font-bold tracking-tight text-white font-mono">
                 Welcome to AgentFlow
               </h2>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-[#8A8D93]">
                 Sign in to access your autonomous AI workspaces.
               </p>
             </div>
@@ -83,18 +86,18 @@ const Home = () => {
             <button
               type="button"
               onClick={googleLogin}
-              className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-white/15 bg-white px-4 py-2.5 text-xs font-semibold text-gray-900 shadow-sm transition hover:bg-gray-100 active:scale-[0.99]"
+              className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-white/20 bg-white px-4 py-2.5 text-xs font-semibold text-gray-900 shadow-sm transition hover:bg-gray-100 hover:shadow-[0_0_15px_rgba(255,255,255,0.25)] active:scale-[0.99]"
             >
               <FcGoogle className="text-lg shrink-0" />
               <span>Continue with Google</span>
             </button>
 
             {/* Privacy & Terms Links */}
-            <div className="mt-6 flex items-center justify-center gap-2 text-[10px] text-gray-500 font-mono">
+            <div className="mt-6 flex items-center justify-center gap-2 text-[10px] text-[#8A8D93] font-mono">
               <button
                 type="button"
                 onClick={() => navigate("/privacy")}
-                className="hover:text-gray-300 transition cursor-pointer"
+                className="hover:text-[#FF4D68] transition cursor-pointer"
               >
                 Privacy Policy
               </button>
@@ -102,7 +105,7 @@ const Home = () => {
               <button
                 type="button"
                 onClick={() => navigate("/terms")}
-                className="hover:text-gray-300 transition cursor-pointer"
+                className="hover:text-[#FF4D68] transition cursor-pointer"
               >
                 Terms of Service
               </button>

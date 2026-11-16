@@ -50,8 +50,11 @@ export const verifyPayment = async (req, res) => {
   try {
     const { rzp_orderId, rzp_pymtId, rzp_sig } = req.body;
 
+    const secretKey =
+      process.env.RAZORPAY_KEY_SECRET || process.env.RAZORPAY_TEST_SECRET_KEY;
+
     const generateSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_TEST_SECRET_KEY)
+      .createHmac("sha256", secretKey)
       .update(`${rzp_orderId}|${rzp_pymtId}`)
       .digest("hex");
 

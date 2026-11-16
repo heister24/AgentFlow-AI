@@ -90,7 +90,7 @@ export const GeneratedPptCard = ({ href, title }) => {
 
   return (
     <div className="my-3.5 w-full select-none animate-slide-up">
-      <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] retro-card hover:border-amber-500/35">
+      <div className="group relative overflow-hidden rounded-2xl border border-[#20222A] bg-[#111216] retro-card hover:border-amber-500/40">
         {/* Animated download progress strip */}
         {downloading && (
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-amber-500/30 overflow-hidden z-20">
@@ -99,7 +99,7 @@ export const GeneratedPptCard = ({ href, title }) => {
         )}
 
         {/* Top Header Bar */}
-        <div className="flex items-center justify-between border-b border-white/10 bg-[#1c1c1c]/90 px-4 py-2.5 backdrop-blur-md">
+        <div className="flex items-center justify-between border-b border-[#20222A] bg-[#14151B]/95 px-4 py-2.5 backdrop-blur-md">
           <div className="flex items-center gap-2.5">
             <span className="h-2 w-2 rounded-full bg-amber-400 retro-beacon-amber inline-block" />
             <span className="text-xs font-medium tracking-wide text-gray-200">
@@ -112,7 +112,7 @@ export const GeneratedPptCard = ({ href, title }) => {
               type="button"
               onClick={handleCopyLink}
               title="Copy Presentation URL"
-              className="retro-btn flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+              className="retro-btn flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs text-[#8A8D93] transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
             >
               {copied ? (
                 <span className="flex items-center gap-1 text-emerald-400 animate-pop">
@@ -196,7 +196,7 @@ export const GeneratedPptCard = ({ href, title }) => {
         </div>
 
         {/* Footer info banner */}
-        <div className="border-t border-white/5 bg-[#121212] px-4 py-2 flex items-center justify-between text-[11px] text-gray-500">
+        <div className="border-t border-[#1C1D24] bg-[#0E0F12] px-4 py-2 flex items-center justify-between text-[11px] text-[#8A8D93]">
           <span>AgentFlow Presentation Document</span>
           <span className="font-mono">PptxGenJS • Verified</span>
         </div>

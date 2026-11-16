@@ -37,20 +37,27 @@ const AgentFlowLogo = ({ size = 28, className = "" }) => {
           <stop offset="1" stopColor="#334155" />
         </linearGradient>
 
-        {/* Subtle ambient drop shadow */}
+        {/* Subtle ambient Cherry Red & Dark drop shadow */}
         <filter
           id="af-sharp-shadow"
-          x="-20%"
-          y="-20%"
-          width="140%"
-          height="140%"
+          x="-30%"
+          y="-30%"
+          width="160%"
+          height="160%"
         >
           <feDropShadow
             dx="0"
             dy="1.5"
-            stdDeviation="2"
+            stdDeviation="2.5"
+            floodColor="#C8102E"
+            floodOpacity="0.35"
+          />
+          <feDropShadow
+            dx="0"
+            dy="3"
+            stdDeviation="4"
             floodColor="#000000"
-            floodOpacity="0.6"
+            floodOpacity="0.7"
           />
         </filter>
       </defs>

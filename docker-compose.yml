@@ -1,7 +1,120 @@
 services:
   redis:
-    image: redis
-    container_name: AgentFlow-AI
+    image: redis:7-alpine
+    container_name: agentflow-redis
     restart: unless-stopped
     ports:
       - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - agentflow-network
+
+  auth-service:
+    build:
+      context: ./server
+      dockerfile: services/Auth/Dockerfile
+    container_name: agentflow-auth
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+      - REDIS_URL=redis://redis:6379
+    env_file:
+      - ./server/services/Auth/.env
+    depends_on:
+      - redis
+    networks:
+      - agentflow-network
+
+  chat-service:
+    build:
+      context: ./server
+      dockerfile: services/Chat/Dockerfile
+    container_name: agentflow-chat
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    environment:
+      - PORT=8002
+      - REDIS_URL=redis://redis:6379
+    env_file:
+      - ./server/services/Chat/.env
+    depends_on:
+      - redis
+    networks:
+      - agentflow-network
+
+  agent-service:
+    build:
+      context: ./server
+      dockerfile: services/Agents/Dockerfile
+    container_name: agentflow-agent
+    restart: unless-stopped
+    ports:
+      - "8003:8003"
+    environment:
+      - PORT=8003
+      - REDIS_URL=redis://redis:6379
+      - AUTH_URL=http://auth-service:8001
+      - CHAT_URL=http://chat-service:8002
+    env_file:
+      - ./server/services/Agents/.env
+    depends_on:
+      - redis
+      - chat-service
+      - auth-service
+    networks:
+      - agentflow-network
+
+  payment-service:
+    build:
+      context: ./server
+      dockerfile: services/Payment/Dockerfile
+    container_name: agentflow-payment
+    restart: unless-stopped
+    ports:
+      - "8004:8004"
+    environment:
+      - PORT=8004
+      - AUTH_URL=http://auth-service:8001
+    env_file:
+      - ./server/services/Payment/.env
+    depends_on:
+      - auth-service
+    networks:
+      - agentflow-network
+
+  gateway:
+    build:
+      context: ./server
+      dockerfile: gateway/Dockerfile
+    container_name: agentflow-gateway
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - REDIS_URL=redis://redis:6379
+      - AUTH_URL=http://auth-service:8001
+      - CHAT_URL=http://chat-service:8002
+      - AGENT_URL=http://agent-service:8003
+      - PAYMENT_URL=http://payment-service:8004
+    env_file:
+      - ./server/gateway/.env
+    depends_on:
+      - redis
+      - auth-service
+      - chat-service
+      - agent-service
+      - payment-service
+    networks:
+      - agentflow-network
+
+volumes:
+  redis-data:
+
+networks:
+  agentflow-network:
+    driver: bridge

@@ -177,20 +177,20 @@ const Payment = () => {
   const userCurrentPlanId = userData?.plan?.toLowerCase() || "free";
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white p-4 sm:p-8 md:p-10 flex flex-col justify-between retro-grid">
+    <div className="min-h-screen bg-[#0B0B0C] text-white p-4 sm:p-8 md:p-10 flex flex-col justify-between retro-grid">
       {/* Top Nav */}
       <div className="w-full max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-3 mb-6 sm:mb-8">
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 text-xs font-mono text-gray-400 hover:text-white transition-colors cursor-pointer active:scale-95"
+          className="flex items-center gap-2 text-xs font-mono text-[#8A8D93] hover:text-white transition-colors cursor-pointer active:scale-95"
         >
           <ArrowLeft size={15} />
           <span>&lt; Back</span>
         </button>
 
         {userData && (
-          <div className="flex items-center gap-1 text-xs font-mono text-gray-400 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1">
+          <div className="flex items-center gap-1 text-xs font-mono text-[#8A8D93] rounded-lg border border-[#8A8D93]/20 bg-[#121317] px-2.5 py-1">
             <span>Balance: </span>
             <span className="font-semibold text-white">
               {(userData.credits ?? 100).toLocaleString("en-IN")}
@@ -204,10 +204,10 @@ const Payment = () => {
       <div className="w-full max-w-5xl mx-auto my-auto">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-10">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight font-mono">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight font-mono text-white">
             [ Plans & Pricing ]
           </h1>
-          <p className="text-xs sm:text-sm text-gray-400 mt-2">
+          <p className="text-xs sm:text-sm text-[#8A8D93] mt-2">
             Simple and transparent credit plans. Cancel anytime.
           </p>
           {/* Status Message Notification */}
@@ -217,14 +217,14 @@ const Payment = () => {
                 statusMessage.type === "success"
                   ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
                   : statusMessage.type === "error"
-                    ? "border-red-500/30 bg-red-500/10 text-red-300"
+                    ? "border-[#C8102E]/40 bg-[#C8102E]/10 text-[#FF6B81]"
                     : "border-blue-500/30 bg-blue-500/10 text-blue-300"
               }`}
             >
               {statusMessage.type === "success" ? (
                 <CheckCircle2 size={15} className="shrink-0 text-emerald-400" />
               ) : statusMessage.type === "error" ? (
-                <AlertCircle size={15} className="shrink-0 text-red-400" />
+                <AlertCircle size={15} className="shrink-0 text-[#FF4D68]" />
               ) : (
                 <Loader2 size={15} className="shrink-0 animate-spin text-blue-400" />
               )}
@@ -244,8 +244,8 @@ const Payment = () => {
                 key={plan.id}
                 className={`flex flex-col rounded-xl border p-5 sm:p-6 retro-card transition-all duration-200 animate-slide-up ${
                   plan.popular
-                    ? "border-white/25 bg-[#161618] retro-shadow-dark ring-1 ring-white/10 hover:border-white/40"
-                    : "border-white/10 bg-[#141416] retro-shadow hover:border-white/30"
+                    ? "border-[#C8102E]/60 bg-[#160E12] retro-shadow-cherry ring-1 ring-[#C8102E]/40 hover:border-[#C8102E]"
+                    : "border-[#8A8D93]/20 bg-[#111216] retro-shadow hover:border-[#8A8D93]/40"
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -253,25 +253,25 @@ const Payment = () => {
                     {plan.name}
                   </h3>
                   {plan.popular ? (
-                    <span className="rounded-md border border-white/20 bg-white/5 px-2 py-0.5 text-[10px] font-mono text-gray-200 retro-beacon-amber">
+                    <span className="rounded-md border border-[#C8102E]/60 bg-[#C8102E]/20 px-2 py-0.5 text-[10px] font-mono font-bold text-[#FF667D] retro-beacon-cherry">
                       Popular
                     </span>
                   ) : isCurrent ? (
-                    <span className="rounded-md border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] font-mono text-gray-400">
+                    <span className="rounded-md border border-[#8A8D93]/30 bg-white/5 px-2 py-0.5 text-[10px] font-mono text-[#8A8D93]">
                       Active
                     </span>
                   ) : null}
                 </div>
 
-                <p className="text-xs text-gray-400 mt-2 min-h-8">
+                <p className="text-xs text-[#8A8D93] mt-2 min-h-8">
                   {plan.description}
                 </p>
 
                 <div className="my-5">
-                  <span className="text-3xl font-bold tracking-tight">
+                  <span className="text-3xl font-bold tracking-tight text-white">
                     ₹{plan.amount}
                   </span>
-                  <span className="text-xs text-gray-400 ml-1">
+                  <span className="text-xs text-[#8A8D93] ml-1">
                     / {plan.validity} days
                   </span>
                 </div>
@@ -282,7 +282,7 @@ const Payment = () => {
                       key={feature}
                       className="flex items-center gap-2.5 text-xs text-gray-300"
                     >
-                      <Check size={13} className="text-gray-400 shrink-0" />
+                      <Check size={13} className={plan.popular ? "text-[#FF4D68] shrink-0" : "text-[#8A8D93] shrink-0"} />
                       <span>{feature}</span>
                     </div>
                   ))}
@@ -294,12 +294,12 @@ const Payment = () => {
                   onClick={() => handleSelectPlan(plan)}
                   className={`w-full py-2.5 px-4 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2 ${
                     isCurrent
-                      ? "bg-white/5 text-gray-500 cursor-default"
+                      ? "bg-white/5 text-[#8A8D93]/50 cursor-default"
                       : plan.popular
-                        ? "bg-white text-black hover:bg-gray-200 cursor-pointer retro-btn"
+                        ? "btn-cherry cursor-pointer retro-btn shadow-[0_0_15px_rgba(200,16,46,0.35)]"
                         : plan.amount === 0
-                          ? "bg-white/5 text-gray-400 cursor-default"
-                          : "border border-white/15 bg-white/10 text-white hover:bg-white/15 cursor-pointer retro-btn"
+                          ? "bg-white/5 text-[#8A8D93] cursor-default"
+                          : "border border-[#8A8D93]/30 bg-white/5 text-white hover:bg-white/10 hover:border-[#8A8D93]/60 cursor-pointer retro-btn"
                   }`}
                 >
                   {isLoading ? (

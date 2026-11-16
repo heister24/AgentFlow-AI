@@ -157,7 +157,7 @@ export const SearchImagesGallery = ({ images = [] }) => {
                   setSelectedImageIndex(idx);
                 }
               }}
-              className={`group relative cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-[#121214] retro-shadow-sm transition-all duration-200 hover:border-white/25 hover:shadow-md ${
+              className={`group relative cursor-pointer overflow-hidden rounded-xl border border-[#20222B] bg-[#101115] retro-shadow-sm transition-all duration-200 hover:border-[#C8102E]/40 hover:shadow-md ${
                 validImages.length === 1
                   ? "h-44 sm:h-52"
                   : validImages.length === 2
@@ -167,7 +167,7 @@ export const SearchImagesGallery = ({ images = [] }) => {
             >
               {/* Shimmer skeleton while loading */}
               {!isLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center bg-[#171719] text-gray-500">
+                <div className="absolute inset-0 flex items-center justify-center bg-[#0B0B0C] text-[#8A8D93]">
                   <ImageIcon size={18} className="animate-pulse opacity-40" />
                 </div>
               )}

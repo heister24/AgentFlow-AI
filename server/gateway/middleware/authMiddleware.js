@@ -2,17 +2,21 @@ import redis from "../../shared/redis/redis.js";
 
 const authMiddleware = async (req, res, next) => {
   try {
-    const sessionId = req.cookies?.sessionId;
+    const authHeader = req.headers.authorization;
+    const bearerToken = authHeader?.startsWith("Bearer ")
+      ? authHeader.split(" ")[1]
+      : null;
+    const sessionId = req.cookies?.sessionId || bearerToken;
     // console.log(sessionId);
     if (!sessionId) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
         message: "Unauthorized",
       });
     }
     const session = await redis.get(`sessionId-${sessionId}`);
     if (!session) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
         message: "Session Expired",
       });

@@ -14,7 +14,11 @@ const storage = multer.diskStorage({
     cb(null, uploadDirectory);
   },
   filename(req, file, cb) {
-    cb(null, `${Date.now()}file.originalname`);
+    const sanitizedName = (file.originalname || "attachment").replace(
+      /[^a-zA-Z0-9.-]/g,
+      "_",
+    );
+    cb(null, `${Date.now()}-${sanitizedName}`);
   },
 });
 

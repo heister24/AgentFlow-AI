@@ -211,12 +211,12 @@ const ChatInputSection = ({ promptDraft }) => {
       <div className="mx-auto w-full max-w-3xl">
 
         {/* Input box synced with message bubble background */}
-        <div className="relative rounded-xl border border-white/15 bg-[#222222] retro-shadow focus-within:border-white/30 focus-within:shadow-[3px_3px_0px_rgba(255,255,255,0.2)] transition-all duration-200">
+        <div className="relative rounded-xl border border-[#2A2C36] bg-[#121317] retro-shadow focus-within:border-[#C8102E]/70 focus-within:shadow-[0_0_20px_rgba(200,16,46,0.2)] transition-all duration-200">
           {/* File Attachment Chip */}
           {selectedFile && (
             <div className="flex items-center gap-2 px-4 pt-2.5">
-              <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-gray-200 animate-slide-up">
-                <Paperclip size={12} className="text-blue-400" />
+              <div className="inline-flex items-center gap-1.5 rounded-lg border border-[#C8102E]/30 bg-[#C8102E]/10 px-2.5 py-1 text-xs text-gray-200 animate-slide-up">
+                <Paperclip size={12} className="text-[#FF6B81]" />
                 <span className="max-w-60 truncate">{selectedFile.name}</span>
                 <button
                   type="button"
@@ -224,7 +224,7 @@ const ChatInputSection = ({ promptDraft }) => {
                     setSelectedFile(null);
                     if (fileRef.current) fileRef.current.value = "";
                   }}
-                  className="ml-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                  className="ml-1 text-[#8A8D93] hover:text-white transition-colors cursor-pointer"
                 >
                   <X size={12} />
                 </button>
@@ -242,7 +242,7 @@ const ChatInputSection = ({ promptDraft }) => {
             onKeyDown={handleKeyDown}
             disabled={isSubmitting}
             rows={1}
-            className="hide-scrollbar block min-h-10.5 max-h-48 w-full resize-none overflow-y-auto bg-transparent px-3 pt-2.5 pb-1 sm:px-4 sm:pt-3 text-[16px] sm:text-[14px] leading-6 text-white outline-none disabled:opacity-60"
+            className="hide-scrollbar block min-h-10.5 max-h-48 w-full resize-none overflow-y-auto bg-transparent px-3 pt-2.5 pb-1 sm:px-4 sm:pt-3 text-[16px] sm:text-[14px] leading-6 text-white outline-none disabled:opacity-60 placeholder:text-[#8A8D93]/60"
           />
 
           {/* Action Toolbar */}
@@ -254,7 +254,7 @@ const ChatInputSection = ({ promptDraft }) => {
                   type="button"
                   onClick={() => setAgentMenuOpen((prev) => !prev)}
                   title="Switch Agent"
-                  className="retro-btn flex items-center gap-1 sm:gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2 sm:px-2.5 py-1 text-xs font-medium text-gray-300 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+                  className="retro-btn flex items-center gap-1 sm:gap-1.5 rounded-lg border border-[#8A8D93]/20 bg-white/5 px-2 sm:px-2.5 py-1 text-xs font-medium text-gray-300 transition-colors hover:border-[#C8102E]/40 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
                 >
                   <AgentIcon size={13} className="text-gray-300 shrink-0" />
                   <span className="max-w-[75px] sm:max-w-none truncate">
@@ -262,7 +262,7 @@ const ChatInputSection = ({ promptDraft }) => {
                   </span>
                   <ChevronDown
                     size={12}
-                    className={`text-gray-400 transition-transform duration-200 shrink-0 ${
+                    className={`text-[#8A8D93] transition-transform duration-200 shrink-0 ${
                       agentMenuOpen ? "rotate-180" : ""
                     }`}
                   />
@@ -270,8 +270,8 @@ const ChatInputSection = ({ promptDraft }) => {
 
                 {/* Floating Agent Menu */}
                 {agentMenuOpen && (
-                  <div className="absolute bottom-full left-0 mb-2 w-44 rounded-xl border border-white/10 bg-[#1a1a1a] p-1.5 shadow-2xl backdrop-blur-md z-50 animate-pop origin-bottom-left">
-                    <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                  <div className="absolute bottom-full left-0 mb-2 w-44 rounded-xl border border-[#262832] bg-[#121317] p-1.5 shadow-2xl backdrop-blur-md z-50 animate-pop origin-bottom-left">
+                    <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-[#8A8D93]">
                       Select Agent
                     </div>
                     {agents.map((agent) => {
@@ -287,14 +287,14 @@ const ChatInputSection = ({ promptDraft }) => {
                           }}
                           className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs transition cursor-pointer ${
                             isSelected
-                              ? "bg-white/10 text-white font-medium"
-                              : "text-gray-300 hover:bg-white/10 hover:text-white"
+                              ? "bg-[#C8102E]/20 text-white font-medium border border-[#C8102E]/40"
+                              : "text-[#8A8D93] hover:bg-white/10 hover:text-white"
                           }`}
                         >
                           <Icon
                             size={14}
                             className={
-                              isSelected ? "text-white" : "text-gray-400"
+                              isSelected ? "text-[#FF4D68]" : "text-[#8A8D93]"
                             }
                           />
                           <span>{agent.label}</span>
@@ -323,7 +323,7 @@ const ChatInputSection = ({ promptDraft }) => {
                 aria-label="Attach file"
                 onClick={() => fileRef.current.click()}
                 title="Attach file"
-                className="group flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-90"
+                className="group flex h-8 w-8 items-center justify-center rounded-lg text-[#8A8D93] transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-90"
               >
                 <Paperclip
                   size={16}
@@ -337,7 +337,7 @@ const ChatInputSection = ({ promptDraft }) => {
                 type="button"
                 aria-label="Voice input"
                 title="Voice input"
-                className="group flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-90"
+                className="group flex h-8 w-8 items-center justify-center rounded-lg text-[#8A8D93] transition hover:bg-white/10 hover:text-white cursor-pointer active:scale-90"
               >
                 <Mic
                   size={16}
@@ -349,8 +349,8 @@ const ChatInputSection = ({ promptDraft }) => {
 
             {/* Right Controls: Hint & Send Button */}
             <div className="flex items-center gap-2">
-              <span className="hidden text-[11px] text-gray-500 sm:inline">
-                <kbd className="rounded border border-white/10 bg-white/5 px-1 py-0.5 font-mono text-[10px] text-gray-400">
+              <span className="hidden text-[11px] text-[#8A8D93] sm:inline">
+                <kbd className="rounded border border-[#8A8D93]/20 bg-white/5 px-1 py-0.5 font-mono text-[10px] text-[#8A8D93]">
                   Enter
                 </kbd>
               </span>
@@ -364,15 +364,15 @@ const ChatInputSection = ({ promptDraft }) => {
                   isSubmitting
                     ? "send-btn-loading"
                     : input.trim().length > 0
-                      ? "bg-white text-[#151820] hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
-                      : "bg-white/10 text-gray-500 cursor-not-allowed opacity-40 shadow-none"
+                      ? "btn-cherry hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                      : "border border-[#262832] bg-white/5 text-[#8A8D93]/40 cursor-not-allowed shadow-none"
                 }`}
               >
                 {isSubmitting ? (
                   <Loader2
                     size={16}
                     strokeWidth={2.75}
-                    className="send-spinner text-[#121214]"
+                    className="send-spinner text-white"
                   />
                 ) : (
                   <Send
@@ -387,7 +387,7 @@ const ChatInputSection = ({ promptDraft }) => {
         </div>
 
         {/* Disclaimer */}
-        <p className="mt-2 text-center text-[11px] tracking-wide text-gray-500">
+        <p className="mt-2 text-center text-[11px] tracking-wide text-[#8A8D93]">
           AgentFlow can make mistakes. Verify important information.
         </p>
       </div>

@@ -17,7 +17,7 @@ const ChatArea = () => {
   };
 
   return (
-    <div className="relative flex h-screen min-w-0 flex-1 flex-col overflow-hidden bg-[#0B0B0C] retro-grid">
+    <div className="relative flex h-full h-[100dvh] max-h-[100dvh] min-w-0 flex-1 flex-col overflow-hidden bg-[#0B0B0C] retro-grid">
       {/* Mobile Top Navigation Header */}
       <header className="flex h-12 w-full shrink-0 items-center justify-between border-b border-[#1D1E24] bg-[#0E0F12]/95 px-3 backdrop-blur-md md:hidden z-30">
         <div className="flex items-center gap-2.5 min-w-0">

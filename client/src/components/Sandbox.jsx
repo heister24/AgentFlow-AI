@@ -170,8 +170,8 @@ const Sandbox = () => {
       <aside
         className={`flex flex-col border-l border-[#1D1E24] bg-[#0B0B0C] text-gray-200 transition-all duration-300 z-50 retro-shadow-dark ${
           isFullscreen
-            ? "fixed inset-0 w-screen h-screen bg-[#0B0B0C]"
-            : "fixed inset-y-0 right-0 w-full sm:w-[520px] md:w-[600px] lg:relative lg:inset-auto lg:h-screen lg:w-[48%] xl:w-[50%] shrink-0 shadow-2xl lg:shadow-none"
+            ? "fixed inset-0 w-screen h-[100dvh] bg-[#0B0B0C]"
+            : "fixed inset-y-0 right-0 w-full sm:w-[520px] md:w-[600px] lg:relative lg:inset-auto lg:h-[100dvh] lg:w-[48%] xl:w-[50%] shrink-0 shadow-2xl lg:shadow-none"
         }`}
       >
       {/* Top Header */}

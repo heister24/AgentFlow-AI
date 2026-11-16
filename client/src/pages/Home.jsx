@@ -61,9 +61,9 @@ const Home = () => {
   }
 
   return (
-    <div className="h-screen w-full flex bg-[#0B0B0C] text-white overflow-hidden">
+    <div className="h-full h-[100dvh] max-h-[100dvh] w-full flex bg-[#0B0B0C] text-white overflow-hidden">
       {userData ? (
-        <div className="flex h-full w-full relative">
+        <div className="flex h-full w-full relative overflow-hidden">
           <Sidebar />
           <ChatArea />
           <Sandbox />

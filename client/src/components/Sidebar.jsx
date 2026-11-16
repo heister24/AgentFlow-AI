@@ -296,7 +296,7 @@ const Sidebar = () => {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 md:relative md:z-auto flex h-screen shrink-0 flex-col overflow-hidden border-r border-[#1D1E24] bg-[#0E0F12] p-3 text-white transition-all duration-300 ${
+        className={`fixed inset-y-0 left-0 z-50 md:relative md:z-auto flex h-full h-[100dvh] max-h-[100dvh] shrink-0 flex-col overflow-hidden border-r border-[#1D1E24] bg-[#0E0F12] p-3 text-white transition-all duration-300 ${
           sidebarOpen
             ? "w-72 max-w-[85vw] md:w-64 md:min-w-[16rem] translate-x-0 shadow-2xl md:shadow-none"
             : "-translate-x-full md:translate-x-0 md:w-16 md:min-w-16"

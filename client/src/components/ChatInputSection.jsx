@@ -207,7 +207,7 @@ const ChatInputSection = ({ promptDraft }) => {
   const AgentIcon = currentAgent.icon;
 
   return (
-    <div className="w-full bg-transparent px-3 pb-3 sm:px-6 sm:pb-4">
+    <div className="w-full shrink-0 bg-transparent px-2.5 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] sm:px-6 sm:pb-4">
       <div className="mx-auto w-full max-w-3xl">
 
         {/* Input box synced with message bubble background */}
@@ -387,7 +387,7 @@ const ChatInputSection = ({ promptDraft }) => {
         </div>
 
         {/* Disclaimer */}
-        <p className="mt-2 text-center text-[11px] tracking-wide text-[#8A8D93]">
+        <p className="mt-1 sm:mt-2 text-center text-[10px] sm:text-[11px] tracking-wide text-[#8A8D93]">
           AgentFlow can make mistakes. Verify important information.
         </p>
       </div>

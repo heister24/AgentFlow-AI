@@ -151,27 +151,28 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
   };
 
   return (
-    <section className="flex h-full min-h-0 flex-col overflow-hidden bg-transparent">
+    <section className="flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-transparent">
       {showWelcome ? (
-        <div className="flex flex-1 flex-col items-center justify-center px-4 py-6">
-          <div className="flex flex-col items-center text-center max-w-md space-y-3.5 animate-fade-in">
+        <div className="flex flex-1 min-h-0 flex-col items-center justify-center overflow-y-auto px-4 py-3 sm:py-6">
+          <div className="flex flex-col items-center text-center max-w-md space-y-2.5 sm:space-y-3.5 my-auto animate-fade-in">
             {/* Unique AgentFlow Logo Mark */}
-            <div className="flex items-center justify-center mb-1">
-              <AgentFlowLogo size={42} className="transition-transform duration-300 hover:scale-105" />
+            <div className="flex items-center justify-center mb-0.5 sm:mb-1">
+              <AgentFlowLogo size={34} className="sm:hidden" />
+              <AgentFlowLogo size={42} className="hidden sm:block transition-transform duration-300 hover:scale-105" />
             </div>
 
             {/* Clean Headline */}
             <div>
-              <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-white font-mono">
+              <h1 className="text-lg sm:text-2xl font-semibold tracking-tight text-white font-mono">
                 How can I help you today?
               </h1>
-              <p className="mt-1 text-xs text-[#8A8D93]">
+              <p className="mt-1 text-[11px] sm:text-xs text-[#8A8D93]">
                 Ask a question, write code, build pitch decks, or search live web.
               </p>
             </div>
 
             {/* Compact suggestion pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 pt-1">
               {QUICK_PROMPTS.map((item, idx) => {
                 const Icon = item.icon;
                 return (
@@ -179,9 +180,9 @@ const ChatMessagesSection = ({ onSelectPrompt }) => {
                     key={idx}
                     type="button"
                     onClick={() => onSelectPrompt?.(item.prompt, item.agent)}
-                    className="inline-flex items-center gap-2 rounded-full border border-[#8A8D93]/20 bg-white/[0.03] px-3.5 py-1.5 text-xs text-[#8A8D93] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C8102E]/60 hover:bg-[#C8102E]/10 hover:text-white hover:shadow-[0_0_12px_rgba(200,16,46,0.2)] cursor-pointer active:scale-95"
+                    className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-[#8A8D93]/20 bg-white/[0.03] px-2.5 py-1 sm:px-3.5 sm:py-1.5 text-[11px] sm:text-xs text-[#8A8D93] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C8102E]/60 hover:bg-[#C8102E]/10 hover:text-white hover:shadow-[0_0_12px_rgba(200,16,46,0.2)] cursor-pointer active:scale-95"
                   >
-                    <Icon size={13} className={item.iconColor} />
+                    <Icon size={12} className={item.iconColor} />
                     <span>{item.label}</span>
                   </button>
                 );
